@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model client{
+  codeC Int @id @default(autoincrement())
+  nomC String
+  prenomC String
+  adressC String
+  teleC Int
+  credit Int
+  pointC Int
+  achats achat[]
+}
+
+model achat{
+idAchat Int @id @default(autoincrement())
+montantTotal Int
+montantRestant Int
+client Int
+clientId client @relation(fields: [client],references: [codeC])
+reglements regelementClient[] 
+transactions transaction[]
+}
+
+model transaction{
+  numTr Int @id @default(autoincrement())
+  achat Int
+  achatId achat @relation(fields: [achat],references: [idAchat])
+  qte Int
+}
+model regelementClient{
+  idRegelementClient Int @id @default(autoincrement())
+  paiment Int
+  achat Int
+  achatId achat @relation(fields: [achat],references: [idAchat])
+}
+
+model fournisseur{
+  codeF Int @id @default(autoincrement())
+  nomF String
+  prenomF String
+  adressF String
+  teleF Int
+  sold Int
+  pointF Int
+  ventes  vente[]
+  commandes bonCommande[]
+  factures facture[]
+}
+model vente{
+produit Int
+product produit @relation(fields: [produit],references: [codeP])
+fournisseur Int
+supplier fournisseur @relation(fields: [fournisseur],references:[codeF])
+@@id([produit,fournisseur])
+prix Int
+}
+model produit{
+codeP Int @id @default(autoincrement())
+nomP String
+designation String
+qteAchat Int
+qteVendu Int
+type String
+typeproduit typeProduit @relation(fields: [type],references: [name])
+concernes concerne[]
+ventes vente[]
+stocker stocker[]
+}
+model typeProduit{
+  name String @id 
+  designation String
+  products produit[]
+}
+model bonCommande{
+idBon Int @id @default(autoincrement())
+concernes concerne[]
+fournisseur Int
+supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
+}
+model concerne{
+  qte Int
+  produit Int
+  product produit @relation(fields: [produit],references: [codeP])
+  BonCommande Int
+  Commande bonCommande @relation(fields: [BonCommande],references: [idBon])
+  @@id([BonCommande,produit])
+}
+model facture{
+  numF Int @id @default(autoincrement())
+  dateF DateTime @default(now())
+  TotalTtc Int 
+  TotalRest Int 
+  fournisseur Int
+  supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
+  stocker stocker[]
+  reglement regelementFournisseur[]
+  Bl bl?
+}
+model stocker{
+  produit Int
+  product produit @relation(fields: [produit],references: [codeP])
+  facture Int
+  numFacture facture @relation(fields: [facture],references: [numF])
+  stock Int
+  idStock stock @relation(fields: [stock],references: [idStock])
+  @@id([facture,produit])
+  prixHt Int
+  prixV Int
+  qte Int
+}
+model regelementFournisseur{
+  idReg Int @id @default(autoincrement())
+  montant Int
+  facture Int
+  numFacture facture @relation(fields: [facture],references: [numF])
+}
+model bl{
+  id Int @id @default(autoincrement())
+  facture Int @unique
+  numFacture facture @relation(fields: [facture],references: [numF])
+  DateBl DateTime @default(now())
+}
+
+model stock {
+  idStock Int @id
+  stockes stocker[]
+
+}
+model entreeStock{
+  idEntreeStock Int @id @default(autoincrement())
+}
+model sortieStock{
+  idSortieStock Int @id @default(autoincrement())
+}
