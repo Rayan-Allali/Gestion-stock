@@ -15,7 +15,7 @@ model client{
   nomC String
   prenomC String
   adressC String
-  teleC Int
+  teleC String
   credit Int
   pointC Int
   achats achat[]
@@ -49,7 +49,7 @@ model fournisseur{
   nomF String
   prenomF String
   adressF String
-  teleF Int
+  teleF String
   sold Int
   pointF Int
   ventes  vente[]
