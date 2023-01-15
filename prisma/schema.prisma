@@ -13,6 +13,7 @@ datasource db {
 model client{
   codeC Int @id @default(autoincrement())
   nomC String
+  img String
   prenomC String
   adressC String
   teleC String
@@ -46,6 +47,7 @@ model regelementClient{
 
 model fournisseur{
   codeF Int @id @default(autoincrement())
+  img String
   nomF String
   prenomF String
   adressF String
@@ -71,6 +73,7 @@ designation String
 qteAchat Int
 qteVendu Int
 type String
+img String
 typeproduit typeProduit @relation(fields: [type],references: [name])
 concernes concerne[]
 ventes vente[]
@@ -138,7 +141,12 @@ model stock {
 }
 model entreeStock{
   idEntreeStock Int @id @default(autoincrement())
+  modifiedDate DateTime @updatedAt
+  dateE DateTime @default(now())
 }
 model sortieStock{
   idSortieStock Int @id @default(autoincrement())
+  motif String
+  modifiedDate DateTime @updatedAt
+  dateE DateTime @default(now())
 }
