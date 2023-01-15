@@ -111,6 +111,14 @@ else{
             nomP:product.nomP
         }
     })
+    const product =await prisma.produit.update({
+        where:{
+            codeP:produit.codeP
+        },
+        data:{
+            qteAchat:produit.qteAchat + qte
+        }
+    })
 }
 const stocker=await prisma.stocker.create({
     data:{
