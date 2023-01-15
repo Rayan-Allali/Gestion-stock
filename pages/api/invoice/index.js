@@ -1,4 +1,4 @@
-import {getAllHandler,postHandler} from '../../../controllers/supplierControllers.js'
+import {getAllHandler,postHandler} from '../../../controllers/invoiceControllers.js'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') return getAllHandler(req, res);

@@ -21,6 +21,38 @@ export async function getAllHandler(req,res){
         })
     }
 }
+
+export async function postHandler(req,res){
+    try{
+const {nomF,adressF,prenomF,teleF}=req.body
+if(!nomF || !adressF || !teleF || !prenomF) return res.status(400).json({status:400,message:"missing data"});
+const pointF=0;
+const sold=0;
+const supplier =await prisma.fournisseur.create({
+    data:{
+        nomF,adressF,prenomF,teleF,pointF,sold
+    }
+})
+if(!supplier )return res.status(400).json({
+        status:400,
+        message:"something went wrong we couldn't create new supplier"
+    })
+
+  return res.status(201).json({
+    status:201,
+    data:supplier 
+  })  
+ }catch(err){
+        console.error(err)
+        return res.status(500).json({
+            status:500,
+            message:"something went wrong"
+        })
+    }
+}
+
+//add new supplier
+
 export async function getHandler(req,res){
 try{
     const id=req.query.id *1
@@ -61,5 +93,68 @@ return res.status(204).json({
     }catch(err){
         console.error(err)
         return res.status(500).json({status:500,message:"an error occurred"})
+    }
+}
+
+//update supplier
+
+export async function putHandler(req,res){
+    try{
+        const id=req.query.id *1
+    if(!id){
+        return res.status(400).json({
+            status:400,
+            message:'invalid id'
+        })
+    }
+    let {nomF,prenomF,adressF,teleF}=req.body
+    if(!nomF && !prenomF && !adressF && !teleF){
+        return res.status(400).json({
+            status:400,
+            message:"missing data"
+        })
+    }
+    
+    const supplier=await prisma.fournisseur.findUnique({
+        where:{
+            codeF:id
+        }
+    })
+    if(!supplier){
+        return res.status(404).json({
+            status:404,
+            message:'no supplier found'
+        })
+    }
+    if(!nomF){
+        nomF=supplier.nomF
+    }
+    if(!teleF){
+        teleF=supplier.teleF
+    }
+    if(!adressF){
+        adressF=supplier.adressF
+    }
+    if(!prenomF){
+        prenomF=supplier.prenomF
+    }
+    const newsupplier =await prisma.fournisseur.update({
+        where:{
+            codeF:id
+        },
+        data:{
+            prenomF,nomF,teleF,adressF
+        }
+    })
+    return res.status(200).json({
+        status:200,
+        data:newsupplier
+    })
+    }catch(err){
+        console.error(err)
+        return res.status(500).json({
+            status:500,
+            message:"an error occurred"
+        })
     }
 }
