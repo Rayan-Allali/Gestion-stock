@@ -1,18 +1,36 @@
 import prisma from '../lib/prisma'
-
+import findObject from '../lib/searchObject'
 export async function getAllHandler(req,res){
-    
-    try{ 
-        const customers=await prisma.client.findMany()
-        if(!customers){
+    try{
+        const invoices=await prisma.facture.findMany(
+            {
+                select:{
+                    dateF:true,
+                    fournisseur:true,
+                    stocker:{
+                        select:{
+                            product:{
+                                select:{
+                                    nomP:true
+                                }
+                            },
+                            qte:true,
+                            prixV:true,
+                            prixHt:true
+                        }
+                    }
+                }
+            }
+        )
+        if(!invoices){
             return res.status(404).json({
                 status:404,
-                message:"no customer were found"
+                message:"no facture were found"
             })
         }
         return res.status(200).json({
             status:200,
-            data:customers
+            data:invoices
         })
 
     }
@@ -33,20 +51,36 @@ export async function getHandler(req,res){
             message:"invalid id"
         })
     }
-    const customer=await prisma.client.findUnique({
+    const invoice=await prisma.facture.findUnique({
         where:{
-            codeC:id
+            numF:id
+        },
+        select:{
+            dateF:true,
+            fournisseur:true,
+            stocker:{
+                select:{
+                    product:{
+                        select:{
+                            nomP:true
+                        }
+                    },
+                    qte:true,
+                    prixV:true,
+                    prixHt:true
+                }
+            }
         }
     })
-    if(!customer){
+    if(!invoice){
         return res.status(404).json({
             status:404,
-            message:"no client found"
+            message:"no facture found"
         })
     }
     return res.status(200).json({
         status:200,
-        data:customer
+        data:invoice
     })
    }
    catch(err){
@@ -57,39 +91,41 @@ export async function getHandler(req,res){
     })
    }
 }
+
 export async function postHandler(req,res){
     try{
-const {nomC,adressC,prenomC,teleC}=req.body
-if(!nomC || !adressC || !teleC || !prenomC) return res.status(400).json({status:400,message:"missing data"});
-const pointC=0;
-const credit=0;
-const customer =await prisma.client.create({
+const {fournisseur}=req.body
+if(!fournisseur) return res.status(400).json({status:400,message:"missing data"})
+if(!findObject("fournisseur","codeF")){await prisma.fournisseur.create({
+    data:{fournisseur}
+})}
+
+const invoice =await prisma.facture.create({
     data:{
-        nomC,prenomC,teleC,adressC,pointC,credit
+  TotalTtc:0,
+  TotalRest:0,
+  fournisseur:fournisseur * 1
     }
 })
-if(!customer)return res.status(400).json({
+if(!invoice)return res.status(400).json({
         status:400,
-        message:"something went wrong we couldn't create new customer"
+        message:"something went wrong we couldn't create new invoice"
     })
-
   return res.status(201).json({
     status:201,
-    data:customer
+    data:invoice
   })  
-
+  
 
     }catch(err){
         console.error(err)
+        
         return res.status(500).json({
             status:500,
             message:"something went wrong"
         })
     }
 }
-
-//update customer
-
 export async function putHandler(req,res){
     try{
         const id=req.query.id *1
@@ -107,32 +143,32 @@ export async function putHandler(req,res){
         })
     }
     
-    const customer=await prisma.client.findUnique({
+    const invoice=await prisma.facture.findUnique({
         where:{
-            codeC:id
+            numF:id
         }
     })
-    if(!customer){
+    if(!invoice){
         return res.status(404).json({
             status:404,
-            message:'no customer found'
+            message:'no invoice found'
         })
     }
     if(!nomC){
-        nomC=customer.nomC
+        nomC=invoice.nomC
     }
     if(!teleC){
-        teleC=customer.teleC
+        teleC=invoice.teleC
     }
     if(!adressC){
-        adressC=customer.adressC
+        adressC=invoice.adressC
     }
     if(!prenomC){
-        prenomC=customer.prenomC
+        prenomC=invoice.prenomC
     }
-    const newCustomer =await prisma.client.update({
+    const newinvoice =await prisma.facture.update({
         where:{
-            codeC:id
+            numF:id
         },
         data:{
             prenomC,nomC,teleC,adressC
@@ -140,7 +176,7 @@ export async function putHandler(req,res){
     })
     return res.status(200).json({
         status:200,
-        data:newCustomer
+        data:newinvoice
     })
     }catch(err){
         console.error(err)
@@ -150,21 +186,19 @@ export async function putHandler(req,res){
         })
     }
 }
-
-//delete customer by id
 export async function deleteHandler(req,res){
     try {
         const id=req.query.id*1;
         if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
-        const customer=await prisma.client.findUnique({
+        const invoice=await prisma.facture.findUnique({
             where:{
-                codeC:id
+                numF:id
             }
         })
-        if(!customer) return res.status(404).json({status:404, message:"Customer not found"})
-        const deletedCustomer=await prisma.client.delete({
+        if(!invoice) return res.status(404).json({status:404, message:"invoice not found"})
+        const deletedinvoice=await prisma.facture.delete({
             where:{
-                codeC:id
+                numF:id
             }
         })
         res.status(204).json({status:204})
