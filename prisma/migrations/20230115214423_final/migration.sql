@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "client" ALTER COLUMN "credit" SET DEFAULT 0,
+ALTER COLUMN "pointC" SET DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "fournisseur" ALTER COLUMN "sold" SET DEFAULT 0,
+ALTER COLUMN "pointF" SET DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "produit" ALTER COLUMN "qteAchat" SET DEFAULT 0,
+ALTER COLUMN "qteVendu" SET DEFAULT 0;

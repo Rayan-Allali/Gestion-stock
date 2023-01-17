@@ -17,8 +17,8 @@ model client{
   prenomC String
   adressC String
   teleC String
-  credit Int
-  pointC Int
+  credit Int @default(0)
+  pointC Int @default(0)
   achats achat[]
 }
 
@@ -52,8 +52,8 @@ model fournisseur{
   prenomF String
   adressF String
   teleF String
-  sold Int
-  pointF Int
+  sold Int @default(0)
+  pointF Int @default(0)
   ventes  vente[]
   commandes bonCommande[]
   factures facture[]
@@ -70,14 +70,16 @@ model produit{
 codeP Int @id @default(autoincrement())
 nomP String
 designation String
-qteAchat Int
-qteVendu Int
+qteAchat Int @default(0)
+qteVendu Int @default(0)
 type String
 img String
 typeproduit typeProduit @relation(fields: [type],references: [name])
 concernes concerne[]
 ventes vente[]
 stocker stocker[]
+sortiesStock sortieStock[]
+entreesStock entreeStock[]
 }
 model typeProduit{
   name String @id 
@@ -143,10 +145,19 @@ model entreeStock{
   idEntreeStock Int @id @default(autoincrement())
   modifiedDate DateTime @updatedAt
   dateE DateTime @default(now())
+   qte Int
+   prixV Int 
+   produit Int
+   product produit @relation(fields: [produit],references: [codeP])
 }
 model sortieStock{
   idSortieStock Int @id @default(autoincrement())
   motif String
   modifiedDate DateTime @updatedAt
   dateE DateTime @default(now())
+  qte Int
+  produit Int
+  prixV Int 
+  prixHt Int?
+  product produit @relation(fields: [produit],references: [codeP])
 }
