@@ -61,7 +61,8 @@ export async function getHandler(req,res){
                 select:{
                     product:{
                         select:{
-                            nomP:true
+                            nomP:true,
+                            img:true
                         }
                     },
                     qte:true,
