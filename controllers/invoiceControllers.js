@@ -1,5 +1,4 @@
 import prisma from '../lib/prisma'
-import findObject from '../lib/searchObject'
 export async function getAllHandler(req,res){
     try{
         const invoices=await prisma.facture.findMany(
@@ -96,15 +95,22 @@ export async function postHandler(req,res){
     try{
 const {fournisseur}=req.body
 if(!fournisseur) return res.status(400).json({status:400,message:"missing data"})
-if(!findObject("fournisseur","codeF")){await prisma.fournisseur.create({
+const fs=await prisma.fournisseur.findUnique({
+    where:{
+        codeF:fournisseur*1
+    }
+})
+if(!fs){await prisma.fournisseur.create({
     data:{fournisseur}
 })}
 
 const invoice =await prisma.facture.create({
     data:{
-  TotalTtc:0,
-  TotalRest:0,
-  fournisseur:fournisseur * 1
+        TotalTtc:0,
+        TotalRest:0,
+  supplier:{connect:{
+    codeF:fournisseur*1
+  }}
     }
 })
 if(!invoice)return res.status(400).json({
@@ -126,66 +132,7 @@ if(!invoice)return res.status(400).json({
         })
     }
 }
-export async function putHandler(req,res){
-    try{
-        const id=req.query.id *1
-    if(!id){
-        return res.status(400).json({
-            status:400,
-            message:'invalid id'
-        })
-    }
-    let {nomC,prenomC,adressC,teleC}=req.body
-    if(!nomC && !prenomC && !adressC && !teleC){
-        return res.status(400).json({
-            status:400,
-            message:"missing data"
-        })
-    }
-    
-    const invoice=await prisma.facture.findUnique({
-        where:{
-            numF:id
-        }
-    })
-    if(!invoice){
-        return res.status(404).json({
-            status:404,
-            message:'no invoice found'
-        })
-    }
-    if(!nomC){
-        nomC=invoice.nomC
-    }
-    if(!teleC){
-        teleC=invoice.teleC
-    }
-    if(!adressC){
-        adressC=invoice.adressC
-    }
-    if(!prenomC){
-        prenomC=invoice.prenomC
-    }
-    const newinvoice =await prisma.facture.update({
-        where:{
-            numF:id
-        },
-        data:{
-            prenomC,nomC,teleC,adressC
-        }
-    })
-    return res.status(200).json({
-        status:200,
-        data:newinvoice
-    })
-    }catch(err){
-        console.error(err)
-        return res.status(500).json({
-            status:500,
-            message:"an error occurred"
-        })
-    }
-}
+
 export async function deleteHandler(req,res){
     try {
         const id=req.query.id*1;

@@ -73,13 +73,12 @@ return res.status(204).json({
 
 export async function postHandler(req,res){
     try{
-const {nomP,designation,type}=req.body
+const {nomP,designation,type,img}=req.body
 if(!nomP || !designation|| !type) return res.status(400).json({status:400,message:"missing data"});
 
 const product =await prisma.produit.create({
     data:{
-        nomP,designation,type, qteAchat:0,
-        qteVendu:0
+        nomP,designation,type,img
     }
 })
 if(!product )return res.status(400).json({
@@ -111,8 +110,8 @@ export async function putHandler(req,res){
             message:'invalid id'
         })
     }
-    let {nomP,designation,type}=req.body
-    if(!nomP && !designation && type){
+    let {nomP,designation,type,img}=req.body
+    if(!nomP && !designation && !type && !img){
         return res.status(400).json({
             status:400,
             message:"missing data"
@@ -139,13 +138,16 @@ export async function putHandler(req,res){
     if(!designation){
         designation=product.designation
     }
+    if(!img){
+        img=product.img
+    }
 
     const newproduct =await prisma.produit.update({
         where:{
             codeP:id
         },
         data:{
-            nomP,designation,type
+            nomP,designation,type,img
         }
     })
     return res.status(200).json({

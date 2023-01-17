@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma'
 import findProduct from '../lib/searchObject'
+
 export async function getAllHandler(req,res){
     try{
         const stockers=await prisma.stocker.findMany(
@@ -39,36 +40,28 @@ export async function getAllHandler(req,res){
 }
 export async function getHandler(req,res){
    try{
-    const id=req.query.id * 1
-    if(!id){
-        return res.status(400).json({
-            status:400,
-            message:"invalid id"
+    let id= req.query.id.split("&");
+       if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
+        
+        const numF=id[0]
+        const codeP=id[1]
+        const stocker=await prisma.stocker.findUnique({
+            where:{
+                facture:numF,
+                produit:codeP
+            },include:{
+                numFacture:{
+                    select:{
+                        numF:true,
+                    dateF:true
+                    }
+                },
+                product:{
+                       select: {nomP:true,img:true},
+                },
+            }
         })
-    }
-    const stocker=await prisma.stocker.findMany({
-        where:{
-            facture:id
-        },
-                include:{
-                    numFacture:{
-                        select:{
-                            numF:true,
-                        dateF:true
-                        }
-                    },
-                    product:{
-                           select: {nomP:true}
-                    },
-                }
-            
-    })
-    if(!stocker){
-        return res.status(404).json({
-            status:404,
-            message:"no stocker found"
-        })
-    }
+        if(!stocker) return res.status(404).json({status:404, message:"stocker not found"})
     return res.status(200).json({
         status:200,
         data:stocker
@@ -92,34 +85,53 @@ if(!qte || !prixV || !prixHt || !product || !numF){
         message:"missing data"
     })
 }
-let TotalTtc=0;
-TotalTtc=TotalTtc+qte*prixV
 let produit
-if(!findProduct(product)){
-    produit=await prisma.produit.create({
-        data:{
-            nomP:product.nomP,
-    designation:product.designation,
-    qteAchat:qte,
-    qteVendu:0,
-        }
-    })  
-}
-else{
-    produit=await prisma.produit.findFirst({
-        where:{
-            nomP:product.nomP
-        }
-    })
-    const product =await prisma.produit.update({
-        where:{
-            codeP:produit.codeP
-        },
-        data:{
-            qteAchat:produit.qteAchat + qte
-        }
-    })
-}
+    if(!findProduct(product)){
+       produit= await prisma.produit.create({
+            data:{
+                img:product.img,
+                nomP:product.nomP,
+                designation:product.designation,
+                qteAchat:qte,
+                typeproduit:{
+                    connect:{
+                        name:product.type
+                    }
+                }
+            }
+        })
+    }else{
+        produit=await prisma.produit.findFirst({
+            where:{
+                nomP:product.nomP
+            },})
+           const qte2=produit.qteAchat + qte *1
+      await prisma.produit.update({
+            where:{
+                codeP:produit.codeP
+            },
+            data:{
+               qteAchat: qte2
+            }
+        })
+    }
+        
+        const invoice=await prisma.facture.findUnique({
+            where:{
+                numF
+            }
+        })
+        let TotalTtc=invoice.TotalTtc + qte * prixHt
+        await prisma.facture.update({
+            where:{
+                numF
+            },
+            data:{
+                TotalTtc,
+                TotalRest:TotalTtc
+            }
+        })
+
 const stocker=await prisma.stocker.create({
     data:{
         qte,
@@ -141,17 +153,6 @@ const stocker=await prisma.stocker.create({
         }
     }
 })
-
-await prisma.facture.update({
-    where:{
-        numF
-    },
-    data:{
-        TotalRest:TotalTtc,
-        TotalTtc
-    }
-})
-
   return res.status(201).json({
     status:201,
     data:stocker
@@ -163,61 +164,58 @@ await prisma.facture.update({
         
         return res.status(500).json({
             status:500,
-            message:"something went wrong"
+            message:"something went very wrong"
         })
     }
 }
 export async function putHandler(req,res){
     try{
-        const id=req.query.id *1
-    if(!id){
-        return res.status(400).json({
-            status:400,
-            message:'invalid id'
-        })
-    }
-    let {nomC,prenomC,adressC,teleC}=req.body
-    if(!nomC && !prenomC && !adressC && !teleC){
+        let id= req.query.id.split("&");
+       if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
+        
+        const numF=id[0]
+        const codeP=id[1]
+    let {qte,prixV,prixHt}=req.body
+    if(!prixV && !prixHt && !qte){
         return res.status(400).json({
             status:400,
             message:"missing data"
         })
     }
-    
-    const invoice=await prisma.facture.findUnique({
+    const stocker=await prisma.stocker.findUnique({
         where:{
-            numF:id
+            numF:numF,
+            produit:codeP
         }
     })
-    if(!invoice){
+    i
+    if(!stocker){
         return res.status(404).json({
             status:404,
-            message:'no invoice found'
+            message:'no stocker found'
         })
     }
-    if(!nomC){
-        nomC=invoice.nomC
+    if(!qte){
+        qte=stocker.qte
     }
-    if(!teleC){
-        teleC=invoice.teleC
+    if(!prixV){
+        prixV=stocker.prixV
     }
-    if(!adressC){
-        adressC=invoice.adressC
+    if(!prixHt){
+       prixHt=stocker.prixHt
     }
-    if(!prenomC){
-        prenomC=invoice.prenomC
-    }
-    const newinvoice =await prisma.facture.update({
+    const newstocker =await prisma.stocker.update({
         where:{
-            numF:id
+            numF:numF,
+            produit:codeP
         },
         data:{
-            prenomC,nomC,teleC,adressC
+           qte,prixHt,prixV
         }
     })
     return res.status(200).json({
         status:200,
-        data:newinvoice
+        data:newstocker
     })
     }catch(err){
         console.error(err)
@@ -229,17 +227,22 @@ export async function putHandler(req,res){
 }
 export async function deleteHandler(req,res){
     try {
-        const id=req.query.id*1;
-        if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
-        const invoice=await prisma.facture.findUnique({
+       let id= req.query.id.split("&");
+       if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
+        
+        const numF=id[0]
+        const codeP=id[1]
+        const stocker=await prisma.stocker.findUnique({
             where:{
-                numF:id
+                facture:numF,
+                produit:codeP
             }
         })
-        if(!invoice) return res.status(404).json({status:404, message:"invoice not found"})
-        const deletedinvoice=await prisma.facture.delete({
+        if(!stocker) return res.status(404).json({status:404, message:"stocker not found"})
+        const deletedstocker=await prisma.stocker.delete({
             where:{
-                numF:id
+                facture:numF,
+                produit:codeP
             }
         })
         res.status(204).json({status:204})
