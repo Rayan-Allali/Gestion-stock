@@ -1,4 +1,4 @@
-import {getHandler,putHandler,deleteHandler} from '../../../controllers/reglementSuppplierControllers.js'
+import {getHandler,putHandler,deleteHandler} from '../../../controllers/reglementSupplierControllers.js'
 
 export default async function Handler(req,res){
     if(req.method==='GET') return getHandler(req,res)

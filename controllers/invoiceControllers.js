@@ -69,6 +69,11 @@ export async function getHandler(req,res){
                     prixV:true,
                     prixHt:true
                 }
+            },
+            reglement:{
+                select:{
+                    montant:true
+                }
             }
         }
     })

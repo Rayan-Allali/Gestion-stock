@@ -124,8 +124,8 @@ export async function putHandler(req,res){
             message:'invalid id'
         })
     }
-    let {montant,numF}=req.body
-    if(!montant && !numF){
+    let {montant}=req.body
+    if(!montant){
         return res.status(400).json({
             status:400,
             message:"missing data"
@@ -143,13 +143,20 @@ export async function putHandler(req,res){
             message:'no regelementsupplier found'
         })
     }
-    if(!montant){
-        montant=regelementsupplier.regelementsupplier
-    }
-    if(!numF){
-        numF=supplier.numF
-    }
-    
+    const facture=await prisma.facture.findUnique({
+        where:{
+            numF
+        }
+    })
+    const TotalRest=facture.montantRest -regelementsupplier.montant + montant
+    const Updatedfacture=await prisma.facture.update({
+        where:{
+            numF
+        },
+        data:{
+            TotalRest
+        }
+    })
     const newregelementsupplier =await prisma.reglementFournisseur.update({
         where:{
             idReg:id
