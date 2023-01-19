@@ -1,55 +1,49 @@
 import Head from 'next/head'
 import SupCus from '../Componants/Tables/SupCusTable.tsx'
-
+import InvSell from '../Componants/Tables/InvSellTable'
 export default function Home() {
   const Customer=[{ 
     id:1,
     Name:"Ryad",
-    Credit:0,
-    PhoneNumber: '0551055989',
-    Points:1590
+    Total:1000,
+    Rest: 0,
   },
   { 
     id:2,
     Name:"Rayan",
-    Credit:50,
-    PhoneNumber: '0551055989',
-    Points:590
+    Total:5000,
+    Rest: 10,
   },
   { 
     id:3,
     Name:"Rayan",
-    Credit:5,
-    PhoneNumber: '0551055989',
-    Points:590
+    Total:500,
+    Rest: 15,
   },
   { 
     id:4,
     Name:"Mohamed",
-    Credit:7,
-    PhoneNumber: '0551055989',
-    Points:11590
+    Total:700000,
+    Rest: 10000,
   },
   { 
     id:5,
     Name:"Rayan",
-    Credit:0,
-    PhoneNumber: '0551055989',
-    Points:590
+    Total:100,
+    Rest: 0,
   },
   { 
     id:6,
     Name:"Rayan",
-    Credit:77,
-    PhoneNumber: '0551055989',
-    Points:590
+    Total:770,
+    Rest: 0,
+
   },
   { 
     id:7,
     Name:'Rayan',
-    Credit:0,
-    PhoneNumber: '0551055989',
-    Points:590
+    Total:0,
+    Rest: 0,
   }
 
 ]
@@ -62,7 +56,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SupCus   Data={Customer} choices={Filtage} title="Customers"  ></SupCus>
+      <InvSell   Data={Customer} choices={Filtage} title="Customers"  ></InvSell>
     </>
   )
 }

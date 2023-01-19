@@ -14,13 +14,12 @@ interface props{
   choices: { id:number, Nbr: number,Title: string}[],
   Data:{
     id: number;
-    Name: string;
-    Credit: number;
-    PhoneNumber: string;
-    Points: number;
+    ClientName: string;
+    Total: number;
+    Rest: number;
 }[]
 }
-const SupCus:React.FC<props> = (props) => {
+const InvSell:React.FC<props> = (props) => {
     const [Filter, setFilter] =useState([true,false,false])
     const [ClickedSearch, setClickedSearch] = useState(false)
     const ClickSearchHandler=()=>{
@@ -41,18 +40,6 @@ const SupCus:React.FC<props> = (props) => {
             case 'Suppliers':
             Img=SupplierA
                 break;
-            // case 'Sales':
-            // Img=props.Clicked ? SalesA : Sales 
-            //     break;
-            // case 'Stock':
-            // Img=props.Clicked ? StockA : Stock 
-            //     break;
-            // case 'Invoices':
-            // Img=props.Clicked ? invoiceA : invoice 
-            //     break;
-            // case 'History':
-            // Img=props.Clicked ? HistoryA : History 
-            //     break;    
         }
      return Img
        }
@@ -68,7 +55,7 @@ const SupCus:React.FC<props> = (props) => {
        const [ArrayPage, setArrayPage] = useState([]);
 
        const DisplayPage=(id:number)=>{
-        if(id>currentPage+1 || id<currentPage-1){
+        if(id>currentPage+1 || id<currentPage-2){
             return true
         }
         else return false
@@ -121,10 +108,10 @@ const SupCus:React.FC<props> = (props) => {
             <thead>
             <tr className="text-[#A0AEC0] ">
     <th>Id</th>
-    <th>Name</th>
-    <th>{props.title=='Customers' && 'Credit' }     {props.title=='Suppliers' && 'Sold' }</th>
-    <th>Phone Number</th>
-    <th>Points </th>
+    <th>{props.title=='invoice' && 'Supplier Name' }     {props.title=='Sell' && 'Customer Name' }</th>
+    <th>Total</th>
+    <th>Rest</th>
+    <th>state </th>
     <th></th>
     <th></th>
             </tr>
@@ -135,11 +122,17 @@ const SupCus:React.FC<props> = (props) => {
              return <tr key={Data.id}  >
              <td> {Data.id} </td>
              <td> {Data.Name}</td>
-            <td>{Data.Credit}Dz</td>
-            <td>{Data.PhoneNumber}</td>
-           <td>{Data.Points}</td>
+            <td>{Data.Total}Dz</td>
+            <td>{Data.Rest}Dz</td>
            <td>
-           <Image src={Modifier} alt='' ></Image>
+            <span className={ `w-[64px] h-[27px] rounded-[5px] p-1 px-3 uppercase font-bold
+                        ${Data.Rest==0 ? 'bg-[#FFE6EF] text-[#7F193B] ' : 'text-[#326E56] bg-[#ECF8F1] '} `} >
+            {Data.Rest==0 && 'Paid' }   
+             {Data.Rest>0 && 'UnPaid' }
+            </span>
+            </td>
+           <td>
+           <Image  src={Modifier} alt='' ></Image>
           </td>
            <td>
            <Image src={Delete} alt=''></Image>
@@ -164,4 +157,4 @@ const SupCus:React.FC<props> = (props) => {
      );
 }
 
-export default SupCus;
+export default InvSell;
