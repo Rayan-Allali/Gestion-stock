@@ -1,5 +1,4 @@
 import prisma from "../lib/prisma";
-import { postHandler } from "./reglementSupplierControllers";
 
 export async function getAllHandler(req,res){
     try{
