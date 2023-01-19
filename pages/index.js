@@ -1,10 +1,59 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import SupCus from '../Componants/Tables/SupCusTable.tsx'
 
 export default function Home() {
+  const Customer=[{ 
+    id:1,
+    Name:"Ryad",
+    Credit:0,
+    PhoneNumber: '0551055989',
+    Points:1590
+  },
+  { 
+    id:2,
+    Name:"Rayan",
+    Credit:50,
+    PhoneNumber: '0551055989',
+    Points:590
+  },
+  { 
+    id:3,
+    Name:"Rayan",
+    Credit:5,
+    PhoneNumber: '0551055989',
+    Points:590
+  },
+  { 
+    id:4,
+    Name:"Mohamed",
+    Credit:7,
+    PhoneNumber: '0551055989',
+    Points:11590
+  },
+  { 
+    id:5,
+    Name:"Rayan",
+    Credit:0,
+    PhoneNumber: '0551055989',
+    Points:590
+  },
+  { 
+    id:6,
+    Name:"Rayan",
+    Credit:77,
+    PhoneNumber: '0551055989',
+    Points:590
+  },
+  { 
+    id:7,
+    Name:'Rayan',
+    Credit:0,
+    PhoneNumber: '0551055989',
+    Points:590
+  }
+
+]
+ const Filtage=[{id:0,Title:'All Customers',Nbr:50},{id:1,Title:'Active Customers',Nbr:30},{id:2,Title:'Inactive Customers',Nbr:20}]
   return (
     <>
       <Head>
@@ -13,6 +62,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <SupCus   Data={Customer} choices={Filtage} title="Customers"  ></SupCus>
     </>
   )
 }
