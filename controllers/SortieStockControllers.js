@@ -22,7 +22,7 @@ export async function getHandler(req,res){
         if(!id) return res.status(400).json({status:400,message:"INvalid id"})
         const SortieStock=await prisma.sortieStock.findUnique({
             where:{
-                idSortieStock:id
+                idSortieStock:id*1
             }
         });
     if(!SortieStock)return res.status(404).json({status:404,message:"no SortieStock found"})
@@ -46,7 +46,7 @@ export async function postHandler(req,res){
             motif,qte,prixV,prixHt,
             product:{
                 connect:{
-                    codeP:product
+                    codeP:product*1
                 }
             }
         }
@@ -67,11 +67,11 @@ export async function putHandler(req,res){
         if(!id) return res.status(400).json({status:400,message:"INvalid id"})
         const sortieStock=await prisma.sortieStock.findUnique({
             where:{
-                idSortieStock:id
+                idSortieStock:id*1
             }
         });
     if(!sortieStock)return res.status(404).json({status:404,message:"no sortieStocks found"})
-    const {motif,qte,product,prixV,prixHt}=req.body
+    let {motif,qte,product,prixV,prixHt}=req.body
     if(!motif && !qte && !product && !prixV) return res.status(400).json({status:400,message:"missing data"})
 
         if(!qte)qte=sortieStock.qte
@@ -81,7 +81,7 @@ export async function putHandler(req,res){
         if(!prixHt)prixHt=sortieStock.prixHt
     const sortieStockUpdated=await prisma.sortieStock.update({
         where:{
-            idSortieStock:id
+            idSortieStock:id*1
         },
         data:{
             motif,qte,produit:{connect:{
@@ -107,16 +107,32 @@ export async function deleteHandler(req,res){
         if(!id) return res.status(400).json({status:400,message:"INvalid Name"})
         const sortieStock=await prisma.sortieStock.findUnique({
             where:{
-                idSortieStock:id
+                idSortieStock:id*1
             }
         });
+
     if(!sortieStock)return res.status(404).json({status:404,message:"no sortieStock found"})
+    const newproductstock=await prisma.productstock.create({
+        data:{
+            qte:sortieStock.qte,
+            prixV:sortieStock.prixV,
+            prixHt:sortieStock.prixHt,
+            product:{
+                connect:{
+                    codeP:sortieStock.produit
+                }
+            }
+        }
+    });
+    if(!newproductstock) return res.status(400).json({status:400,message:"error creating new product in stock"})
     const sortieStockDeleted=await prisma.sortieStock.delete({
         where:{
-            idSortieStock:id
+            idSortieStock:id*1
         }
     });
     
+    
+
     return res.status(204).json({
         status:204
     })

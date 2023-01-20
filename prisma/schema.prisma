@@ -136,7 +136,7 @@ model bl{
 }
 
 model  productstock{
-  idStock Int @id
+  idStock Int @id @default(autoincrement())
   qte Int
   prixV Int
   prixHt Int?
