@@ -135,7 +135,7 @@ const ProduitStock:React.FC<props> = (props) => {
           
            <tbody>
             {currentPosts.map(Data=>{
-             return <tr key={Data.id}  >
+             return <tr key={Math.random()}  >
              <td> {Data.Name} </td>
              <td> {Data.Quantite}</td>
             <td>{Data.Vendor}</td>
