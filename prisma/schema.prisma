@@ -78,8 +78,9 @@ typeproduit typeProduit @relation(fields: [type],references: [name])
 concernes concerne[]
 ventes vente[]
 stocker stocker[]
-sortiesStock sortieStock[]
 entreesStock entreeStock[]
+productsStock productstock[]
+sortieStock sortieStock[]
 }
 model typeProduit{
   name String @id 
@@ -116,8 +117,6 @@ model stocker{
   product produit @relation(fields: [produit],references: [codeP])
   facture Int
   numFacture facture @relation(fields: [facture],references: [numF])
-  stock Int
-  idStock stock @relation(fields: [stock],references: [idStock])
   @@id([facture,produit])
   prixHt Int
   prixV Int
@@ -136,10 +135,13 @@ model bl{
   DateBl DateTime @default(now())
 }
 
-model stock {
+model  productstock{
   idStock Int @id
-  stockes stocker[]
-
+  qte Int
+  prixV Int
+  prixHt Int?
+  produit Int
+  product produit @relation(fields: [produit],references: [codeP])
 }
 model entreeStock{
   idEntreeStock Int @id @default(autoincrement())
@@ -155,9 +157,9 @@ model sortieStock{
   motif String
   modifiedDate DateTime @updatedAt
   dateE DateTime @default(now())
-  qte Int
+   qte Int
+   prixV Int 
+   prixHt Int?
   produit Int
-  prixV Int 
-  prixHt Int?
   product produit @relation(fields: [produit],references: [codeP])
 }

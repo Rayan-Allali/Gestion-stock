@@ -1,6 +1,5 @@
 import prisma from '../lib/prisma'
-import findProduct from '../lib/searchObject'
-
+import {findProduct,mergeStock} from '../lib/searchObject'
 export async function getAllHandler(req,res){
     try{
         const stockers=await prisma.stocker.findMany(
@@ -86,6 +85,7 @@ if(!qte || !prixV || !prixHt || !product || !numF){
     })
 }
 let produit
+let check=false
     if(!findProduct(product)){
        produit= await prisma.produit.create({
             data:{
@@ -100,11 +100,12 @@ let produit
                 }
             }
         })
-    }else{
+    }else{ 
         produit=await prisma.produit.findFirst({
             where:{
                 nomP:product.nomP
             },})
+            check=mergeStock(product,prixHt,prixV,qte)
            const qte2=produit.qteAchat + qte *1
       await prisma.produit.update({
             where:{
@@ -131,7 +132,19 @@ let produit
                 TotalRest:TotalTtc
             }
         })
-
+        if(!check){  
+    
+        }
+else{
+    const stocker=await prisma.stocker.findUnique(
+        {
+            where:{
+                produit:codeP,
+                prixHt,prixV
+            }
+        }
+    )
+}
 const stocker=await prisma.stocker.create({
     data:{
         qte,
@@ -153,13 +166,13 @@ const stocker=await prisma.stocker.create({
         }
     }
 })
-  return res.status(201).json({
+return res.status(201).json({
     status:201,
     data:stocker
-  })  
-  
+  })
 
-    }catch(err){
+
+}catch(err){
         console.error(err)
         
         return res.status(500).json({
@@ -168,6 +181,7 @@ const stocker=await prisma.stocker.create({
         })
     }
 }
+
 export async function putHandler(req,res){
     try{
         let id= req.query.id.split("&");
