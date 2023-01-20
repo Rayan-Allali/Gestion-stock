@@ -37,6 +37,8 @@ model transaction{
   achat Int
   achatId achat @relation(fields: [achat],references: [idAchat])
   qte Int
+  productStock Int
+  produitStock productstock @relation(fields: [productStock],references: [idStock])
 }
 model regelementClient{
   idRegelementClient Int @id @default(autoincrement())
@@ -142,6 +144,7 @@ model  productstock{
   prixHt Int?
   produit Int
   product produit @relation(fields: [produit],references: [codeP])
+  transactions transaction[]
 }
 model entreeStock{
   idEntreeStock Int @id @default(autoincrement())
