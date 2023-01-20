@@ -5,6 +5,9 @@ import {FaUsers} from "react-icons/fa";
 import unpaidinv from '../public/unpaidinv.svg'
 import paidinv from '../public/paidinv.svg'
 import Image from 'next/image'
+import {Line} from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
+
 export default function Home() {
   const Sales=[
     { id:0,
@@ -50,7 +53,54 @@ export default function Home() {
       nbr:'8K'
     },
   ];
-
+  const data = {
+    labels: [1,2,3,4,5,6,7,8,9,10,11,12],
+    datasets: [
+      {
+        label: 'Purchases',
+        fill: true,
+        lineTension: 0.1,
+        backgroundColor: '#6892e378',
+        borderColor: '#6892E3',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: [65, 59, 80, 81, 56, 55, 40,90, 40,70, 55,90,]
+      },
+      {
+        label: 'Sales',
+        fill: true,
+        lineTension: 0.1,
+        backgroundColor: '#DFF4FF',
+        borderColor: '#23A5E5',
+        borderCapStyle: "square",
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: [70, 80, 77, 40, 70, 55,70, 55,70, 40,70, 55,]
+      }
+    ],
+  };
+  
  return (
     <>
       <Head children={''}>
@@ -62,7 +112,6 @@ export default function Home() {
         </>
          </Head>
       <main className={`w-full bg-[#F8F8F8] pb-[20px] `} >
-
       <div  className='flex h-[50px] bg-white justify-between justify-items-center px-5 items-center ' >
       <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
       <Image alt='' src={DashbordA} ></Image>  Dashborad
@@ -154,7 +203,23 @@ export default function Home() {
       
 
       {/* Statistic */}
-      <div className="w-[1031px] bg-white h-[406px] "></div>
+      <div className="w-[1031px] grid bg-white h-[490px] rounded-[20px] p-[20px] py-8 ">
+      <h1  className=' text-[#646769] text-[18px] font-[700] px-[20px]  ' >  Sales And Purchases Statistics  </h1>
+      <Line
+      data={data}
+      width={1000}
+      options={{
+        scales: {
+            x: {
+                grid: {
+                    display:false
+                }   
+            }
+        }
+    }}
+      height={450}
+    />
+      </div>
       <div className='flex gap-[17px]  rounded-[10px] '>
 
       <div className="h-[351px] w-[503px] bg-white px-3 rounded-[10px] py-6 ">
