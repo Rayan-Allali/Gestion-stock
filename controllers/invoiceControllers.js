@@ -6,6 +6,8 @@ export async function getAllHandler(req,res){
                 select:{
                     dateF:true,
                     fournisseur:true,
+                    TotalRest:true,
+                    TotalTtc:true,
                     stocker:{
                         select:{
                             product:{

@@ -46,8 +46,8 @@ export async function getHandler(req,res){
         const codeP=id[1]
         const stocker=await prisma.stocker.findUnique({
             where:{
-                facture:numF,
-                produit:codeP
+                facture:numF*1,
+                produit:codeP*1
             },include:{
                 numFacture:{
                     select:{
@@ -85,8 +85,8 @@ if(!qte || !prixV || !prixHt || !product || !numF){
     })
 }
 let produit
-let check=false
-    if(!findProduct(product)){
+const ir=await Promise.resolve(findProduct(product))
+    if(!ir){
        produit= await prisma.produit.create({
             data:{
                 img:product.img,
@@ -100,22 +100,25 @@ let check=false
                 }
             }
         })
-    }else{ 
-        produit=await prisma.produit.findFirst({
+    }
+    else{
+        produit=await prisma.produit.findUnique({
             where:{
-                nomP:product.nomP
-            },})
-            check=mergeStock(product,prixHt,prixV,qte)
-           const qte2=produit.qteAchat + qte *1
-      await prisma.produit.update({
+                codeP:product
+            }
+        })
+        
+        const qte2=qte +produit.qteAchat
+        const updatedProduit=await prisma.produit.update({
             where:{
-                codeP:produit.codeP
+                codeP:product
             },
             data:{
-               qteAchat: qte2
+                qteAchat:qte2
             }
         })
     }
+    const check=await Promise.resolve(mergeStock(produit.codeP,prixHt,prixV,qte)) 
         
         const invoice=await prisma.facture.findUnique({
             where:{
@@ -133,27 +136,23 @@ let check=false
             }
         })
         if(!check){  
-    
+           const productStock= await prisma.productstock.create({
+                data:{
+                    qte,prixV,prixHt,
+                    product:{
+                        connect:{
+                            codeP:produit.codeP
+                        }
+                    }
+                }
+            });
         }
-else{
-    const stocker=await prisma.stocker.findUnique(
-        {
-            where:{
-                produit:codeP,
-                prixHt,prixV
-            }
-        }
-    )
-}
+
 const stocker=await prisma.stocker.create({
     data:{
         qte,
         prixV,
         prixHt,
-        idStock:{
-            connect:{
-                idStock:1
-            } },
         numFacture:{
             connect:{
                 numF
@@ -187,8 +186,8 @@ export async function putHandler(req,res){
         let id= req.query.id.split("&");
        if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
         
-        const numF=id[0]
-        const codeP=id[1]
+        const numF=id[0]*1
+        const codeP=id[1]*1
     let {qte,prixV,prixHt}=req.body
     if(!prixV && !prixHt && !qte){
         return res.status(400).json({
