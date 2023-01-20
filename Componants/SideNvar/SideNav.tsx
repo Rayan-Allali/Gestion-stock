@@ -36,11 +36,11 @@ const SideNavbar = () => {
         {/* {props.Title} */}
         <div  className="flex flex-col  items-start text-[15px] w-full gap-[5px] " >
           {Elements.map(Element=>{
-            return <div key={Element.id}
-            //  href={`/${Element.Title=="Dashbord" ? "" : Element.Title }`}  
+            return <Link key={Element.id}
+             href={`/${Element.Title=="Dashbord" ? "" : Element.Title }`}  
              onClick={()=>{Clickhandler(Element.id)}} > 
             <SideElements Title={Element.Title}  Clicked={SideNav[Element.id]}></SideElements>
-            </div>
+            </Link>
           })}
         </div>
      </div>

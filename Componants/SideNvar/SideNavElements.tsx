@@ -21,7 +21,7 @@ interface props{
 }
 const SideElements:React.FC<props> = (props) => {
     let Img: StaticImageData
-   const ImgHandler=()=>{
+   const ImgSetter=()=>{
     switch (props.Title) {
         case 'Dashbord':
          Img=props.Clicked ? DashbordA : Dashbord 
@@ -50,20 +50,12 @@ const SideElements:React.FC<props> = (props) => {
     }
  return Img
    }
-   Img=ImgHandler();
-   console.log(Img)
+   Img=ImgSetter();
     return ( 
        
         <div className={`flex gap-3 cursor-pointer py-1 items-center pl-10 w-full`}  > 
         <div  className={`  ${props.Clicked && "bg-[#ECF2FE] rounded-full"} w-[44px] h-[44px] grid justify-center items-center p-2 text-2xl `}>
-        {props.Title=='Dashbord' && <Image alt='' src={Img} ></Image>  } 
-        {props.Title=='Products' && <Image alt='' src={Img}  ></Image>  } 
-        {props.Title=='Customers' && <Image alt='' src={Img}  ></Image>  } 
-        {props.Title=='Suppliers' && <Image  alt='' src={Img} ></Image>  } 
-        {props.Title=='Sales' && <Image alt='' src={Img}  ></Image>  } 
-        {props.Title=='Stock' && <Image alt='' src={Img} ></Image> } 
-        {props.Title=='Invoices' && <Image alt='' src={Img}  ></Image>  } 
-        {props.Title=='History' && <Image alt='' src={Img} ></Image>  } 
+        <Image alt='' src={Img} ></Image>
         </div>
         {props.Title}</div>
         );
