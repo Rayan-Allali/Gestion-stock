@@ -2,7 +2,7 @@
 import SupCus from '../../Componants/Tables/SupCusTable'
 
 export default function Home() {
-  const Customer=[{ 
+  const Suppliers=[{ 
     id:1,
     Name:"Ryad",
     Credit:0,
@@ -179,10 +179,10 @@ export default function Home() {
   
 
 ]
- const Filtage=[{id:0,Title:'All Customers',Nbr:50},{id:1,Title:'Active Customers',Nbr:30},{id:2,Title:'Inactive Customers',Nbr:20}]
+ const Filtage=[{id:0,Title:'All Suppliers',Nbr:50},{id:1,Title:'Best Suppliers',Nbr:30}]
   return (
     <>
-      <SupCus   Data={Customer} choices={Filtage} title="Customer"  ></SupCus>
+      <SupCus   Data={Suppliers} choices={Filtage} title="Supplier"  ></SupCus>
     </>
   )
 }

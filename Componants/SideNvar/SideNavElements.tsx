@@ -21,7 +21,7 @@ interface props{
 }
 const SideElements:React.FC<props> = (props) => {
     let Img: StaticImageData
-   const ImgHandler=()=>{
+   const ImgSetter=()=>{
     switch (props.Title) {
         case 'Dashbord':
          Img=props.Clicked ? DashbordA : Dashbord 
@@ -50,7 +50,7 @@ const SideElements:React.FC<props> = (props) => {
     }
  return Img
    }
-   Img=ImgHandler();
+   Img=ImgSetter();
     return ( 
        
         <div className={`flex gap-3 cursor-pointer py-1 items-center pl-10 w-full`}  > 
