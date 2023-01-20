@@ -1,4 +1,4 @@
-import {getHandler,putHandler,deleteHandler} from '../../../controllers/productTypeControllers.js'
+import {getAllHandler,postHandler} from '../../../controllers/productTypeControllers.js'
 
 export default async function handler(req, res) {
     if (req.method === 'GET') return getAllHandler(req, res);

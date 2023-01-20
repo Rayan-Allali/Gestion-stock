@@ -39,7 +39,7 @@ export async function getHandler(req,res){
 }
 export async function postHandler(req,res){
     try{
-        const {name,designation}=req.body
+        let {name,designation}=req.body
     if(!name || !designation) return res.status(400).json({status:400,message:"missing data"})
     const newProductType=await prisma.typeProduit.create({
         data:{
@@ -66,7 +66,7 @@ export async function putHandler(req,res){
             }
         });
     if(!productType)return res.status(404).json({status:404,message:"no productTypes found"})
-        const {name,designation}=req.body
+        let {name,designation}=req.body
     if(!name && !designation) return res.status(400).json({status:400,message:"missing data"})
 
         if(!name)name=productType.name
@@ -103,7 +103,7 @@ export async function deleteHandler(req,res){
     if(!productType)return res.status(404).json({status:404,message:"no productType found"})
     const productTypeDeleted=await prisma.typeProduit.delete({
         where:{
-            name:id
+            name:id*1
         }
     });
     
