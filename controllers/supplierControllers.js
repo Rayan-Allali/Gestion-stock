@@ -65,6 +65,8 @@ const supplier=await prisma.fournisseur.findUnique({
     }
 })
 if(!supplier) return res.status(404).json({status:404,message:"supplier not found"})
+
+console.log(update)
 return res.status(200).json({status:200,data:supplier})
 }
 catch(err){
