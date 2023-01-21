@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma'
-import { UpdateSaleMontant, updateProductStockQte } from '../lib/updating';
+import { UpdateProductQteVendu, UpdateSaleMontant, updateProductStockQte } from '../lib/updating';
 export async function getAllHandler(req,res){
     try{
         const transactions=await prisma.transaction.findMany({
@@ -77,7 +77,8 @@ const transaction =await prisma.transaction.create({
             product:{
                 select:{
                     nomP:true,
-                    img:true
+                    img:true,
+                    codeP:true
                 }
             }
             }
@@ -94,7 +95,9 @@ console.log(montant)
 const update2=UpdateSaleMontant(montant,idAchat,"+","post")
 if(update2 ===0) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant no sale found"})
 if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant "})
-  return res.status(201).json({
+const update3=await Promise.resolve(UpdateProductQteVendu(qte,transaction.produitStock.product.codeP,"+"))
+if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the qteVendu of the product "})
+return res.status(201).json({
     status:201,
     data:transaction 
   })  
@@ -155,6 +158,7 @@ const transaction=await prisma.transaction.findUnique({
         numTr:id
     },
     select:{
+        numTr:true,
         achat:true,
          qte:true,
         produitStock:{
@@ -164,21 +168,24 @@ const transaction=await prisma.transaction.findUnique({
             product:{
                 select:{
                     nomP:true,
-                    img:true
+                    img:true,
+                    codeP:true
                 }
             }
             }
         }
     }
 })
+
+
 if(!transaction) return res.status(404).json({status:404,message:"transaction not found"})
-console.log(transaction.produitStock.idStock)
 const update= await Promise.resolve(updateProductStockQte(transaction.qte,transaction.produitStock.idStock,"+"))
 if(update === 0)  return res.status(404).json({status:404,message:"transaction not found"})
 const montant=transaction.qte * transaction.produitStock.prixV
-console.log(montant)
 const update2=UpdateSaleMontant(montant,transaction.achat,"-","post")
 if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant "})
+const update3=await Promise.resolve(UpdateProductQteVendu(qte,transaction.productStock.product.codeP,"-"))
+if(update3 ===1) return res.status(400).json({status:400,message:"we couldnt update the cuqte vendu of the product"})
 const deletedTransaction=await prisma.transaction.delete({
     where:{
         numTr:id
@@ -217,6 +224,28 @@ export async function putHandler(req,res){
     const transaction=await prisma.transaction.findUnique({
         where:{
             numTr:id
+        },
+        select:{
+            numTr:true,
+            achatId:{
+               select:{
+                idAchat:true
+               }
+            },
+            qte:true,
+            produitStock:{
+                select:{
+                    idStock:true,
+                    prixV:true,
+                product:{
+                    select:{
+                        nomP:true,
+                        img:true,
+                        codeP:true
+                    }
+                }
+                }
+            }
         }
     })
     if(!transaction){
@@ -245,17 +274,24 @@ export async function putHandler(req,res){
     })
     qte=transaction.qte - newtransaction.qte
     let update2
+    let update3
     if(qte>0){
         const montant=qte * transaction.produitStock.prixV
         update2=UpdateSaleMontant(montant,idAchat,"+","post")
+        update3=await Promise.resolve(UpdateProductQteVendu(qte,transaction.productStock.product.codeP,"+"))    
+
     }
     else{
         const montant=-qte * transaction.produitStock.prixV
         update2=UpdateSaleMontant(montant,idAchat,"-","post")
+        update3=await Promise.resolve(UpdateProductQteVendu(qte,transaction.productStock.product.codeP,"-"))    
+
     }
     
 if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant "})
-    return res.status(200).json({
+if(update3 ===1) return res.status(400).json({status:400,message:"we couldnt update the qteVendu of the product"})
+
+return res.status(200).json({
         status:200,
         data:newtransaction
     })
