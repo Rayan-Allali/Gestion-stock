@@ -24,13 +24,13 @@ export async function getAllHandler(req,res){
 
 export async function postHandler(req,res){
     try{
-const {nomF,adressF,prenomF,teleF}=req.body
-if(!nomF || !adressF || !teleF || !prenomF) return res.status(400).json({status:400,message:"missing data"});
+const {nomF,adressF,prenomF,teleF,img}=req.body
+if(!nomF || !adressF || !teleF || !prenomF || !img) return res.status(400).json({status:400,message:"missing data"});
 const pointF=0;
 const sold=0;
 const supplier =await prisma.fournisseur.create({
     data:{
-        nomF,adressF,prenomF,teleF,pointF,sold
+        nomF,adressF,prenomF,teleF,pointF,sold,img
     }
 })
 if(!supplier )return res.status(400).json({
