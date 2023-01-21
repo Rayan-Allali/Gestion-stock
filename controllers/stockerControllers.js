@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma'
 import {findProduct,mergeStock} from '../lib/searchObject'
+import { UpdateSupplierSold,updateProductStockQte,UpdateProductQteAchat} from '../lib/updating'
 export async function getAllHandler(req,res){
     try{
         const stockers=await prisma.stocker.findMany(
@@ -44,10 +45,10 @@ export async function getHandler(req,res){
         
         const numF=id[0]
         const codeP=id[1]
-        const stocker=await prisma.stocker.findUnique({
+        const stocker=await prisma.stocker.findFirst({
             where:{
                 facture:numF*1,
-                produit:codeP*1
+                produit:codeP*1,
             },include:{
                 numFacture:{
                     select:{
@@ -56,7 +57,7 @@ export async function getHandler(req,res){
                     }
                 },
                 product:{
-                       select: {nomP:true,img:true},
+                       select: {nomP:true,img:true,codeP:true},
                 },
             }
         })
@@ -84,6 +85,23 @@ if(!qte || !prixV || !prixHt || !product || !numF){
         message:"missing data"
     })
 }
+const invoice=await prisma.facture.findUnique({
+    where:{
+        numF
+    },
+    select:{
+        numF:true,
+        supplier:{
+            select:{
+                codeF:true
+            }
+        },
+        TotalTtc:true,
+        TotalRest:true
+        
+    }
+})
+if(!invoice) return res.status(404).json({status:404,mesage:"there is no invoice with this id"})
 let produit
 const ir=await Promise.resolve(findProduct(product))
     if(!ir){
@@ -118,14 +136,13 @@ const ir=await Promise.resolve(findProduct(product))
             }
         })
     }
-    const check=await Promise.resolve(mergeStock(produit.codeP,prixHt,prixV,qte)) 
+    const check=await Promise.resolve(mergeStock(produit.codeP,prixHt,prixV,qte))
         
-        const invoice=await prisma.facture.findUnique({
-            where:{
-                numF
-            }
-        })
-        let TotalTtc=invoice.TotalTtc + qte * prixHt
+        
+        let TotalTtc
+        if(invoice.TotalTtc === 0){TotalTtc=qte * prixHt}
+        else{TotalTtc=invoice.TotalTtc + qte * prixHt}
+        console.log(TotalTtc)
         await prisma.facture.update({
             where:{
                 numF
@@ -147,7 +164,9 @@ const ir=await Promise.resolve(findProduct(product))
                 }
             });
         }
-
+        const montant=qte * prixHt
+        const update=await Promise.resolve(UpdateSupplierSold(montant,invoice.supplier.codeF,"+","post"))
+        if(update<2)return res.status(400).json({status:400,message:"we couldnt update supplier sold"})
 const stocker=await prisma.stocker.create({
     data:{
         qte,
@@ -195,19 +214,112 @@ export async function putHandler(req,res){
             message:"missing data"
         })
     }
-    const stocker=await prisma.stocker.findUnique({
+    const stocker=await prisma.stocker.findFirst({
         where:{
-            numF:numF,
+            facture:numF,
             produit:codeP
         }
     })
-    i
     if(!stocker){
         return res.status(404).json({
             status:404,
             message:'no stocker found'
         })
     }
+    const invoice=await prisma.facture.findUnique({
+        where:{
+            numF:numF*1
+        },
+        select:{
+            numF:true,
+            supplier:{
+                select:{
+                    codeF:true
+                }
+            },
+            TotalTtc:true,
+            TotalRest:true
+            
+        }
+    })
+    let TotalTtc=invoice.TotalTtc - stocker.qte * stocker.prixV
+    let TotalRest=invoice.TotalTtc - stocker.qte * stocker.prixV
+    if(qte && prixV){
+        TotalTtc= TotalTtc + qte * prixV
+        TotalRest= TotalRest + qte * prixV
+        const updatedInvoice=await prisma.facture.update({
+            where:{
+                numF
+            },
+            data:{
+                TotalRest,
+                TotalTtc
+            }
+        })
+        if(!updatedInvoice) return res.status(400).json({status:400,message:"we couldnt update the invoice"})
+        const qte2=stocker.qte - qte
+       const update=await Promise.resolve(UpdateProductQteAchat(qte2,codeP,"+"))
+       if(update<2) return res.status(400).json({status:400,message:"we couldnt update the product qteachat"})
+    }
+    else if(qte && !prixV){
+        TotalTtc= TotalTtc + qte * stocker.prixV
+        TotalRest= TotalRest + qte * stocker.prixV
+        const updatedInvoice=await prisma.facture.update({
+            where:{
+                numF
+            },
+            data:{
+                TotalRest,
+                TotalTtc
+            }
+        })
+        if(!updatedInvoice) return res.status(400).json({status:400,message:"we couldnt update the invoice"})
+        const qte2=stocker.qte - qte
+       const update=await Promise.resolve(UpdateProductQteAchat(qte2,codeP,"+"))
+       if(update<2) return res.status(400).json({status:400,message:"we couldnt update the product qteachat"})
+    }
+    else if(!qte && prixV){
+        TotalTtc= TotalTtc + stocker.qte * prixV
+        TotalRest= TotalRest + stocker.qte * prixV
+        const updatedInvoice=await prisma.facture.update({
+            where:{
+                numF
+            },
+            data:{
+                TotalRest,
+                TotalTtc
+            }
+        })
+    }
+
+    if(qte && prixHt){
+        const montant=qte*prixHt
+       const total= stocker.qte * stocker.prixHt - montant  
+        const update=await Promise.resolve(UpdateSupplierSold(total,facture.supplier.codeF,"+","post"))
+        if(update<2) return res.status(400).json({status:400,message:"we couldnt update the supplier sold"})
+    }
+    else if(!qte && prixHt){
+        const montant=qte*prixHt
+        const total= qte * stocker.prixHt - montant  
+         const update=await Promise.resolve(UpdateSupplierSold(total,facture.supplier.codeF,"+","post"))
+         if(update<2) return res.status(400).json({status:400,message:"we couldnt update the supplier sold"})
+    }
+    else if(!qte && prixHt){
+        const montant=qte*prixHt
+        const total= stocker.qte *prixHt - montant  
+         const update=await Promise.resolve(UpdateSupplierSold(total,facture.supplier.codeF,"+","post"))
+         if(update<2) return res.status(400).json({status:400,message:"we couldnt update the supplier sold"})
+    }
+    
+    const productstock=await prisma.productstock.findFirst(
+        {where:{
+            prixV:stocker.prixV,
+            prixHt:stocker.prixHt,
+            produit:codeP
+        }}
+    )
+    if(!productstock) return res.status(400).json({status:400,message:"product is not in stock"})
+
     if(!qte){
         qte=stocker.qte
     }
@@ -217,9 +329,25 @@ export async function putHandler(req,res){
     if(!prixHt){
        prixHt=stocker.prixHt
     }
-    const newstocker =await prisma.stocker.update({
+   const qte3=stocker.qte - qte
+   if(qte3 != 0){
+const update=await Promise.resolve(updateProductStockQte(qte3,productstock.idStock,"+"))
+if(update <2) return res.status(400).json({status:400,message:"we couldnt update the product stuck qte"})
+    
+   }
+   const updatedstock=prisma.productstock.update({
+    where:{
+        idStock:productstock.idStock
+    },
+    data:{
+        prixHt,
+        prixV
+    }
+})
+if(!updatedstock) return res.status(400).json({status:400,message:"we couldnt update the product stuck qte"})
+    const newstocker =await prisma.stocker.updateMany({
         where:{
-            numF:numF,
+            facture:numF,
             produit:codeP
         },
         data:{
@@ -245,17 +373,59 @@ export async function deleteHandler(req,res){
         
         const numF=id[0]
         const codeP=id[1]
-        const stocker=await prisma.stocker.findUnique({
+        const stocker=await prisma.stocker.findFirst({
             where:{
-                facture:numF,
-                produit:codeP
+                facture:numF*1,
+                produit:codeP*1
             }
         })
         if(!stocker) return res.status(404).json({status:404, message:"stocker not found"})
-        const deletedstocker=await prisma.stocker.delete({
+        const invoice=await prisma.facture.findUnique({
             where:{
-                facture:numF,
-                produit:codeP
+                numF:numF*1
+            },
+            select:{
+                numF:true,
+                supplier:{
+                    select:{
+                        codeF:true
+                    }
+                },
+                TotalTtc:true,
+                TotalRest:true
+                
+            }
+        })
+
+        const montant=stocker.qte * stocker.prixHt
+        const TotalTtc=invoice.TotalTtc - montant
+        const TotalRest=invoice.TotalRest - montant
+        const updateinvoice=await prisma.facture.update({
+            where:{
+                numF:numF*1
+            },
+            data:{
+                TotalRest,
+                TotalTtc
+            }
+        })
+        if(!updateinvoice) return res.status(400).json({status:400,message:"we couldnt update the invoice total rest and totalttc"})
+        const productstock=await prisma.productstock.findFirst(
+            {where:{
+                prixV:stocker.prixV,
+                prixHt:stocker.prixHt,
+                produit:codeP*1
+            }}
+        )
+        if(!productstock)return res.status(400).json({status:400,message:"we couldnt update the productstuck qte"})
+        const update1=await Promise.resolve(updateProductStockQte(stocker.qte,productstock.idStock,"-")) 
+       if(update1<2) return res.status(400).json({status:400,message:"we couldnt update the productstuck qte"})
+        const update=await Promise.resolve(UpdateSupplierSold(montant,invoice.supplier.codeF,"-","post"))
+        if(update<2)return res.status(400).json({status:400,message:"we couldnt update supplier sold"})
+        const deletedstocker=await prisma.stocker.deleteMany({
+            where:{
+                facture:numF*1,
+                produit:codeP*1
             }
         })
         res.status(204).json({status:204})
