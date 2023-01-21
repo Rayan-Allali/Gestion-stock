@@ -84,14 +84,14 @@ const transaction =await prisma.transaction.create({
         }
     }
 })
-const update= await Promise.resolve(updateProductStockQte(qte,idStock,0,"+"))
+const update= await Promise.resolve(updateProductStockQte(qte,idStock,"-"))
 if(update === 0) return res.status(404).json({status:400,message:"no product in stock with that id"})
 
 if(update === 1)return res.status(400).json({status:400,message:"This product's quantity is less than the amount you wish to extract."})
 
 const montant=qte * transaction.produitStock.prixV
 console.log(montant)
-const update2=UpdateSaleMontant(montant,idAchat,"+")
+const update2=UpdateSaleMontant(montant,idAchat,"+","post")
 if(update2 ===0) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant no sale found"})
 if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant "})
   return res.status(201).json({
@@ -173,11 +173,11 @@ const transaction=await prisma.transaction.findUnique({
 })
 if(!transaction) return res.status(404).json({status:404,message:"transaction not found"})
 console.log(transaction.produitStock.idStock)
-const update= await Promise.resolve(updateProductStockQte(transaction.qte,transaction.produitStock.idStock,0,"-"))
+const update= await Promise.resolve(updateProductStockQte(transaction.qte,transaction.produitStock.idStock,"+"))
 if(update === 0)  return res.status(404).json({status:404,message:"transaction not found"})
 const montant=transaction.qte * transaction.produitStock.prixV
 console.log(montant)
-const update2=UpdateSaleMontant(montant,transaction.achat,"-")
+const update2=UpdateSaleMontant(montant,transaction.achat,"-","post")
 if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant "})
 const deletedTransaction=await prisma.transaction.delete({
     where:{
@@ -230,7 +230,10 @@ export async function putHandler(req,res){
             idStock:transaction.productStock
         }
     })
-    const update= await Promise.resolve(updateProductStockQte(qte,productStock.idStock,productStock.qte,"+"))
+    const qte2= productStock.qte - qte
+    if(qte2 < 0) return res.status(400).json({status:400,message:"quantity is out of range"})
+
+    const update= await Promise.resolve(updateProductStockQte(qte,productStock.idStock,"-"))
     if(update === 1) return res.status(400).json({status:400,message:"This product's quantity is less than the amount you wish to extract."}) 
     const newtransaction =await prisma.transaction.update({
         where:{
@@ -244,11 +247,11 @@ export async function putHandler(req,res){
     let update2
     if(qte>0){
         const montant=qte * transaction.produitStock.prixV
-        update2=UpdateSaleMontant(montant,idAchat,"+")
+        update2=UpdateSaleMontant(montant,idAchat,"+","post")
     }
     else{
         const montant=-qte * transaction.produitStock.prixV
-        update2=UpdateSaleMontant(montant,idAchat,"-")
+        update2=UpdateSaleMontant(montant,idAchat,"-","post")
     }
     
 if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant "})
