@@ -59,13 +59,13 @@ export async function getHandler(req,res){
 }
 export async function postHandler(req,res){
     try{
-const {nomC,adressC,prenomC,teleC}=req.body
-if(!nomC || !adressC || !teleC || !prenomC) return res.status(400).json({status:400,message:"missing data"});
+const {nomC,adressC,prenomC,teleC,img}=req.body
+if(!nomC || !adressC || !teleC || !prenomC ||!img) return res.status(400).json({status:400,message:"missing data"});
 const pointC=0;
 const credit=0;
 const customer =await prisma.client.create({
     data:{
-        nomC,prenomC,teleC,adressC,pointC,credit
+        nomC,prenomC,teleC,adressC,pointC,credit,img
     }
 })
 if(!customer)return res.status(400).json({
