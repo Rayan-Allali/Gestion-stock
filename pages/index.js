@@ -203,7 +203,7 @@ export default function Home() {
       
 
       {/* Statistic */}
-      <div className="w-[1031px] grid bg-white h-[490px] rounded-[20px] p-[20px] py-8 ">
+      <div className="w-[1031px] grid bg-white h-[500px] rounded-[20px] p-[20px] py-8 ">
       <h1  className=' text-[#646769] text-[18px] font-[700] px-[20px]  ' >  Sales And Purchases Statistics  </h1>
       <Line
       data={data}

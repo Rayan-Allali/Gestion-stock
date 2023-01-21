@@ -9,6 +9,8 @@ import RightArrow from '../../public/RightArrow.svg'
 import CloseSearch from '../../public/CloseSearch.svg'
 import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../Filter';
+import { AnimatePresence, motion } from 'framer';
+import Add from '../Add';
 
 interface props{
   title:string,
@@ -24,6 +26,8 @@ interface props{
 const InvSale:React.FC<props> = (props) => {
     const [Filter, setFilter] =useState([true,false,false])
     const [ClickedSearch, setClickedSearch] = useState(false)
+    const [AddClick, setAddClick] = useState(false)
+
     const ClickSearchHandler=()=>{
       setClickedSearch(prev=>prev=!prev)
     }
@@ -111,10 +115,20 @@ const InvSale:React.FC<props> = (props) => {
             </span>
          })}
          </div>
+         <AnimatePresence>
+        {AddClick &&  <motion.div className='w-[calc(100vw-230px)] z-10 h-[calc(100vh-122px)] fixed bg-[#3b373713]  top-[122px] '   
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, }} 
+        transition={{duration:.5, }}
+        >
+         <Add Title='Customer'  setClicked={setAddClick} ></Add>
+         </motion.div> }
+         </AnimatePresence>
           <div className="bg-white grid justify-center grid-rows-[90px,300px] py-2 pb-4 w-[874px] ">
            <div className="w-full h-[90px]  flex justify-between items-center " >
             <div  className="w-[130px] h-[40px] bg-[#3A78F1] rounded-[10px] cursor-pointer text-white text-[14px] flex justify-center 
-            gap-2 font-bold items-center  " > 
+            gap-2 font-bold items-center  " onClick={()=>setAddClick(true)}  > 
             <Image src={Plus} alt=""></Image> Add {props.title}   </div>
             <div className='relative'  onBlur={()=>ClickSearchHandler()} onFocus={()=>ClickSearchHandler()}    >
               <input type="text" placeholder="Search" className="w-[300px] rounded-[10px] p-2 px-4 bg-[#FAFAFA] h-[36px] " />
