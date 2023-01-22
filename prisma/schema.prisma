@@ -62,7 +62,7 @@ model fournisseur{
 }
 model vente{
 produit Int
-product produit @relation(fields: [produit],references: [codeP])
+product produit @relation(fields: [produit],references: [codeP],onDelete: Cascade)
 fournisseur Int
 supplier fournisseur @relation(fields: [fournisseur],references:[codeF])
 @@id([produit,fournisseur])
@@ -98,7 +98,7 @@ supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
 model concerne{
   qte Int
   produit Int
-  product produit @relation(fields: [produit],references: [codeP])
+  product produit @relation(fields: [produit],references: [codeP],onDelete: Cascade)
   BonCommande Int
   Commande bonCommande @relation(fields: [BonCommande],references: [idBon],onDelete: Cascade, onUpdate: Cascade)
   @@id([BonCommande,produit])
@@ -116,7 +116,7 @@ model facture{
 }
 model stocker{
   produit Int
-  product produit @relation(fields: [produit],references: [codeP])
+  product produit @relation(fields: [produit],references: [codeP], onDelete:Cascade)
   facture Int
   numFacture facture @relation(fields: [facture],references: [numF])
   @@id([facture,produit])
@@ -143,7 +143,7 @@ model  productstock{
   prixV Int
   prixHt Int?
   produit Int
-  product produit @relation(fields: [produit],references: [codeP])
+  product produit @relation(fields: [produit],references: [codeP],onDelete:Cascade)
   transactions transaction[]
 }
 model entreeStock{
@@ -153,7 +153,7 @@ model entreeStock{
    qte Int
    prixV Int 
    produit Int
-   product produit @relation(fields: [produit],references: [codeP])
+   product produit @relation(fields: [produit],references: [codeP],onDelete: Cascade)
 }
 model sortieStock{
   idSortieStock Int @id @default(autoincrement())
@@ -164,5 +164,5 @@ model sortieStock{
    prixV Int 
    prixHt Int?
   produit Int
-  product produit @relation(fields: [produit],references: [codeP])
+  product produit @relation(fields: [produit],references: [codeP],onDelete:Cascade)
 }
