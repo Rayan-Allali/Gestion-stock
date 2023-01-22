@@ -62,7 +62,7 @@ const facture=await prisma.facture.findUnique({
     }
 })
 if(!facture) return res.status(400).json({status:400,message:"no facture with that id"});
-const TotalRest=facture.montantRest-montant
+const TotalRest=facture.TotalRest-montant
 if(TotalRest<0) return res.status(400).json({status:400,message:"the reglement amount must be less than the total Rest of the facture"})
 const Updatedfacture=await prisma.facture.update({
     where:{
@@ -136,6 +136,8 @@ catch(err){
     res.status(500).json({status:500,message:"something went wrong"})
 }
 }
+
+
 export async function deleteHandler(req,res){
     try{
         const id=req.query.id *1
@@ -160,9 +162,35 @@ const reglementSupplier=await prisma.regelementFournisseur.findUnique({
         }
     }
 })
-
 if(!reglementSupplier) return res.status(404).json({status:404,message:"reglementSupplier not found"})
-const update=await Promise.resolve(UpdateSupplierSold(reglementSupplier.montant,reglementSupplier.numF,"+","delete"))
+const invoice=await prisma.facture.findUnique({
+    where:{
+        numF:reglementSupplier.numFacture.numF
+    },
+    select:{
+        supplier:{
+            select:{
+                codeF:true
+            }
+        },
+        TotalRest:true,
+        TotalTtc:true,
+        numF:true
+    }
+})
+if(!invoice) return res.status(404).json({status:404,message:"no invoice found"})
+const TotalRest= invoice.TotalRest + reglementSupplier.montant
+const updatedInvoice=await prisma.facture.update({
+    where:{
+        numF:invoice.numF
+    },
+    data:{
+        TotalRest
+    }
+})
+if(!updatedInvoice) return res.status(400).json({status:400,message:"we couldnt update the invoice "})
+const update=await Promise.resolve(UpdateSupplierSold(reglementSupplier.montant,invoice.supplier.codeF,"+","delete"))
+if(update<2) return res.status(400).json({status:400,message:"we couldnt update the supplier sold"})
 const deletedreglementFournisseur=await prisma.regelementFournisseur.delete({
     where:{
         idReg:id
@@ -227,7 +255,7 @@ export async function putHandler(req,res){
     }
     const facture=await prisma.facture.findUnique({
         where:{
-            numF
+            numF:reglementsupplier.numFacture.numF
         },
         select:{
             numF:true,
@@ -243,24 +271,25 @@ export async function putHandler(req,res){
     })
     
     const diff=reglementsupplier.montant - montant
-    if(-diff>facture.montantRest)return res.status(400).json({status:400,message:"amount you want to add is bigger then the facture total rest"})
-    const TotalRest=facture.montantRest +diff
-    const update=await Promise.resolve(UpdateSupplierSold(diff,facture.supplier.codeF,"+","delete"))
-    if(update<2)return res.status(400).json({status:400,message:"we couldnt update supplier sold"})
+    if(-diff>facture.TotalRest)return res.status(400).json({status:400,message:"amount you want to add is bigger then the facture total rest"})
+    const TotalRest=facture.TotalRest +diff
+    const updat=await Promise.resolve(UpdateSupplierSold(diff,facture.supplier.codeF,"+","delete"))
+    if(updat <2)return res.status(400).json({status:400,message:"we couldnt update supplier sold"})
     const Updatedfacture=await prisma.facture.update({
         where:{
-            numF
+            numF:facture.numF
         },
         data:{
             TotalRest
         }
     })
-    const newreglementsupplier =await prisma.reglementFournisseur.update({
+    if(!Updatedfacture) return res.status(400).json({status:400,message:"we couldnt update the facture"})
+    const newreglementsupplier =await prisma.regelementFournisseur.update({
         where:{
             idReg:id
         },
         data:{
-            numF,montant
+            montant
         }
     })
     return res.status(200).json({

@@ -91,7 +91,7 @@ model typeProduit{
 }
 model bonCommande{
 idBon Int @id @default(autoincrement())
-concernes concerne[]
+concernes concerne[] 
 fournisseur Int
 supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
 }
@@ -100,7 +100,7 @@ model concerne{
   produit Int
   product produit @relation(fields: [produit],references: [codeP])
   BonCommande Int
-  Commande bonCommande @relation(fields: [BonCommande],references: [idBon])
+  Commande bonCommande @relation(fields: [BonCommande],references: [idBon],onDelete: Cascade, onUpdate: Cascade)
   @@id([BonCommande,produit])
 }
 model facture{
