@@ -6,7 +6,7 @@ import Delete from '../../public/Delete.svg'
 import Plus from '../../public/Plus.svg'
 import LeftArrow from '../../public/LeftArrow.svg'
 import RightArrow from '../../public/RightArrow.svg'
-import CloseSearch from '../../public/CloseSearch.svg'
+import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
 import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
@@ -25,9 +25,9 @@ interface props{
 const SupCus:React.FC<props> = (props) => {
     const [Filter, setFilter] =useState([true,false,false])
     const [AddClick, setAddClick] = useState(false)
-    const [ClickedSearch, setClickedSearch] = useState(false)
-    const ClickSearchHandler=()=>{
-      setClickedSearch(prev=>prev=!prev)
+    const [select, setselect] = useState(false)
+    const handleSelect=()=>{
+      setselect(prev=>prev=!prev)
     }
     let arr=[...Filter] 
     const Clickhandler=(id:number)=>{
@@ -122,17 +122,22 @@ const SupCus:React.FC<props> = (props) => {
          <Add Title={props.title}  setClicked={setAddClick} ></Add>
          </motion.div> }
          </AnimatePresence>
-          <div className="bg-white grid justify-center grid-rows-[90px,250px] py-2 pb-4 w-[874px] ">
-           <div className="w-full h-[90px]  flex justify-between items-center " >
-            <div  className="w-[130px] h-[40px] bg-[#3A78F1] rounded-[10px] cursor-pointer text-white text-[14px] flex justify-center 
-            gap-2 font-bold items-center  " onClick={()=>setAddClick(true)}  > 
+          <div className="bg-white grid justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
+          <div className="w-full h-[90px]  flex justify-between items-center " >
+            <div  className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
+            gap-2 font-bold items-center  "  onClick={()=>setAddClick(true)} > 
             <Image src={Plus} alt=""></Image> Add {props.title}   </div>
-            <div className='relative'  onBlur={()=>ClickSearchHandler()} onFocus={()=>ClickSearchHandler()}    >
-              <input type="text" placeholder="Search" className="w-[300px] rounded-[10px] p-2 px-4 bg-[#FAFAFA] h-[36px] " />
-              <Image src={CloseSearch} className={ ` ${!ClickedSearch &&  'hidden' } absolute top-[50%] translate-y-[-50%] right-[3%] `} alt=''  ></Image>
+            <div className=' flex gap-3' >
+              <input type="text" placeholder="Search" className="w-[250px] rounded-[5px] p-2 px-4 bg-[#FAFAFA] h-[36px] " />
+              <div className="bg-[#f4f5f7] text-[#8f969c] p-2 text-xl rounded-[5px] cursor-pointer  "  onClick={handleSelect} >
+              <MdDelete ></MdDelete>
+              </div>
+                <div  className="w-[90px] h-[35px] text-[#3A78F1] bg-[#ecf2fe] rounded-[5px] cursor-pointer text-[14px] 
+                flex justify-center gap-2 font-bold items-center  "  >  Filter 
+                 <MdOutlineKeyboardArrowDown  className='text-xl' ></MdOutlineKeyboardArrowDown> </div>
             </div>
            </div>
-           <table className=" w-[650px] text-left ">
+           <table className=" w-[750px] text-left ">
             <thead>
             <tr className="text-[#A0AEC0] ">
     <th className='w-[10%] '>Id</th>
