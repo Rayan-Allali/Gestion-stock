@@ -48,8 +48,8 @@ export async function getHandler(req,res){
     let id= req.query.id.split("&");
        if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
         
-        const idBon=id[0]
-        const codeP=id[1]
+        const idBon=id[0]*1
+        const codeP=id[1]*1
     const concerne=await prisma.concerne.findFirst({
         where:{
             produit:codeP,
@@ -105,7 +105,7 @@ const concerne =await prisma.concerne.create({
                 codeP:product
             }
         },
-        BonCommande:{
+        Commande:{
             connect:{
                 idBon:BonCommande
             }
@@ -139,8 +139,8 @@ export async function putHandler(req,res){
         let id= req.query.id.split("&");
        if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
         
-        const idBon=id[0]
-        const codeP=id[1]
+        const idBon=id[0]*1
+        const codeP=id[1]*1
     const concerne=await prisma.concerne.findFirst({
         where:{
             produit:codeP,
@@ -189,8 +189,8 @@ export async function deleteHandler(req,res){
         let id= req.query.id.split("&");
         if(!id)return res.status(400).json({status:400, message:"Invalid Id"})
          
-         const idBon=id[0]
-         const codeP=id[1]
+         const idBon=id[0]*1
+         const codeP=id[1]*1
      const concerne=await prisma.concerne.findFirst({
          where:{
              produit:codeP,
