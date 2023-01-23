@@ -33,10 +33,12 @@ const supplier =await prisma.fournisseur.create({
         nomF,adressF,prenomF,teleF,pointF,sold,img
     }
 })
-if(!supplier )return res.status(400).json({
+if(!supplier ){return res.status(400).json({
         status:400,
         message:"something went wrong we couldn't create new supplier"
-    })
+    }); 
+console.log('HI');
+}
 
   return res.status(201).json({
     status:201,
