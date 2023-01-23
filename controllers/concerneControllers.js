@@ -3,7 +3,7 @@ import prisma from '../lib/prisma'
 export async function getAllHandler(req,res){
     
     try{ 
-        const concernes=await prisma.concerne.findMany({
+        const contients=await prisma.contient.findMany({
             select:{
                 qte:true,
                 product:{
@@ -23,15 +23,15 @@ export async function getAllHandler(req,res){
                 }
             }
         })
-        if(!concernes){
+        if(!contients){
             return res.status(404).json({
                 status:404,
-                message:"no concerne were found"
+                message:"no contient were found"
             })
         }
         return res.status(200).json({
             status:200,
-            data:concernes
+            data:contients
         })
 
     }
@@ -50,7 +50,7 @@ export async function getHandler(req,res){
         
         const idBon=id[0]*1
         const codeP=id[1]*1
-    const concerne=await prisma.concerne.findFirst({
+    const contient=await prisma.contient.findFirst({
         where:{
             produit:codeP,
             BonCommande:idBon
@@ -74,15 +74,15 @@ export async function getHandler(req,res){
             }
         }
     })
-    if(!concerne){
+    if(!contient){
         return res.status(404).json({
             status:404,
-            message:"no concerne found"
+            message:"no contient found"
         })
     }
     return res.status(200).json({
         status:200,
-        data:concerne
+        data:contient
     })
    }
    catch(err){
@@ -97,7 +97,7 @@ export async function postHandler(req,res){
     try{
 const {qte,product,BonCommande}=req.body
 if(!qte || !product || !BonCommande ) return res.status(400).json({status:400,message:"missing data"});
-const concerne =await prisma.concerne.create({
+const contient =await prisma.contient.create({
     data:{
         qte,
         product:{
@@ -112,14 +112,14 @@ const concerne =await prisma.concerne.create({
         }
     }
 })
-if(!concerne)return res.status(400).json({
+if(!contient)return res.status(400).json({
         status:400,
-        message:"something went wrong we couldn't create new concerne"
+        message:"something went wrong we couldn't create new contient"
     })
 
   return res.status(201).json({
     status:201,
-    data:concerne
+    data:contient
   })  
 
 
@@ -132,7 +132,7 @@ if(!concerne)return res.status(400).json({
     }
 }
 
-//update concerne
+//update contient
 
 export async function putHandler(req,res){
     try{
@@ -141,16 +141,16 @@ export async function putHandler(req,res){
         
         const idBon=id[0]*1
         const codeP=id[1]*1
-    const concerne=await prisma.concerne.findFirst({
+    const contient=await prisma.contient.findFirst({
         where:{
             produit:codeP,
             BonCommande:idBon
         }
     })
-    if(!concerne){
+    if(!contient){
         return res.status(404).json({
             status:404,
-            message:"no concerne found"
+            message:"no contient found"
         })
     }
     let {qte}=req.body
@@ -161,7 +161,7 @@ export async function putHandler(req,res){
         })
     }
     
-    const newconcerne =await prisma.concerne.updateMany({
+    const newcontient =await prisma.contient.updateMany({
         where:{
             produit:codeP,
             BonCommande:idBon
@@ -172,7 +172,7 @@ export async function putHandler(req,res){
     })
     return res.status(200).json({
         status:200,
-        data:newconcerne
+        data:newcontient
     })
     }catch(err){
         console.error(err)
@@ -183,7 +183,7 @@ export async function putHandler(req,res){
     }
 }
 
-//delete concerne by id
+//delete contient by id
 export async function deleteHandler(req,res){
     try {
         let id= req.query.id.split("&");
@@ -191,19 +191,19 @@ export async function deleteHandler(req,res){
          
          const idBon=id[0]*1
          const codeP=id[1]*1
-     const concerne=await prisma.concerne.findFirst({
+     const contient=await prisma.contient.findFirst({
          where:{
              produit:codeP,
              BonCommande:idBon
          }
      })
-     if(!concerne){
+     if(!contient){
          return res.status(404).json({
              status:404,
-             message:"no concerne found"
+             message:"no contient found"
          })
      }
-        const deletedconcerne=await prisma.concerne.deleteMany({
+        const deletedcontient=await prisma.contient.deleteMany({
             where:{
                 produit:codeP,
                 BonCommande:idBon
