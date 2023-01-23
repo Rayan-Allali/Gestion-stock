@@ -6,6 +6,7 @@ import unpaidinv from '../public/unpaidinv.svg'
 import paidinv from '../public/paidinv.svg'
 import Image from 'next/image'
 import {Line} from 'react-chartjs-2';
+import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
 import Chart from 'chart.js/auto';
 
 export default function Home() {
@@ -101,6 +102,11 @@ export default function Home() {
     ],
   };
   
+ const dropdownhandel=e=>{
+
+ }
+
+
  return (
     <>
       <Head children={''}>
@@ -112,12 +118,29 @@ export default function Home() {
         </>
          </Head>
       <main className={`w-full bg-[#F8F8F8] pb-[20px] `} >
-      <div  className='flex h-[50px] bg-white justify-between justify-items-center px-5 items-center ' >
+      <div  className='flex h-[50px] bg-white px-5 relative ' >
       <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
       <Image alt='' src={DashbordA} ></Image>  Dashborad
       </div>
-      <div  className='w-[100px] text-[#ABB1B4] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[8px] grid justify-center 
-      items-center h-[32px] px-2 '> Year To Date</div>
+      <ui  className='flex flex-col bg-black absolute top-[10%] right-5 ' >
+      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
+      justify-center items-center h-[32px] gap-1'  onClick={dropdownhandel} >
+        <MdOutlineKeyboardArrowDown  className='text-lg' ></MdOutlineKeyboardArrowDown>  Year 2019
+      </li>
+      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
+      justify-center items-center h-[32px] border-t-1 border-t-solid border-t-[#999a9b]'   onClick={dropdownhandel} >
+     Year 2018
+      </li>
+      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
+      justify-center items-center h-[32px]'  onClick={dropdownhandel} >
+     Year 2017
+      </li>
+      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
+      justify-center items-center h-[32px] '  onClick={dropdownhandel} >
+     Year 2016
+      </li>
+      </ui>
+    
       </div> 
 
       <div className="w-full grid gap-[24px] justify-items-center ">
