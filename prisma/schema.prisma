@@ -77,7 +77,7 @@ qteVendu Int @default(0)
 type String
 img String
 typeproduit typeProduit @relation(fields: [type],references: [name])
-concernes concerne[]
+contients contient[]
 ventes vente[]
 stocker stocker[]
 entreesStock entreeStock[]
@@ -91,11 +91,11 @@ model typeProduit{
 }
 model bonCommande{
 idBon Int @id @default(autoincrement())
-concernes concerne[] 
+contients contient[] 
 fournisseur Int
 supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
 }
-model concerne{
+model contient{
   qte Int
   produit Int
   product produit @relation(fields: [produit],references: [codeP],onDelete: Cascade)
