@@ -53,8 +53,8 @@ const SideElements:React.FC<props> = (props) => {
    Img=ImgSetter();
     return ( 
        
-        <div className={`flex gap-3 cursor-pointer py-1 items-center pl-10 w-full`}  > 
-        <div  className={`  ${props.Clicked && "bg-[#ECF2FE] rounded-full"} w-[44px] h-[44px] grid justify-center items-center p-2 text-2xl `}>
+        <div className={`flex gap-3 cursor-pointer py-1 items-center ${props.Clicked && "text-[#3a78f1]"}  ${!props.Clicked && "text-[#9ca1a5] "} pl-10 w-full`}  > 
+        <div  className={`  ${props.Clicked && "bg-[#ECF2FE] rounded-full"}   w-[44px] h-[44px] grid justify-center items-center p-2 text-2xl `}>
         <Image alt='' src={Img} ></Image>
         </div>
         {props.Title}</div>

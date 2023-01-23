@@ -10,6 +10,7 @@ interface props{
 
 
 const Add:React.FC<props> = (props) => {
+   const [Added,setAdded]=useState(false);
    let Type:any={};
    let url=''
 if(props.Title=='Supplier'){
@@ -28,17 +29,6 @@ else if(props.Title=='Customer') {
    teleC:""}
    url='http://localhost:3000/api/customer'
 }
-// else if(props.Title=='Product') {
-//    Type={  img:"tst",
-//    nomP: "",
-//    designation:"",
-//    type: "",}
-//    url='http://localhost:3000/api/product'
-// }
-
-// "nomP":"dragon fruit","designation":"nature",
-// "type":"fruits"
-
   const [data, setdata] = useState( Type )
      const handleChange = (event:any,attrb: number) => {
       switch (attrb) {
@@ -74,8 +64,11 @@ else if(props.Title=='Customer') {
     
 
    async function SaveClicked() {
-     await handleSubmit() 
-     props.setClicked(false)
+      await handleSubmit() 
+     setAdded(true) 
+     setTimeout(() => {
+      props.setClicked(false) 
+     }, 400);
    }
 
     return ( 
@@ -126,17 +119,22 @@ else if(props.Title=='Customer') {
             <button type='submit' className="bg-[#666cde] text-white p-2 duration-[.5s] px-7 rounded-[5px] hover:bg-[#6167d3] " 
             onClick={()=>{SaveClicked()}}   >Save</button>
         </div>
-        {/* <AnimatePresence></AnimatePresence>
-        {
-
+        <AnimatePresence>
+        { Added &&
+  <motion.div className="absolute bottom-[-13%] right-[50%] translate-x-[50%] bg-white rounded-[5px] gap-3 border-l-[3px]
+   border-l-solid border-l-[#666cde] w-[180px] items-center justify-center flex h-[45px] text-black "
+   initial={{ opacity: 0, y:40 }}
+        animate={{ opacity: 1,y:0 }}
+        exit={{ opacity: 0, }} 
+        transition={{duration:.3, }}
+   >
+    <div className="rounded-full bg-[#666cde] text-white h-[20px] w-[20px] grid justify-center items-center  ">
+    <AiOutlineCheck></AiOutlineCheck> 
+    </div>
+    {props.Title}   Added
+  </motion.div>
         }
-        <div className="absolute bottom-[-13%] right-[50%] translate-x-[50%] bg-white rounded-[5px] gap-3 border-l-[3px] border-l-solid 
-        border-l-[#6ac259] w-[180px] items-center justify-center flex h-[45px] text-black ">
-          <div className="rounded-full bg-[#6ac259] text-white h-[20px] w-[20px] grid justify-center items-center  ">
-          <AiOutlineCheck></AiOutlineCheck> 
-          </div>
-          {props.Title}   Added
-        </div> */}
+        </AnimatePresence>
     </motion.div> );
 }
  

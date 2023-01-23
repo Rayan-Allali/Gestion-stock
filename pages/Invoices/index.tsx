@@ -176,7 +176,15 @@ export default function Home() {
     Rest:15
   }
 ]
-const Filtage=[{id:0,Title:'All Invoices',Nbr:50},{id:1,Title:'Paid Invoice',Nbr:30},{id:2,Title:'Unpaid Invoice',Nbr:20}]
+let unpaid=0;
+const countpaid=()=>{
+  for(let Invoice of Invoices){
+    if(Invoice.Rest>0) unpaid++
+  }
+  return unpaid
+}
+unpaid=countpaid();
+const Filtage=[{id:0,Title:'All Invoices',Nbr:Invoices.length},{id:1,Title:'Paid Invoice',Nbr:Invoices.length-unpaid},{id:2,Title:'Unpaid Invoice',Nbr:unpaid}]
 
   return (
     <>
