@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import StockA from '../../public/Stock+.png'
-import Modifier from '../../public/Modifier.svg'
 import Plus from '../../public/Plus.svg'
 import ProduitA from '../../public/product+.png'
 import LeftArrow from '../../public/LeftArrow.svg'
@@ -8,8 +7,10 @@ import RightArrow from '../../public/RightArrow.svg'
 import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../Filter';
 import {motion,AnimatePresence } from 'framer-motion'
-import AddProductStock from '../AddProductStock';
-import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
+import AddProductStock from '../Add/AddProductStock';
+import { MdDelete,MdOutlineKeyboardArrowDown,MdModeEdit } from "react-icons/md";
+import {IoMdEye } from "react-icons/io";
+
 import axios from 'axios';
 
 
@@ -39,14 +40,11 @@ const ProduitStock:React.FC<props> = (props) => {
       setselect(prev=>prev=!prev)
     }
     
-    const DeleteElement=(e)=>{
-    
+    const DeleteElement=(e)=>{ 
       let ID=parseInt(e.target.id)
       console.log(e.target.id);
       axios.delete( `http://localhost:3000/api/product/${ID}`)
     .then(() => { console.log("No probleme")   ;location.reload() } ).catch((err)=>console.log(err))
-   
-
     }
 
 
@@ -190,13 +188,14 @@ const ProduitStock:React.FC<props> = (props) => {
            <table className=" w-[750px] text-left ">
             <thead>
             <tr className="text-[#A0AEC0] ">
-    <th   className='w-[4%] '></th>
+    <th   className='w-[3%] '></th>
     <th className='w-[20%] ' >Name</th>
     <th className='w-[15%] ' >Type</th>
     <th  className='w-[15%] ' >Qte vendu</th>
-    <th className='w-[15%] ' >Qte Achet</th>
-    <th className='w-[6%] '></th>
-    <th className='w-[.5%] '></th>
+    <th className='w-[18%] ' >Qte Achet</th>
+    <th className='w-[4%] '></th>
+    <th className='w-[4%] '></th>
+    <th className='w-[4%] '></th>
             </tr>
             </thead>
           
@@ -204,14 +203,17 @@ const ProduitStock:React.FC<props> = (props) => {
 
             {currentPosts.map(Data=>{
              return <tr key={Math.random()}  >
-            <th   className={` ${!select && 'invisible'} `}>  
-            <input type="checkbox" name="" value={Data.codeP}/></th>
+            <td   className={` ${!select && 'invisible'} `}>  
+            <input type="checkbox" name="" value={Data.codeP}/></td>
              <td> {Data.nomP} </td>
             <td>{Data.type}</td>
             <td> {Data.qteVendu}</td>
             <td>{Data.qteAchat}</td>
            <td className='' >
-           <Image src={Modifier} alt='' ></Image>
+           <MdModeEdit  className='cursor-pointer  text-2xl' ></MdModeEdit>
+          </td>
+          <td>
+          <IoMdEye  className='cursor-pointer  text-2xl' ></IoMdEye>
           </td>
            <td      >
            <MdDelete id={Data.codeP} onClick={(e)=>DeleteElement(e)} className='cursor-pointer  text-2xl' ></MdDelete>

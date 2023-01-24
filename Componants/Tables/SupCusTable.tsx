@@ -1,22 +1,22 @@
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import customersA from '../../public/customers+.svg'
 import SupplierA from '../../public/Suppliers+.svg'
-import Modifier from '../../public/Modifier.svg'
-import Delete from '../../public/Delete.svg'
 import Plus from '../../public/Plus.svg'
 import LeftArrow from '../../public/LeftArrow.svg'
 import RightArrow from '../../public/RightArrow.svg'
-import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdDelete,MdOutlineKeyboardArrowDown,MdModeEdit } from "react-icons/md";
 import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
-import Add from '../Add';
+import Add from '../Add/Add';
+import axios from 'axios';
 interface props{
   title:string,
   choices?: { id:number, Nbr: number,Title: string}[],
   Data:{
     codeF?: number;   codeC?:number;
     nomF?: string;    nomC?:string;
+    prenomF?: string;    prenomC?:string;
     sold?: number;    teleC?:string;
     teleF?: string;   credit?:number;
     pointF?: number;    pointC:number;
@@ -96,7 +96,13 @@ const SupCus:React.FC<props> = (props) => {
         else if(Dir=='-' && currentPage!=1) setCurrentPage(prev=>prev=prev-1)
         }
        }
-
+       const DeleteElement=(e)=>{ 
+        let ID=parseInt(e.target.id)
+        console.log(e.target.id);
+       
+        axios.delete( `http://localhost:3000/api/supplier/${ID}`)
+      .then(() => { console.log("No probleme")   ;location.reload() } ).catch((err)=>console.log(err))
+      }
     return ( 
         <div  className=" bg-[#EFF2F6] w-full">
           <div  className='flex h-[50px] bg-white px-5 items-center ' >
@@ -140,6 +146,7 @@ const SupCus:React.FC<props> = (props) => {
            <table className=" w-[750px] text-left ">
             <thead>
             <tr className="text-[#A0AEC0] ">
+              <th className='w-[4%] ' ></th>
     <th className='w-[10%] '>Id</th>
     <th className='w-[15%] '  >Name</th>
     <th className='w-[15%] '   >{props.title=='Customer' && 'Credit' }    {props.title=='Supplier' && 'Sold' }</th>
@@ -153,16 +160,18 @@ const SupCus:React.FC<props> = (props) => {
            <tbody>
             {currentPosts.map(Data=>{
              return <tr key={Math.random()}  > 
+             <td   className={` ${!select && 'invisible'} `}>  
+            <input type="checkbox" name="" value={Data.codeP}/></td>
              <td>  {Data.codeF} {Data.codeC} </td>
-             <td> {Data.nomF}   {Data.nomC} </td>
+             <td> {Data.nomF}  {Data.prenomF} {Data.nomC}  {Data.prenomC} </td>
             <td>{Data.sold} {Data.credit} Dz</td>
             <td>{Data.teleF}  {Data.teleC} </td>
            <td>{Data.pointF} {Data.pointC} </td>
-           <td className='cursor-pointer' >
-           <Image src={Modifier} alt='' ></Image>
+           <td>
+           <MdModeEdit  className='cursor-pointer  text-2xl' ></MdModeEdit>
           </td>
-           <td className='cursor-pointer' >
-           <Image src={Delete} alt=''></Image>
+           <td>
+           <MdDelete id={Data.codeC || Data.codeF} onClick={(e)=>DeleteElement(e)} className='cursor-pointer  text-2xl' ></MdDelete>
            </td>
          </tr>
              })}

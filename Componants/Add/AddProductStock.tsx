@@ -3,7 +3,7 @@ import {motion,AnimatePresence } from 'framer-motion'
 import { useState } from 'react';
 import { AiOutlineCheck } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
-import Dropzone from './Imgdropping';
+import Dropzone from '../Imgdropping';
 interface props{
     Title:string,
     setClicked:(value:boolean) => void
@@ -34,8 +34,7 @@ const AddProductStock:React.FC<props> = (props) => {
       console.log(data);
       }
     
-   const handleSubmit = () => {
-       
+   const handleSubmit = () => {  
         axios.post(url,data)
         .then(res => {
           console.log(res);
