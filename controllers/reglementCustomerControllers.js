@@ -66,7 +66,7 @@ const achat=await prisma.achat.findUnique({
 })
 if(!achat) return res.status(400).json({status:400,message:"no facture with that id"});
 const TotalPaiment=achat.montantRestant-paiment
-if(TotalPaiment < 0) return res.status.json({status:400,message:"the amount you want to pay is bigger than the amount of the sale"})
+if(TotalPaiment < 0) return res.status(400).json({status:400,message:"the amount you want to pay is bigger than the amount of the sale"})
 
 const update=await Promise.resolve(UpdateSaleMontant(paiment,idAchat,"-","delete"))
 if(update ===1) return res.status(400).json({status:400,message:"we couldnt update the customer and the sale montant"})
