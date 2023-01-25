@@ -142,7 +142,7 @@ const SupCus:React.FC<props> = (props) => {
          <Add Title={props.title}  setClicked={setAddClick} ></Add>
          </motion.div> }
          </AnimatePresence>
-          <div className="bg-white grid justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
+          <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
           <div className="w-full h-[90px]  flex justify-between items-center " >
             <div  className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
             gap-2 font-bold items-center  "  onClick={()=>setAddClick(true)} > 

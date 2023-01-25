@@ -18,9 +18,9 @@ interface props{
   choices?: { id:number, Nbr: number,Title: string}[],
   Data:{
     id: number;
-    ClientName: string;
-    Total: number;
-    Rest: number;
+    ClientName?: string;  fournisseur?:number;
+    Total?: number;    TotalTtc?:number; 
+    Rest?: number;   TotalRest?:number
 }[]
 }
 
@@ -165,7 +165,7 @@ const InvSale:React.FC<props> = (props) => {
           
            <tbody>
             {currentPosts.map(Data=>{
-             return <tr key={Data.id}  >
+             return <tr key={Math.random()}  >
              <td> {Data.id} </td>
             <td>{Data.Total}Dz</td>
             <td>{Data.Rest}Dz</td>

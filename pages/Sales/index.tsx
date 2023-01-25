@@ -177,7 +177,12 @@ export default function Home() {
     Rest:15
   }
 ]
-
+// useEffect(() => { 
+//   axios.get('http://localhost:3000/api/sale')
+//   .then(res => {
+//    setData(res.data.data)
+//    console.log(Data);
+//   })
 const countpaid=()=>{
   for(let sale of Sales){
     if(sale.Rest>0) unpaid++

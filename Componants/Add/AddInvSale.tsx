@@ -44,13 +44,14 @@ const AddInvSale:React.FC<props> = (props) => {
       }
     
    const handleSubmit = () => {  
-        axios.post(url,data)
-        .then(res => {
-          console.log(res);
-          console.log(res.data);
-          console.log('Successful');
-          location.reload();
-        })}
+      //   axios.post(url,data)
+      //   .then(res => {
+      //     console.log(res);
+      //     console.log(res.data);
+      //     console.log('Successful');
+      //     location.reload();
+      //   })
+   }
     
 
    async function SaveClicked() {
@@ -85,8 +86,9 @@ const AddInvSale:React.FC<props> = (props) => {
          <div className='max-h-[210px] overflow-y-scroll grid gap-4'>
          {productAdded.map(product=>{
             return    <div className='flex gap-4'>
-             <div className="">
-               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="Select Product" className=" pl-[15%] rounded-[5px] w-[270px] h-[40px] border border-solid border-[#a6a7a8] " />
+             <div className="relative">
+           <Image src={NewAdd} className="absolute h-[20px] cursor-pointer w-[20px] translate-y-[-50%] top-[50%] left-5 " alt=""></Image>
+               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="Select Product" className=" pl-[25%] rounded-[5px] w-[270px] h-[40px] border border-solid border-[#a6a7a8] " />
             </div>
             <div className="">
                <input type="text" onChange={(e)=>handleChange(e,3)} placeholder="PrixUt"   className="  pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
