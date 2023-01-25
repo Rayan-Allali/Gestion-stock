@@ -44,11 +44,8 @@ const ProduitStock:React.FC<props> = (props) => {
       let ID=parseInt(e.target.id)
       console.log(e.target.id);
       axios.delete( `http://localhost:3000/api/product/${ID}`)
-    .then(() => { console.log("No probleme")   ;location.reload() } ).catch((err)=>console.log(err))
+    .then(() => { console.log("No probleme") } ).catch((err)=>console.log(err))
     }
-
-
-
 
     // const handelChange=(e: any)=>{ 
     //   const newState = selectData.map(obj => {
@@ -149,8 +146,8 @@ const ProduitStock:React.FC<props> = (props) => {
       <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
        <Image alt="" src={Img} ></Image > {props.title}s
       </div>
-      </div> 
-          <div className="grid  py-[30px] justify-center ">  
+          </div> 
+          <div className="grid py-[30px] justify-center ">  
           {props.choices && <div className="flex justify-start gap-2 mt-5 " >
          {props.choices.map(Filterage=>{
             return <span key={Filterage.id} onClick={()=>{Clickhandler(Filterage.id)}} >
@@ -171,7 +168,7 @@ const ProduitStock:React.FC<props> = (props) => {
          </AnimatePresence>
          
           <div className="bg-white grid justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
-           <div className="w-full h-[90px]  flex justify-between items-center " >
+           <div className="w-full h-[90px] flex justify-between items-center " >
             <div  className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
             gap-2 font-bold items-center  "  onClick={()=>setAddClick(true)} > 
             <Image src={Plus} alt=""></Image> Add {props.title}   </div>
@@ -185,7 +182,7 @@ const ProduitStock:React.FC<props> = (props) => {
                  <MdOutlineKeyboardArrowDown  className='text-xl' ></MdOutlineKeyboardArrowDown> </div>
             </div>
            </div>
-           <table className=" w-[750px] text-left ">
+           <table className=" w-[700px] text-left ">
             <thead>
             <tr className="text-[#A0AEC0] ">
     <th   className='w-[3%] '></th>
@@ -193,7 +190,6 @@ const ProduitStock:React.FC<props> = (props) => {
     <th className='w-[15%] ' >Type</th>
     <th  className='w-[15%] ' >Qte vendu</th>
     <th className='w-[18%] ' >Qte Achet</th>
-    <th className='w-[4%] '></th>
     <th className='w-[4%] '></th>
     <th className='w-[4%] '></th>
             </tr>
@@ -209,14 +205,11 @@ const ProduitStock:React.FC<props> = (props) => {
             <td>{Data.type}</td>
             <td> {Data.qteVendu}</td>
             <td>{Data.qteAchat}</td>
-           <td className='' >
-           <MdModeEdit  className='cursor-pointer  text-2xl' ></MdModeEdit>
-          </td>
           <td>
           <IoMdEye  className='cursor-pointer  text-2xl' ></IoMdEye>
           </td>
            <td      >
-           <MdDelete id={Data.codeP} onClick={(e)=>DeleteElement(e)} className='cursor-pointer  text-2xl' ></MdDelete>
+           <MdDelete id={Data.codeP} onClick={(e)=>DeleteElement(e)} className='cursor-pointer text-2xl' ></MdDelete>
            </td>
          </tr>
              })}
@@ -231,10 +224,10 @@ const ProduitStock:React.FC<props> = (props) => {
                     onClick={()=>HandelPagination(Page)} > {Page} </p>
                  })}
             <Image src={RightArrow} className='cursor-pointer' alt="" onClick={()=>HandelPagination(0,'+')} ></Image>
-            </div>
           </div>
           </div>
-         
+          </div>
+          <div className="w-[109px] h-[40px] bg-[black] rounded-[10px] text-[#576AC5] "></div>
         </div>     
      );
 }

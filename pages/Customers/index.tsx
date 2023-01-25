@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 export default function Home() {
 
   const [Data, setData] = useState<any>()
- const Filtage=[{id:0,Title:'All Customers',Nbr:50},{id:1,Title:'Top Customers',Nbr:30},{id:2,Title:'Black List',Nbr:20}]
+ const Filtage=[{id:0,Title:'All Customers',Nbr:50},{id:1,Title:'Active Customers',Nbr:30},{id:2,Title:'Inactive Customers',Nbr:20}]
  
  useEffect(() => { 
   axios.get(`http://localhost:3000/api/customer`)

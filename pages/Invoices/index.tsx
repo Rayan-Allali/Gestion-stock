@@ -25,7 +25,7 @@ const Filtage=[{id:0,Title:'All Invoices',Nbr:Data?.length || 0},{id:1,Title:'Pa
 
   return (
     <>
-      <InvSale   Data={Data} choices={Filtage}  title="Invoice"  ></InvSale>
+   { Data &&  <InvSale   Data={Data} choices={Filtage}  title="Invoice"  ></InvSale>}
     </>
   )
 }
