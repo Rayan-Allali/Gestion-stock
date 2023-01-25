@@ -1,9 +1,11 @@
-import Image from 'next/image'
 import {MdOutlineNotifications} from "react-icons/md";
 const NavBar = () => {
-    return (<div className="h-[72px] flex flex-end gap-3 w-full border-b-[#EBF1F7] border-b border-b-solid   ">
-        <MdOutlineNotifications></MdOutlineNotifications>
-        <Image  alt='' src='' className=' rounded-full w-[30px] h-[30] ' />
+    return (<div className="h-[72px] flex justify-end items-center px-9 gap-3 w-full text-[#27427b] border-b-[rgb(235,241,247)] border-b border-b-solid   ">
+        <MdOutlineNotifications  className='text-3xl ' ></MdOutlineNotifications>
+        <div  className='rounded-full h-[30px] w-[30px] bg-[#27427b] ' >
+      
+        </div>
+      
         Boss Allali 
         </div> );
 }

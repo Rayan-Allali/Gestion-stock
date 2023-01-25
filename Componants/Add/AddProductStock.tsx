@@ -8,8 +8,6 @@ interface props{
     Title:string,
     setClicked:(value:boolean) => void
 }
-
-
 const AddProductStock:React.FC<props> = (props) => {
    const [Added,setAdded]=useState(false);
    let Type:any={};
