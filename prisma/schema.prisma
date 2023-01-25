@@ -27,7 +27,7 @@ idAchat Int @id @default(autoincrement())
 montantTotal Int
 montantRestant Int
 client Int
-clientId client @relation(fields: [client],references: [codeC])
+clientId client @relation(fields: [client],references: [codeC], onDelete: Cascade)
 reglements regelementClient[] 
 transactions transaction[]
 }
@@ -35,7 +35,7 @@ transactions transaction[]
 model transaction{
   numTr Int @id @default(autoincrement())
   achat Int
-  achatId achat @relation(fields: [achat],references: [idAchat])
+  achatId achat @relation(fields: [achat],references: [idAchat],onDelete:Cascade)
   qte Int
   productStock Int
   produitStock productstock @relation(fields: [productStock],references: [idStock])
@@ -44,7 +44,7 @@ model regelementClient{
   idRegelementClient Int @id @default(autoincrement())
   paiment Int
   achat Int
-  achatId achat @relation(fields: [achat],references: [idAchat])
+  achatId achat @relation(fields: [achat],references: [idAchat],onDelete:Cascade)
 }
 
 model fournisseur{
@@ -109,7 +109,7 @@ model facture{
   TotalTtc Int 
   TotalRest Int 
   fournisseur Int
-  supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
+  supplier fournisseur @relation(fields: [fournisseur],references: [codeF],onDelete:Cascade)
   stocker stocker[]
   reglement regelementFournisseur[]
   Bl bl?
@@ -118,7 +118,7 @@ model stocker{
   produit Int
   product produit @relation(fields: [produit],references: [codeP], onDelete:Cascade)
   facture Int
-  numFacture facture @relation(fields: [facture],references: [numF])
+  numFacture facture @relation(fields: [facture],references: [numF],onDelete:Cascade)
   @@id([facture,produit])
   prixHt Int
   prixV Int

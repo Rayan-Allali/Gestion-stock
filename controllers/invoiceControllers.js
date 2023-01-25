@@ -7,19 +7,7 @@ export async function getAllHandler(req,res){
                     dateF:true,
                     fournisseur:true,
                     TotalRest:true,
-                    TotalTtc:true,
-                    stocker:{
-                        select:{
-                            product:{
-                                select:{
-                                    nomP:true
-                                }
-                            },
-                            qte:true,
-                            prixV:true,
-                            prixHt:true
-                        }
-                    }
+                    TotalTtc:true
                 }
             }
         )
