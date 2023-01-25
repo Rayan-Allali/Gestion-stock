@@ -10,7 +10,8 @@ import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
 import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
-import Add from '../Add';
+import AddInvSale from '../Add/AddInvSale';
+import axios from 'axios';
 
 interface props{
   title:string,
@@ -99,6 +100,15 @@ const InvSale:React.FC<props> = (props) => {
         else if(Dir=='-' && currentPage!=1) setCurrentPage(prev=>prev=prev-1)
         }
        }
+       const DeleteElement = (ID: number) => {
+        axios
+          .delete(`http://localhost:3000/api/product/${ID}`)
+          .then(() => {
+            console.log("No probleme");
+            location.reload();
+          })
+          .catch((err) => console.log(err));
+      };
 
     return ( 
         <div  className=" bg-[#EFF2F6] w-full">
@@ -123,7 +133,7 @@ const InvSale:React.FC<props> = (props) => {
         exit={{ opacity: 0, }} 
         transition={{duration:.5, }}
         >
-         <Add Title='Customer'  setClicked={setAddClick} ></Add>
+         <AddInvSale Title={props.title}  setClicked={setAddClick} ></AddInvSale>
          </motion.div> }
          </AnimatePresence>
           <div className="bg-white grid justify-center grid-rows-[90px,300px] py-2 pb-4 w-[874px] ">

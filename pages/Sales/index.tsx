@@ -2,12 +2,12 @@
 import InvSale from '../../Componants/Tables/InvSale'
 
 export default function Home() {
-
+ let unpaid=0;
   const Sales=[{ 
     id:1,
     ClientName:"Rayan",
     Total: 15000,
-    Rest:15
+    Rest:0
   },
   { 
     id:2,
@@ -177,7 +177,16 @@ export default function Home() {
     Rest:15
   }
 ]
-const Filtage=[{id:0,Title:'All Invoices',Nbr:50},{id:1,Title:'Paid Invoice',Nbr:30},{id:2,Title:'Unpaid Invoice',Nbr:20}]
+
+const countpaid=()=>{
+  for(let sale of Sales){
+    if(sale.Rest>0) unpaid++
+  }
+  return unpaid
+}
+unpaid=countpaid();
+const Filtage=[{id:0,Title:'All Invoices',Nbr:Sales.length},{id:1,Title:'Paid Invoice',Nbr:Sales.length-unpaid},
+{id:2,Title:'Unpaid Invoice',Nbr:unpaid}]
 
   return (
     <>
