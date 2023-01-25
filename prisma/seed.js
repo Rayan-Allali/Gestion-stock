@@ -2,11 +2,11 @@ const  {PrismaClient} =require("@prisma/client");
 const Prisma=new PrismaClient()
 async function main() {
 const clients=await Prisma.fournisseur.create({data:{
-  nomF: "Kleinfeld",
-  prenomF: "Eugenio",
+  nomF: "moncef",
+  prenomF: "ryad",
   teleF: "989-956-1716",
   img: "https://robohash.org/doloresutest.png?size=20x20&set=set1",
-  adressF: "00 David Court"
+  adressF: "mhalma"
 }})
 }
 main()
