@@ -11,7 +11,7 @@ export async function getAllHandler(req,res){
                         nomF:true
                     }
                 },
-                concernes:{
+                contients:{
                     select:{
                         qte:true,
                 product:{
@@ -65,7 +65,7 @@ export async function getHandler(req,res){
                     nomF:true
                 }
             },
-            concernes:{
+            contients:{
                 select:{
                     qte:true,
             product:{
