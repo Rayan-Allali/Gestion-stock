@@ -11,6 +11,7 @@ import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
 import AddInvSale from '../Add/AddInvSale';
+import axios from 'axios';
 
 interface props{
   title:string,
@@ -99,6 +100,15 @@ const InvSale:React.FC<props> = (props) => {
         else if(Dir=='-' && currentPage!=1) setCurrentPage(prev=>prev=prev-1)
         }
        }
+       const DeleteElement = (ID: number) => {
+        axios
+          .delete(`http://localhost:3000/api/product/${ID}`)
+          .then(() => {
+            console.log("No probleme");
+            location.reload();
+          })
+          .catch((err) => console.log(err));
+      };
 
     return ( 
         <div  className=" bg-[#EFF2F6] w-full">

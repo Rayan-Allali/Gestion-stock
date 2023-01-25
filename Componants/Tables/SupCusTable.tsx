@@ -52,9 +52,7 @@ const SupCus:React.FC<props> = (props) => {
        const [blogPosts, setBlogPosts] = useState([]);
        const [currentPage, setCurrentPage] = useState(1);
        const RowsPerPage = 5;
-      
        const indexOfLastPost = currentPage * RowsPerPage;
-
        const LastPage= Math.ceil(props.Data.length/5)
        const [ArrayPage, setArrayPage] = useState([]);
 
@@ -96,13 +94,29 @@ const SupCus:React.FC<props> = (props) => {
         else if(Dir=='-' && currentPage!=1) setCurrentPage(prev=>prev=prev-1)
         }
        }
-       const DeleteElement=(e)=>{ 
-        let ID=parseInt(e.target.id)
-        console.log(e.target.id);
-       
-        axios.delete( `http://localhost:3000/api/supplier/${ID}`)
-      .then(() => { console.log("No probleme")   ;location.reload() } ).catch((err)=>console.log(err))
-      }
+
+      const DeleteElement = (ID: number) => {
+        let url=''
+     if(props.title==='Supplier'){
+      axios
+      .delete(`http://localhost:3000/api/supplier/${ID}`)
+      .then(() => {
+        console.log("No probleme");
+        location.reload();
+      })
+      .catch((err) => console.log(err));
+     }
+     else {
+      axios
+      .delete(`http://localhost:3000/api/customer/${ID}`)
+      .then(() => {
+        console.log("No probleme");
+        location.reload();
+      })
+      .catch((err) => console.log(err));
+     }
+      };
+
     return ( 
         <div  className=" bg-[#EFF2F6] w-full">
           <div  className='flex h-[50px] bg-white px-5 items-center ' >
@@ -171,7 +185,13 @@ const SupCus:React.FC<props> = (props) => {
            <MdModeEdit  className='cursor-pointer  text-2xl' ></MdModeEdit>
           </td>
            <td>
-           <MdDelete id={Data.codeC || Data.codeF} onClick={(e)=>DeleteElement(e)} className='cursor-pointer  text-2xl' ></MdDelete>
+           <MdDelete 
+            id={Data.codeF}
+            onClick={() => {
+              let id= Data.codeF || Data.codeC
+              console.log(id);
+              DeleteElement(id);
+            }}  className='cursor-pointer  text-2xl' ></MdDelete>
            </td>
          </tr>
              })}

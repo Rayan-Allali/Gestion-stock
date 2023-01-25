@@ -7,7 +7,9 @@ import paidinv from '../public/paidinv.svg'
 import Image from 'next/image'
 import {Line} from 'react-chartjs-2';
 import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
+import {GiBanana,GiOrange,GiShinyApple} from "react-icons/gi";
 import Chart from 'chart.js/auto';
+import { useState } from 'react';
 
 export default function Home() {
   const Sales=[
@@ -101,11 +103,11 @@ export default function Home() {
       }
     ],
   };
-  
+  const [YearSelected, setYearSelected] = useState(false)
  const dropdownhandel=e=>{
-
+  setYearSelected(prev=>prev=!prev)
+ 
  }
-
 
  return (
     <>
@@ -122,25 +124,29 @@ export default function Home() {
       <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
       <Image alt='' src={DashbordA} ></Image>  Dashborad
       </div>
-      <ui  className='flex flex-col bg-black absolute top-[10%] right-5 ' >
-      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
+      <div className='grid gap-2  absolute top-[10%] right-5 ' >
+      <span  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
       justify-center items-center h-[32px] gap-1'  onClick={dropdownhandel} >
-        <MdOutlineKeyboardArrowDown  className='text-lg' ></MdOutlineKeyboardArrowDown>  Year 2019
+        <MdOutlineKeyboardArrowDown  className='text-lg' ></MdOutlineKeyboardArrowDown>  Select Year
+      </span>
+      { YearSelected && <ui  className='flex flex-col gap-1  ' >
+      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
+      justify-center items-center h-[32px] gap-1'  onClick={()=>{location.reload()}} >
+       Year 2019
       </li>
       <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px] border-t-1 border-t-solid border-t-[#999a9b]'   onClick={dropdownhandel} >
-     Year 2018
+      justify-center items-center h-[32px] border-t-1 border-t-solid border-t-[#999a9b]' onClick={()=>{location.reload()}} > Year 2018
       </li>
       <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px]'  onClick={dropdownhandel} >
-     Year 2017
+      justify-center items-center h-[32px]'  onClick={()=>{location.reload()}} > Year 2017
       </li>
       <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px] '  onClick={dropdownhandel} >
-     Year 2016
+      justify-center items-center h-[32px] '  onClick={()=>{location.reload()}} >  Year 2016
       </li>
-      </ui>
-    
+      </ui> }
+      
+      </div>
+
       </div> 
 
       <div className="w-full grid gap-[24px] justify-items-center ">
@@ -274,21 +280,21 @@ export default function Home() {
         <h1 className=' text-[#646769] text-[18px] mb-3 font-[700] '>   Best Products </h1>
         <div className='grid gap-2  bg-white rounded-[10px]  '>
      <div  className='h-[56px] w-[210px] p-2 flex justify-between items-center border-b-[#EBF1F7] border-b border-b-solid   ' > 
-      <FaUsers  className='text-4xl'></FaUsers>   
-        <h1>Meriem Allali </h1> 
-       <p>80</p>   
+      <GiBanana  className='text-4xl  text-[yellow] '></GiBanana>   
+        <h1> Banana </h1> 
+       <p>150K</p>   
       </div>
       <div  className='h-[56px] w-[210px] p-2 flex justify-between items-center border-b-[#EBF1F7] border-b border-b-solid ' > 
-      <FaUsers  className='text-4xl'></FaUsers>   
-        <h1>Meriem Allali </h1> 
-       <p>80</p>   
+      <GiOrange  className='text-4xl  text-[orange] '></GiOrange>   
+        <h1>Orange</h1> 
+       <p>80K</p>   
       </div>
       <div  className='h-[56px] w-[210px] p-2 flex justify-between items-center' > 
-      <FaUsers  className='text-4xl'></FaUsers>   
-        <h1>Meriem Allali </h1> 
-       <p>80</p>   
+      <GiShinyApple  className='text-4xl  text-[red] '></GiShinyApple>   
+        <h1>Apple</h1> 
+       <p>50K</p>   
       </div>
-     </div>
+       </div>
       </div>
       </div>
     
@@ -318,26 +324,25 @@ export default function Home() {
       </div>
      </div>
       </div>
-
       <div className='w-[237px] h-[257px] bg-[#F8F8F8] p-3 ' >
         <h1 className=' text-[#646769] text-[18px] mb-3 font-[700] '>   Best Products </h1>
         <div className='grid gap-2  bg-white rounded-[10px]  '>
      <div  className='h-[56px] w-[210px] p-2 flex justify-between items-center border-b-[#EBF1F7] border-b border-b-solid   ' > 
-      <FaUsers  className='text-4xl'></FaUsers>   
-        <h1>Meriem Allali </h1> 
-       <p>80</p>   
+      <GiBanana  className='text-4xl  text-[yellow] '></GiBanana>   
+        <h1> Banana </h1> 
+       <p>150K</p>   
       </div>
       <div  className='h-[56px] w-[210px] p-2 flex justify-between items-center border-b-[#EBF1F7] border-b border-b-solid ' > 
-      <FaUsers  className='text-4xl'></FaUsers>   
-        <h1>Meriem Allali </h1> 
-       <p>80</p>   
+      <GiOrange  className='text-4xl  text-[orange] '></GiOrange>   
+        <h1>Orange</h1> 
+       <p>80K</p>   
       </div>
       <div  className='h-[56px] w-[210px] p-2 flex justify-between items-center' > 
-      <FaUsers  className='text-4xl'></FaUsers>   
-        <h1>Meriem Allali </h1> 
-       <p>80</p>   
+      <GiShinyApple  className='text-4xl  text-[red] '></GiShinyApple>   
+        <h1>Apple</h1> 
+       <p>50K</p>   
       </div>
-     </div>
+       </div>
       </div>
       </div>
       </div>
