@@ -17,3 +17,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 -next js full stack with typescript
 -react icons for icons
 -axios to fetch data from backend
+-framer motion for animation
