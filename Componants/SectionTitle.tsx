@@ -10,13 +10,13 @@ import SupplierA from '../public/Suppliers+.svg'
 type Type= 'Invoice' | 'Customer' | 'Product' | 'Stock' | 'Sale' | 'Supplier'
 interface props{
     title:string,
-    type:Type
+    type?:Type
   }
 
 const SectionTitle :React.FC<props>= (props) => {
     let Img: StaticImageData
       const ImgSetter=()=>{
-        switch (props.type) {
+        switch (props.title) {
             case 'Invoice':
              Img=InvoiceA
                 break;
@@ -44,7 +44,7 @@ const SectionTitle :React.FC<props>= (props) => {
     return ( 
         <div  className='flex h-[50px] bg-white px-5 items-center ' >
                     <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
-                    <Image alt="" src={Img} ></Image > {props.title}
+                    <Image alt="" src={Img} ></Image > {props.title}s
                     </div>
         </div> 
      );
