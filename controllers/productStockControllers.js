@@ -43,7 +43,7 @@ export async function postHandler(req,res){
     if(!qte || !productId || !prixV) return res.status(400).json({status:400,message:"missing data"})
     const newproductstock=await prisma.productstock.create({
         data:{
-            qte,prixV,prixHt,
+            qte,prixV,
             product:{
                 connect:{
                     codeP:productId
@@ -51,6 +51,16 @@ export async function postHandler(req,res){
             }
         }
     });
+    
+    const entreeStock=await prisma.entreeStock.create({
+        data:{
+            qte,prixV,productstock:{
+                connect:{
+                    idStock:newproductstock.idStock
+                }
+            }
+        }
+    })
     return res.status(201).json({
         status:201,
         data:newproductstock

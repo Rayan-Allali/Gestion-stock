@@ -80,7 +80,6 @@ typeproduit typeProduit @relation(fields: [type],references: [name])
 contients contient[]
 ventes vente[]
 stocker stocker[]
-entreesStock entreeStock[]
 productsStock productstock[]
 sortieStock sortieStock[]
 }
@@ -145,6 +144,7 @@ model  productstock{
   produit Int
   product produit @relation(fields: [produit],references: [codeP],onDelete:Cascade)
   transactions transaction[]
+  entree entreeStock?
 }
 model entreeStock{
   idEntreeStock Int @id @default(autoincrement())
@@ -152,8 +152,8 @@ model entreeStock{
   dateE DateTime @default(now())
    qte Int
    prixV Int 
-   produit Int
-   product produit @relation(fields: [produit],references: [codeP],onDelete: Cascade)
+   produit Int @unique
+   productstock productstock @relation(fields: [produit],references: [idStock],onDelete: Cascade)
 }
 model sortieStock{
   idSortieStock Int @id @default(autoincrement())
