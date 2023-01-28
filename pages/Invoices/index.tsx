@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 import InvSale from '../../Componants/Tables/InvSale'
 
 export default function Home() {
-  const url='http://localhost:3000/api/invoice'
+ // const url='http://localhost:3000/api/invoice'
 const [Data, setData] = useState<any>()
   
   useEffect(() => { 
-   axios.get(url)
+   axios.get('http://localhost:3000/api/invoice')
    .then(res => {
     setData(res.data.data)
+    console.log(Data);
    })
  }, [])
 let unpaid=0;
