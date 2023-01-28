@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import StockA from "../../public/Stock+.png";
 import Plus from "../../public/Plus.svg";
-import ProduitA from "../../public/product+.png";
 import LeftArrow from "../../public/LeftArrow.svg";
 import RightArrow from "../../public/RightArrow.svg";
 import Image, { StaticImageData } from "next/image";
@@ -16,6 +14,7 @@ import {
 import { IoMdEye } from "react-icons/io";
 
 import axios from "axios";
+import SectionTitle from "../SectionTitle";
 
 interface props {
   title: string;
@@ -38,18 +37,22 @@ interface props {
 const ProduitStock: React.FC<props> = (props) => {
   const [Filter, setFilter] = useState([true, false, false]);
   const [select, setselect] = useState(false);
-  const [selectData, setselectData] = useState<
-    {
-      selected: boolean;
-      id: any;
-    }[]
-  >();
-
+  const [selectData, setselectData] = useState<number[]>([]);
   const [AddClick, setAddClick] = useState(false);
   const handleSelect = () => {
+    if(select==true){
+   for(let i=0;i<=selectData.length;i++) DeleteElement(selectData[i]);
+    }
     setselect((prev) => (prev = !prev));
   };
-
+ const AddSelected=(id:number)=>{
+  if(selectData.includes(id)){
+    const index = selectData.indexOf(id);
+    selectData.splice(index, 1);
+  }
+ else selectData.push(id);
+  console.log(selectData)
+ }
   const DeleteElement = (ID: number) => {
     axios
       .delete(`http://localhost:3000/api/product/${ID}`)
@@ -60,42 +63,12 @@ const ProduitStock: React.FC<props> = (props) => {
       .catch((err) => console.log(err));
   };
 
-  // const handelChange=(e: any)=>{
-  //   const newState = selectData.map(obj => {
-  //     // if id equals e.target.value, update selected property
-  //     if (obj.id === e.target.value) {
-  //       const x=obj.selected
-  //       return {...obj, selected: !x};
-  //     }
-
-  //     //  otherwise return the object as is
-  //     return obj;
-  //   });
-
-  //   setselectData(newState);
-
-  // }
-
-  let arr = [...Filter];
-  const Clickhandler = (id: number) => {
-    arr = [false, false, false];
-    arr[id] = true;
-    setFilter(arr);
-  };
-
-  let Img: StaticImageData;
-  const ImgSetter = () => {
-    switch (props.title) {
-      case "Stock":
-        Img = StockA;
-        break;
-      case "Product":
-        Img = ProduitA;
-        break;
-    }
-    return Img;
-  };
-  Img = ImgSetter();
+  // let arr = [...Filter];
+  // const Clickhandler = (id: number) => {
+  //   arr = [false, false, false];
+  //   arr[id] = true;
+  //   setFilter(arr);
+  // };
 
   const [blogPosts, setBlogPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -141,14 +114,14 @@ const ProduitStock: React.FC<props> = (props) => {
       ArrayPage.push(i);
     }
     // selecteddata
-    setselectData([{ selected: false, id: "0" }]);
-    for (let i of props.Data) {
-      setselectData((current) => [
-        ...current,
-        { selected: false, id: i.codeP },
-      ]);
-    }
-    console.log(selectData);
+    // setselectData([{ selected: false, id: "0" }]);
+    // for (let i of props.Data) {
+    //   setselectData((current) => [
+    //     ...current,
+    //     { selected: false, id: i.codeP },
+    //   ]);
+    // }
+    // console.log(selectData);
   }, []);
   const Array = ArrayPage.slice(0, LastPage); // this bcs there's a bug the page render twice which make the useeffect execute twice
   const indexOfFirstPost = indexOfLastPost - RowsPerPage;
@@ -166,15 +139,10 @@ const ProduitStock: React.FC<props> = (props) => {
 
   return (
     <div className=" bg-[#EFF2F6] w-full">
-      <div className="flex h-[50px] bg-white px-5 items-center ">
-        <div
-          className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}
-        >
-          <Image alt="" src={Img}></Image> {props.title}s
-        </div>
-      </div>
+      <SectionTitle  title={props.title}  ></SectionTitle>
+
       <div className="grid  py-[30px] justify-center ">
-        {props.choices && (
+        {/* {props.choices && (
           <div className="flex justify-start gap-2 mt-5 ">
             {props.choices.map((Filterage) => {
               return (
@@ -192,7 +160,7 @@ const ProduitStock: React.FC<props> = (props) => {
               );
             })}
           </div>
-        )}
+        )} */}
 
         <AnimatePresence>
           {AddClick && (
@@ -211,7 +179,7 @@ const ProduitStock: React.FC<props> = (props) => {
           )}
         </AnimatePresence>
 
-        <div className="bg-white grid justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
+        <div className="bg-white grid justify-center justify-items-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
           <div className="w-full h-[90px]  flex justify-between items-center ">
             <div
               className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
@@ -232,13 +200,10 @@ const ProduitStock: React.FC<props> = (props) => {
               >
                 <MdDelete></MdDelete>
               </div>
-              <div
-                className="w-[90px] h-[35px] text-[#3A78F1] bg-[#ecf2fe] rounded-[5px] cursor-pointer text-[14px] 
-                flex justify-center gap-2 font-bold items-center  "
-              >
-                {" "}
+              <div className="w-[90px] h-[35px] text-[#3A78F1] bg-[#ecf2fe] rounded-[5px] cursor-pointer text-[14px] 
+                flex justify-center gap-2 font-bold items-center  ">
                 Filter
-                <MdOutlineKeyboardArrowDown className="text-xl"></MdOutlineKeyboardArrowDown>{" "}
+                <MdOutlineKeyboardArrowDown className="text-xl"></MdOutlineKeyboardArrowDown>
               </div>
             </div>
           </div>
@@ -260,7 +225,7 @@ const ProduitStock: React.FC<props> = (props) => {
                 return (
                   <tr key={Math.random()}>
                     <td className={` ${!select && "invisible"} `}>
-                      <input type="checkbox" name="" value={Data.codeP} />
+                      <input type="checkbox" name="" onClick={()=>{ AddSelected(Data.codeP);}} />
                     </td>
                     <td> {Data.nomP} </td>
                     <td>{Data.type}</td>
@@ -271,11 +236,7 @@ const ProduitStock: React.FC<props> = (props) => {
                     </td>
                     <td>
                       <MdDelete
-                        id={Data.codeP}
-                        onClick={() => {
-                          console.log(Data.codeP);
-                          DeleteElement(Data.codeP);
-                        }}
+                        onClick={() => {DeleteElement(Data.codeP)}}
                         className="cursor-pointer  text-2xl"
                       ></MdDelete>
                     </td>

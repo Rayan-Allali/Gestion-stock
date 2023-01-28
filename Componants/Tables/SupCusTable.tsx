@@ -1,6 +1,4 @@
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import customersA from '../../public/customers+.svg'
-import SupplierA from '../../public/Suppliers+.svg'
+import { useEffect, useState} from 'react';
 import Plus from '../../public/Plus.svg'
 import LeftArrow from '../../public/LeftArrow.svg'
 import RightArrow from '../../public/RightArrow.svg'
@@ -10,6 +8,7 @@ import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
 import Add from '../Add/Add';
 import axios from 'axios';
+import SectionTitle from '../SectionTitle';
 interface props{
   title:string,
   choices?: { id:number, Nbr: number,Title: string}[],
@@ -26,28 +25,48 @@ const SupCus:React.FC<props> = (props) => {
     const [Filter, setFilter] =useState([true,false,false])
     const [AddClick, setAddClick] = useState(false)
     const [select, setselect] = useState(false)
-    const handleSelect=()=>{
-      setselect(prev=>prev=!prev)
+    const [selectData, setselectData] = useState<number[]>([]);
+    const handleSelect = () => {
+      if(select==true){
+     for(let i=0;i<=selectData.length;i++) DeleteElement(selectData[i]);
+      }
+      setselect((prev) => (prev = !prev));
+    };
+   const AddSelected=(id:number)=>{
+    if(selectData.includes(id)){
+      const index = selectData.indexOf(id);
+      selectData.splice(index, 1);
     }
+   else selectData.push(id);
+    console.log(selectData)
+   }    
+    const DeleteElement = (ID: number) => {
+   if(props.title==='Supplier'){
+    axios
+    .delete(`http://localhost:3000/api/supplier/${ID}`)
+    .then(() => {
+      console.log("No probleme");
+      location.reload();
+    })
+    .catch((err) => console.log(err));
+   }
+   else {
+    axios
+    .delete(`http://localhost:3000/api/customer/${ID}`)
+    .then(() => {
+      console.log("No probleme");
+      location.reload();
+    })
+    .catch((err) => console.log(err));
+   }
+    };
+
     let arr=[...Filter] 
     const Clickhandler=(id:number)=>{
       arr=[false,false,false]
       arr[id]=true
       setFilter(arr);
       }
-      let Img: StaticImageData
-      const ImgSetter=()=>{
-        switch (props.title) {
-            case 'Customer':
-             Img=customersA
-                break;
-            case 'Supplier':
-            Img=SupplierA
-                break;  
-        }
-     return Img
-       }
-       Img=ImgSetter()
 
        const [blogPosts, setBlogPosts] = useState([]);
        const [currentPage, setCurrentPage] = useState(1);
@@ -95,35 +114,11 @@ const SupCus:React.FC<props> = (props) => {
         }
        }
 
-      const DeleteElement = (ID: number) => {
-        let url=''
-     if(props.title==='Supplier'){
-      axios
-      .delete(`http://localhost:3000/api/supplier/${ID}`)
-      .then(() => {
-        console.log("No probleme");
-        location.reload();
-      })
-      .catch((err) => console.log(err));
-     }
-     else {
-      axios
-      .delete(`http://localhost:3000/api/customer/${ID}`)
-      .then(() => {
-        console.log("No probleme");
-        location.reload();
-      })
-      .catch((err) => console.log(err));
-     }
-      };
+  
 
     return ( 
         <div  className=" bg-[#EFF2F6] w-full">
-          <div  className='flex h-[50px] bg-white px-5 items-center ' >
-      <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
-       <Image alt="" src={Img} ></Image > {props.title}s
-      </div>
-      </div> 
+      <SectionTitle  title={props.title}  ></SectionTitle>
           <div className="grid  py-[30px] justify-center ">  
           {props.choices && <div className="flex justify-start gap-2 mt-5 " >
          {props.choices.map(Filterage=>{
@@ -175,7 +170,7 @@ const SupCus:React.FC<props> = (props) => {
             {currentPosts.map(Data=>{
              return <tr key={Math.random()}  > 
              <td   className={` ${!select && 'invisible'} `}>  
-            <input type="checkbox" name="" value={Data.codeP}/></td>
+            <input type="checkbox" name=""  onClick={()=>{   AddSelected(Data.codeF || Data.codeC) }} /></td>
              <td>  {Data.codeF} {Data.codeC} </td>
              <td> {Data.nomF}  {Data.prenomF} {Data.nomC}  {Data.prenomC} </td>
             <td>{Data.sold} {Data.credit} Dz</td>
