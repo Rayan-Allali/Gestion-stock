@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Plus from "../../public/Plus.svg";
 import LeftArrow from "../../public/LeftArrow.svg";
 import RightArrow from "../../public/RightArrow.svg";
+import Typearrow from '../../public/TypeArrow.png'
 import Image, { StaticImageData } from "next/image";
 import FilterElmnt from "../Filter";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,21 +16,16 @@ import { IoMdEye } from "react-icons/io";
 
 import axios from "axios";
 import SectionTitle from "../SectionTitle";
+import Link from "next/link";
 
 interface props {
   title: string;
   choices?: { id: number; Nbr: number; Title: string }[];
   Data: {
     codeP?: number;
-    codeC?: number;
     nomP?: string;
-    nomC?: string;
     designation?: string;
-    teleC?: string;
     type?: string;
-    credit?: number;
-    pointF?: number;
-    pointC: number;
     qteAchat?: number;
     qteVendu?: number;
   }[];
@@ -72,9 +68,9 @@ const ProduitStock: React.FC<props> = (props) => {
 
   const [blogPosts, setBlogPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const RowsPerPage = 5;
+  const RowsPerPage = 4;
   const indexOfLastPost = currentPage * RowsPerPage;
-  const LastPage = Math.ceil(props.Data.length / 5);
+  const LastPage = Math.ceil(props.Data.length / 4);
   const [ArrayPage, setArrayPage] = useState([]);
 
   const DisplayPage = (id: number) => {
@@ -138,9 +134,8 @@ const ProduitStock: React.FC<props> = (props) => {
   };
 
   return (
-    <div className=" bg-[#EFF2F6] w-full">
+    <div className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
       <SectionTitle  title={props.title}  ></SectionTitle>
-
       <div className="grid  py-[30px] justify-center ">
         {/* {props.choices && (
           <div className="flex justify-start gap-2 mt-5 ">
@@ -179,8 +174,8 @@ const ProduitStock: React.FC<props> = (props) => {
           )}
         </AnimatePresence>
 
-        <div className="bg-white grid justify-center justify-items-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
-          <div className="w-full h-[90px]  flex justify-between items-center ">
+        <div className=" bg-white grid justify-center justify-items-center grid-rows-[90px,200px] py-2 pb-4 w-[900px] ">
+          <div className="w-full h-[90px] flex justify-between items-center ">
             <div
               className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
             gap-2 font-bold items-center  "
@@ -279,6 +274,12 @@ const ProduitStock: React.FC<props> = (props) => {
           </div>
         </div>
       </div>
+    
+      <Link className="bg-[#D8E3FA] cursor-pointer relative left-[80%] items-center justify-center h-[40px] w-[110px] hover:bg-[#c6d1eb]
+       text-[#576AC5] border-[#576AC5] border border-solid rounded-[10px] flex gap-2 hover:text-[#4f5fb3] hover:border-[#4f5fb3] 
+       duration-500 " href={ props.title=='Product' ? "/Products/Type" : "/Stock/History" } >
+      {props.title=='Product' ?  'Types' :  "History" }    <Image alt="" src={Typearrow} ></Image>
+      </Link>
     </div>
   );
 };

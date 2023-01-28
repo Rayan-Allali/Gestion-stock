@@ -22,7 +22,6 @@ interface props{
 }[]
 }
 const SupCus:React.FC<props> = (props) => {
-    const [Filter, setFilter] =useState([true,false,false])
     const [AddClick, setAddClick] = useState(false)
     const [select, setselect] = useState(false)
     const [selectData, setselectData] = useState<number[]>([]);
@@ -60,7 +59,7 @@ const SupCus:React.FC<props> = (props) => {
     .catch((err) => console.log(err));
    }
     };
-
+    const [Filter, setFilter] =useState([true,false,false])
     let arr=[...Filter] 
     const Clickhandler=(id:number)=>{
       arr=[false,false,false]
@@ -70,9 +69,9 @@ const SupCus:React.FC<props> = (props) => {
 
        const [blogPosts, setBlogPosts] = useState([]);
        const [currentPage, setCurrentPage] = useState(1);
-       const RowsPerPage = 5;
+       const RowsPerPage = 4;
        const indexOfLastPost = currentPage * RowsPerPage;
-       const LastPage= Math.ceil(props.Data.length/5)
+       const LastPage= Math.ceil(props.Data.length/4)
        const [ArrayPage, setArrayPage] = useState([]);
 
        const DisplayPage=(id:number)=>{
@@ -117,10 +116,10 @@ const SupCus:React.FC<props> = (props) => {
   
 
     return ( 
-        <div  className=" bg-[#EFF2F6] w-full">
+        <div  className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
       <SectionTitle  title={props.title}  ></SectionTitle>
-          <div className="grid  py-[30px] justify-center ">  
-          {props.choices && <div className="flex justify-start gap-2 mt-5 " >
+          <div className="grid py-[30px] justify-center ">  
+          {props.choices && <div className="flex justify-start gap-2 " >
          {props.choices.map(Filterage=>{
             return <span key={Filterage.id} onClick={()=>{Clickhandler(Filterage.id)}} >
                    <FilterElmnt Filter={Filter[Filterage.id]} {...Filterage}></FilterElmnt>
@@ -137,8 +136,8 @@ const SupCus:React.FC<props> = (props) => {
          <Add Title={props.title}  setClicked={setAddClick} ></Add>
          </motion.div> }
          </AnimatePresence>
-          <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
-          <div className="w-full h-[90px]  flex justify-between items-center " >
+          <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,200px] py-1 pb-4 w-[900px] ">
+          <div className="w-full h-[90px] flex justify-between items-center " >
             <div  className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
             gap-2 font-bold items-center  "  onClick={()=>setAddClick(true)} > 
             <Image src={Plus} alt=""></Image> Add {props.title}   </div>

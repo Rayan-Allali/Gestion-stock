@@ -1,5 +1,5 @@
 import Image, { StaticImageData } from 'next/image'
-
+import History from '../public/History.png'
 import InvoiceA from '../public/invoice+.svg'
 import SaleA from '../public/Sales+.png'
 import StockA from '../public/Stock+.png'
@@ -37,6 +37,9 @@ const SectionTitle :React.FC<props>= (props) => {
             case 'Product':
             Img=ProduitA
                 break;
+            case 'History' : 
+            Img=History
+            break;
         }
      return Img
        }

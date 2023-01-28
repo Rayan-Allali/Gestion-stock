@@ -1,12 +1,14 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import FilterElmnt from "../../Componants/Filter";
-import SectionTitle from "../../Componants/SectionTitle";
+import { useEffect, useState} from 'react';
+import LeftArrow from '../../public/LeftArrow.svg'
+import RightArrow from '../../public/RightArrow.svg'
+import { MdDelete,MdOutlineKeyboardArrowDown,MdModeEdit } from "react-icons/md";
+import Image, { StaticImageData } from 'next/image'
+import FilterElmnt from '../../Componants/Filter';
+import axios from 'axios';
+import SectionTitle from '../../Componants/SectionTitle';
 
 
-
-
-const Type = () => {
+const History = () => {
 
     const [Filter, setFilter] =useState([true,false])
     let arr=[...Filter] 
@@ -52,11 +54,13 @@ const Type = () => {
       .catch((err) => console.log(err));
      }
       };
+
+        const [Data, setData] = useState([])
          const [blogPosts, setBlogPosts] = useState([]);
          const [currentPage, setCurrentPage] = useState(1);
          const RowsPerPage = 4;
          const indexOfLastPost = currentPage * RowsPerPage;
-         const LastPage= Math.ceil(props.Data.length/4)
+         const LastPage= Math.ceil(Data.length/4)
          const [ArrayPage, setArrayPage] = useState([]);
   
          const DisplayPage=(id:number)=>{
@@ -81,12 +85,18 @@ const Type = () => {
           }
          }
   
-         useEffect(() => {
-          setBlogPosts(props.Data)
+         useEffect(() => { 
+          let  url= Filter[0] ? 'http://localhost:3000/api/sortieStock' : 'http://localhost:3000/api/sortieStock'
+          setBlogPosts(Data)
           for(let i=1;i<=LastPage;i++){
               ArrayPage.push(i)
            }
-         }, [])
+           axios.get(url)
+           .then(res => {
+            setData(res.data.data)
+            console.log(Data);
+           })
+         }, [Filter])
          const Array=ArrayPage.slice(0, LastPage); // this bcs there's a bug the page render twice which make the useeffect execute twice
          const indexOfFirstPost = indexOfLastPost - RowsPerPage;
          const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost);
@@ -104,14 +114,14 @@ const Type = () => {
         <div className="grid py-[30px] justify-center ">  
      <div className="flex justify-start gap-2 " >
        <span onClick={()=>{Clickhandler(0)}} >
-        <FilterElmnt Filter={true} Title="Entrer" Nbr={10} ></FilterElmnt>
+        <FilterElmnt Filter={Filter[0]} Title="EntrerStock" Nbr={10} ></FilterElmnt>
           </span>
           <span onClick={()=>{Clickhandler(1)}} >
-        <FilterElmnt Filter={false} Title="Sotie" Nbr={10}></FilterElmnt>
+        <FilterElmnt Filter={Filter[1]} Title="SotieStock" Nbr={10}></FilterElmnt>
           </span>
        </div>
    
-        <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,200px] py-1 pb-4 w-[900px] ">
+        <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,200px] py-2 pb-4 w-[900px] ">
          <table className=" w-[750px] text-left ">
           <thead>
           <tr className="text-[#A0AEC0] ">
@@ -121,7 +131,6 @@ const Type = () => {
   <th className='w-[15%] '  >Product</th>
   <th className='w-[15%] '   >Qte</th>
   <th  className='w-[24%] ' > {Filter[0] ? 'PrixVt' : 'motif' } </th>
-  <th className='w-[8%] ' ></th>
   <th className='w-[8%] ' ></th>
           </tr>
           </thead>
@@ -136,9 +145,6 @@ const Type = () => {
           <td>{Data.sold} {Data.credit} Dz</td>
           <td>{Data.teleF}  {Data.teleC} </td>
          <td>{Data.pointF} {Data.pointC} </td>
-         <td>
-         <MdModeEdit  className='cursor-pointer  text-2xl' ></MdModeEdit>
-        </td>
          <td>
          <MdDelete 
           id={Data.codeF}
@@ -169,4 +175,4 @@ const Type = () => {
    );
 }
  
-export default Type;
+export default History;
