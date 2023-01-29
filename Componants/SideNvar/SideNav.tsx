@@ -2,8 +2,14 @@ import {useState} from 'react';
 import Link from 'next/link'
 import SideElements from './SideNavElements'
 
-const SideNavbar = () => {
-    const [SideNav, setSideNav] = useState([true,false,false,false,false,false,false,false])
+
+interface props{
+  className: string;
+  State:boolean[]
+}
+
+const SideNavbar:React.FC<props> = (props) => {
+    const [SideNav, setSideNav] = useState(props.State)
     const Elements=[
       { id:0,
         Title:'Dashbord'} ,

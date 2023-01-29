@@ -53,13 +53,9 @@ else if(props.Title=='Customer') {
       }
     
    const handleSubmit = () => {
-       
         axios.post(url,data)
         .then(res => {
-          console.log(res);
-          console.log(res.data);
           console.log('Successful');
-          location.reload();
         })}
     
 
@@ -88,28 +84,28 @@ else if(props.Title=='Customer') {
         <form >
         <div className=" grid justify-items-center items-center grid-cols-2 w-full my-6 gap-3 ">
          <div className="">
-            <h1 className="mb-2 text-lg ">Fisrt Name</h1>
-            <input type="text" onChange={(e)=>handleChange(e,1)} className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <h1 className="mb-2 text-lg ">First Name</h1>
+            <input type="text" onChange={(e)=>handleChange(e,1)} className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg "> Last Name </h1>
-            <input type="text"  onChange={(e)=>handleChange(e,2)} className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text"  onChange={(e)=>handleChange(e,2)} className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg ">Adress</h1>
-            <input type="text" onChange={(e)=>handleChange(e,3)}   className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text" onChange={(e)=>handleChange(e,3)}   className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg ">Phone </h1>
-            <input type="text" onChange={(e)=>handleChange(e,4)}  className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text" onChange={(e)=>handleChange(e,4)}  className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg ">Emails</h1>
-            <input type="text"   className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
+            <input type="text"   className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
          </div>
       {props.Title!='Product' &&  <div className="">
             <h1 className="mb-2 text-lg ">Points</h1>
-            <input type="text"  className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
+            <input type="text"  className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
          </div>}
         </div>
         </form>

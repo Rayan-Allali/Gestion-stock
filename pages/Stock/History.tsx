@@ -6,10 +6,13 @@ import Image, { StaticImageData } from 'next/image'
 import FilterElmnt from '../../Componants/Filter';
 import axios from 'axios';
 import SectionTitle from '../../Componants/SectionTitle';
+import Pagination from '../../Componants/Tables/Pagination';
+import SideNavbar from '../../Componants/SideNvar/SideNav';
+import Navbar from '../../Componants/Navbar';
 
 
 const History = () => {
-
+  let State=[false,false,false,false,false,true,false,false]
     const [Filter, setFilter] =useState([true,false])
     let arr=[...Filter] 
     const Clickhandler=(id:number)=>{
@@ -109,8 +112,12 @@ const History = () => {
          }
   
     return(
-    <div  className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
-    <SectionTitle  title='History'  ></SectionTitle>
+      <div className='grid grid-cols-[230px,1fr] relative w-full'>
+      <SideNavbar State={State} className={` col-span-1 ` }  />
+      <div   className=" col-start-[2] col-end-[3] ">
+  <Navbar/>
+ <div  className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
+    <SectionTitle  title='History' type={'History'}  ></SectionTitle>
         <div className="grid py-[30px] justify-center ">  
      <div className="flex justify-start gap-2 " >
        <span onClick={()=>{Clickhandler(0)}} >
@@ -159,19 +166,14 @@ const History = () => {
          </tbody>
 
         </table>
-        <div className="flex w-[650px] mt-10 justify-items-center justify-between ">
-          <Image src={LeftArrow} alt="" className='cursor-pointer' onClick={()=>HandelPagination(0,'-')} ></Image>
-              {Array.map(Page=>{
-              return <p key={Page} className={`cursor-pointer ${DisplayPage(Page) && 'hidden'} grid items-center justify-center rounded-[7px]
-                  ${Page==currentPage && 'border-2 border-[#3A78F1] text-[#3A78F1] border-solid '} w-[30px] h-[30px]  `} 
-                  onClick={()=>HandelPagination(Page)} > {Page} </p>
-               })}
-          <Image src={RightArrow} className='cursor-pointer' alt="" onClick={()=>HandelPagination(0,'+')} ></Image>
-          </div>
+        <Pagination Array={Array}  DisplayPage={DisplayPage} HandelPagination={HandelPagination} currentPage={currentPage}  ></Pagination>
         </div>
         </div>
        
-      </div>     
+      </div>  
+      </div>
+      </div>
+      
    );
 }
  

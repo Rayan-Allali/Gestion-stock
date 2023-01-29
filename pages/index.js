@@ -6,12 +6,15 @@ import unpaidinv from '../public/unpaidinv.svg'
 import paidinv from '../public/paidinv.svg'
 import Image from 'next/image'
 import {Line} from 'react-chartjs-2';
-import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
+import {MdOutlineKeyboardArrowDown } from "react-icons/md";
+import SideNavbar from '../Componants/SideNvar/SideNav';
+import Navbar from '../Componants/Navbar';
 import {GiBanana,GiOrange,GiShinyApple} from "react-icons/gi";
 import Chart from 'chart.js/auto';
 import { useState } from 'react';
 
 export default function Home() {
+  let State=[true,false,false,false,false,false,false,false]
   const Sales=[
     { id:0,
       Type:0,
@@ -119,7 +122,12 @@ export default function Home() {
         {/* <link rel="icon" href="/favicon.ico" /> */}
         </>
          </Head>
-      <main className={`w-full bg-[#F8F8F8] pb-[20px] `} >
+         <div  className='grid grid-cols-[230px,1fr] relative w-full' >
+         <SideNavbar State={State} className={` col-span-1 ` }  />
+
+         <div   className=" col-start-[2] col-end-[3] ">
+         <Navbar/>
+         <main className={`w-full bg-[#F8F8F8] pb-[20px] `} >
       <div  className='flex h-[50px] bg-white px-5 relative ' >
       <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
       <Image alt='' src={DashbordA} ></Image>  Dashborad
@@ -352,6 +360,10 @@ export default function Home() {
     </div>
       
       </main>
+         </div>
+
+         </div>
+   
     </>
   )
 }

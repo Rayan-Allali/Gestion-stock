@@ -9,12 +9,9 @@ const lato = Lato({
 })
 export default function App({ Component, pageProps }) {
 
-  return  <main className={`  ${lato.className } font-semibold grid grid-cols-[230px,1fr] w-full` } >
-   <SideNavbar  className={` col-span-1 ` }   />
-  <div   className=" col-start-[2] col-end-[3] ">
-  <Navbar/>
-  <Component className="grid justify-end" {...pageProps} /> 
-  </div>
+  return  <main className={`  ${lato.className } font-semibold  w-full` } >
+  
+  <Component {...pageProps} /> 
  
   </main>
 }
