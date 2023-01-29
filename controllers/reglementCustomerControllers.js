@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma'
-import {  UpdateCustomerPoint, UpdateSaleMontant } from '../lib/updating';
+import {  UpdateCustomerPoint, UpdateSaleMontant, updatePointCustomer } from '../lib/updating';
 
 
 export async function getAllHandler(req,res){
@@ -58,8 +58,6 @@ const achat=await prisma.achat.findUnique({
                 clientId:{
                     select:{
                         codeC:true,
-                        nomC:true,
-                        img:true
                     }
                 }
             }
@@ -69,9 +67,11 @@ const TotalPaiment=achat.montantRestant-paiment
 if(TotalPaiment < 0) return res.status(400).json({status:400,message:"the amount you want to pay is bigger than the amount of the sale"})
 
 const update=await Promise.resolve(UpdateSaleMontant(paiment,idAchat,"-","delete"))
-if(update ===1) return res.status(400).json({status:400,message:"we couldnt update the customer and the sale montant"})
+if(update <2) return res.status(400).json({status:400,message:"we couldnt update the customer and the sale montant"})
 const update2=await Promise.resolve(UpdateCustomerPoint(paiment,achat.clientId.codeC,"+"))
-if(update2 ===1) return res.status(400).json({status:400,message:"we couldnt update the customer points try again"})
+if(update2 <2) return res.status(400).json({status:400,message:"we couldnt update the customer points try again"})
+const update3=Promise.resolve(updatePointCustomer(Date.now(),paiment,achat.clientId.codeC,"+"))
+if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the PointC try again"})
 const reglementCustomer=await prisma.regelementClient.create({
     data:{
         paiment,achatId:{
@@ -154,8 +154,6 @@ const reglementCustomer=await prisma.regelementClient.findUnique({
                 clientId:{
                     select:{
                         codeC:true,
-                        nomC:true,
-                        img:true
                     }
                 }
             }
@@ -168,6 +166,8 @@ const update=await Promise.resolve(UpdateSaleMontant(reglementCustomer.paiment,r
 if(update<2) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant"})
 const update2=await Promise.resolve(UpdateCustomerPoint(reglementCustomer.paiment,reglementCustomer.achatId.clientId.CodeC,"-")) 
 if(update2<2)return res.status(400).json({status:400,message:"we coudlnot update the customer point"})
+const update3=Promise.resolve(updatePointCustomer(Date.now(),reglementCustomer.paiment,reglementCustomer.achatId.client,"-"))
+if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the PointC try again"})
 const deletedregelementClient=await prisma.regelementClient.delete({
     where:{
         idRegelementClient:id
@@ -256,6 +256,8 @@ export async function putHandler(req,res){
     if(update < 2) return res.status(400).json({status:400,message:"we couldnt update the customer credit and the sale montant try again later"})
     const update2=await Promise.resolve(UpdateCustomerPoint(diff,achat.clientId.codeC,"+"))
     if(update2 < 2) return res.status(400).json({status:400,message:"we couldnt update the customer points"})
+    const update3=Promise.resolve(updatePointCustomer(Date.now(),diff,reglementCustomer.achatId.idAchat,"+"))
+if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the PointC try again"})
     const newreglementCustomer =await prisma.reglementFournisseur.update({
         where:{
             idRegelementClient:id

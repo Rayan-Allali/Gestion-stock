@@ -9,6 +9,7 @@ export async function getAllHandler(req,res){
                 idAchat:true,
                 montantTotal:true,
                 montantRestant:true,
+                DateA:true,
                 clientId:{
                     select:{
                         codeC:true,
@@ -16,7 +17,7 @@ export async function getAllHandler(req,res){
                         img:true
                     }
                 }
-                            }
+            }
         });
     if(!sales){
         return res.status(404).json({
@@ -84,6 +85,7 @@ const sale=await prisma.achat.findUnique({
         idAchat:true,
         montantTotal:true,
         montantRestant:true,
+        DateA:true,
         clientId:{
             select:{
                 codeC:true,
