@@ -1,57 +1,80 @@
 import axios from 'axios';
 import {motion,AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AiOutlineCheck } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
-import Dropzone from '../Imgdropping';
 interface props{
     Title:string,
-    Type?:string,
+    ID:number,
     setClicked:(value:boolean) => void
 }
-const AddProductStock:React.FC<props> = (props) => {
+
+
+const Edit:React.FC<props> = (props) => {
    const [Added,setAdded]=useState(false);
    let Type:any={};
-   let  url='http://localhost:3000/api/product'
-
-    Type={  img:"tst",
-    nomP: "",
-    designation:"",
-    type: props.Type ? props.Type : "" ,}
+   let url=''
+if(props.Title=='Supplier'){
+   Type={
+   nomF: "",
+   prenomF:"",
+   adressF: "",
+   teleF:"",
+   img:"tst",
+   email:"" }
+   url='http://localhost:3000/api/supplier'
+}
+else if(props.Title=='Customer') {
+   Type={  img:"tst",
+   nomC: "",
+   prenomC:"",
+   adressC: "",
+   teleC:""}
+   url='http://localhost:3000/api/customer'
+}
   const [data, setdata] = useState( Type )
      const handleChange = (event:any,attrb: number) => {
       switch (attrb) {
          case 1:
-         data.nomP  = event.target.value
+            if(props.Title=='Supplier')   data.nomF  = event.target.value
+            else data.nomC  = event.target.value
             break;
          case 2:
-         data.designation  = event.target.value
+            if(props.Title=='Supplier') data.prenomF  = event.target.value
+            else data.prenomC  = event.target.value
             break;
          case 3:
-         data.type  = event.target.value
-          break;}
+           if(props.Title=='Supplier') data.adressF  = event.target.value
+           else data.adressC  = event.target.value
+          break;
+         case 4:
+           if(props.Title=='Supplier') data.teleF= event.target.value
+           else data.teleC  = event.target.value
+          case 5:
+            if(props.Title=='Supplier') data.email= event.target.value
+            else data.email  = event.target.value
+          break;
+      }
       console.log(data);
       }
     
-   const handleSubmit = () => {  
+   const handleSubmit = () => {
+      console.log(data);
+      
         axios.post(url,data)
         .then(res => {
-          console.log(res);
-          console.log(res.data);
           console.log('Successful');
-          location.reload();
         })}
     
 
    async function SaveClicked() {
-     await handleSubmit() 
+      await handleSubmit() 
      setAdded(true) 
      setTimeout(() => {
       props.setClicked(false) 
      }, 400);
-     
    }
- 
+
     return ( 
     <motion.div  className="w-[800px] ml-[100px] absolute top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] h-[420px] shadow-2xl
     rounded-[10px] mb-10 bg-white p-7 text-[#b0b1b3] " 
@@ -61,34 +84,33 @@ const AddProductStock:React.FC<props> = (props) => {
     transition={{ type: "spring", stiffness: 60,delay:.5 }}
      >
     <div  className='flex justify-between' >
-    <h1  className="text-xl text-black font-semibold ">New {props.Title}</h1>  
+    <h1  className="text-xl text-black font-semibold ">Edit {props.Title}  N° {props.ID} </h1>  
     <div className='rounded-full bg-[#ff0000b7] hover:bg-[red] duration-[.5s] text-white text-xl w-[30px] h-[30px] grid justify-center cursor-pointer items-center' 
     onClick={()=>props.setClicked(false)}> 
     <FiX></FiX></div>
     </div>
         <form >
         <div className=" grid justify-items-center items-center grid-cols-2 w-full my-6 gap-3 ">
-        <Dropzone ></Dropzone>
-        <div className='grid gap-3  '    >
-        <div className="">
-            <h1 className="mb-2 text-lg ">Nom Produit</h1>
-            <input type="text" onChange={(e)=>handleChange(e,1)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+         <div className="">
+            <h1 className="mb-2 text-lg ">First Name</h1>
+            <input type="text" onChange={(e)=>handleChange(e,1)} className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
-            <h1 className="mb-2 text-lg "> Designation</h1>
-            <input type="text"  onChange={(e)=>handleChange(e,2)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <h1 className="mb-2 text-lg "> Last Name </h1>
+            <input type="text"  onChange={(e)=>handleChange(e,2)} className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
-            <h1 id='Type' className="mb-2 text-lg ">Type</h1>
-            {props.Type ? 
-             <input type="text" value={props.Type} readOnly={true}
-             className="rounded-[5px] pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " /> : 
-            <input type="text" onChange={(e)=>handleChange(e,3)}
-             className="rounded-[5px] w-[350px]  pl-[5%] h-[35px] border border-solid border-[#a6a7a8] " /> }
-         
+            <h1 className="mb-2 text-lg ">Adress</h1>
+            <input type="text" onChange={(e)=>handleChange(e,3)}   className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
-        </div>
-         
+         <div className="">
+            <h1 className="mb-2 text-lg ">Phone </h1>
+            <input type="text" onChange={(e)=>handleChange(e,4)}  className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+         </div>
+         <div className="">
+            <h1 className="mb-2 text-lg ">Email</h1>
+            <input type="text" onChange={(e)=>handleChange(e,5)}  className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
+         </div>
         </div>
         </form>
         <div className="flex w-full justify-end px-3 gap-4">
@@ -113,8 +135,7 @@ const AddProductStock:React.FC<props> = (props) => {
   </motion.div>
         }
         </AnimatePresence>
-      
     </motion.div> );
 }
  
-export default AddProductStock;
+export default Edit;

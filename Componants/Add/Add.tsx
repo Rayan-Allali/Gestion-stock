@@ -14,11 +14,13 @@ const Add:React.FC<props> = (props) => {
    let Type:any={};
    let url=''
 if(props.Title=='Supplier'){
-   Type={  img:"tst",
+   Type={
    nomF: "",
    prenomF:"",
    adressF: "",
-   teleF:""}
+   teleF:"",
+   img:"tst",
+   email:"" }
    url='http://localhost:3000/api/supplier'
 }
 else if(props.Title=='Customer') {
@@ -45,14 +47,19 @@ else if(props.Title=='Customer') {
            else data.adressC  = event.target.value
           break;
          case 4:
-           if(props.Title=='Supplier') data.teleF  = event.target.value
+           if(props.Title=='Supplier') data.teleF= event.target.value
            else data.teleC  = event.target.value
+          case 5:
+            if(props.Title=='Supplier') data.email= event.target.value
+            else data.email  = event.target.value
           break;
       }
       console.log(data);
       }
     
    const handleSubmit = () => {
+      console.log(data);
+      
         axios.post(url,data)
         .then(res => {
           console.log('Successful');
@@ -85,28 +92,24 @@ else if(props.Title=='Customer') {
         <div className=" grid justify-items-center items-center grid-cols-2 w-full my-6 gap-3 ">
          <div className="">
             <h1 className="mb-2 text-lg ">First Name</h1>
-            <input type="text" onChange={(e)=>handleChange(e,1)} className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text" onChange={(e)=>handleChange(e,1)} className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg "> Last Name </h1>
-            <input type="text"  onChange={(e)=>handleChange(e,2)} className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text"  onChange={(e)=>handleChange(e,2)} className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg ">Adress</h1>
-            <input type="text" onChange={(e)=>handleChange(e,3)}   className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text" onChange={(e)=>handleChange(e,3)}   className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg ">Phone </h1>
-            <input type="text" onChange={(e)=>handleChange(e,4)}  className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text" onChange={(e)=>handleChange(e,4)}  className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
-            <h1 className="mb-2 text-lg ">Emails</h1>
-            <input type="text"   className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
+            <h1 className="mb-2 text-lg ">Email</h1>
+            <input type="text" onChange={(e)=>handleChange(e,5)}  className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
          </div>
-      {props.Title!='Product' &&  <div className="">
-            <h1 className="mb-2 text-lg ">Points</h1>
-            <input type="text"  className=" pl-[5%] rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
-         </div>}
         </div>
         </form>
         <div className="flex w-full justify-end px-3 gap-4">

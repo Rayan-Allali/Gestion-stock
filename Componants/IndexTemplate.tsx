@@ -22,6 +22,7 @@ interface props{
 
 const [Data, setData] = useState<any>()
 const [AddClick, setAddClick] = useState(false)
+
 let State=[false,false,false,false,false,false,false,false]
 switch (props.title) {
   case "Product":

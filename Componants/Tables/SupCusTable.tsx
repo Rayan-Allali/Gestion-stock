@@ -22,6 +22,11 @@ interface props{
 }[]
 }
 const SupCus:React.FC<props> = (props) => {
+  const [EditClick, setEditClick] = useState(false)
+
+
+
+
     const [select, setselect] = useState(false)
     const [selectData, setselectData] = useState<number[]>([]);
     const handleSelect = () => {
@@ -65,7 +70,7 @@ const SupCus:React.FC<props> = (props) => {
       arr[id]=true
       setFilter(arr);
       }
-
+ 
        const [blogPosts, setBlogPosts] = useState([]);
        const [currentPage, setCurrentPage] = useState(1);
        const RowsPerPage = 4;
@@ -113,6 +118,31 @@ const SupCus:React.FC<props> = (props) => {
        }
 
   
+
+      //  const editElement=(ID: number)=>{ 
+      //     if(props.title==='Supplier'){
+      //      axios
+      //      .put(`http://localhost:3000/api/supplier/${ID}`,)
+      //      .then(() => {
+      //        console.log("No probleme");
+      //        location.reload();
+      //      })
+      //      .catch((err) => console.log(err));
+      //     }
+      //     else {
+      //      axios
+      //      .delete(`http://localhost:3000/api/customer/${ID}`)
+      //      .then(() => {
+      //        console.log("No probleme");
+      //        location.reload();
+      //      })
+      //      .catch((err) => console.log(err));
+      //     }
+           
+
+      //   axios.put('http://dummy.restapiexample.com/api/v1/update/{this.state.id}',0)
+      //  .then(res => console.log(res.data));
+      //  }
 
     return ( 
         <div  className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
