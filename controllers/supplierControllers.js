@@ -1,7 +1,14 @@
 import prisma from '../lib/prisma'
 export async function getAllHandler(req,res){
     try{
-        const suppliers=await prisma.fournisseur.findMany();
+        let page=(req.query.page * 1 - 1) * 4
+        if(!page || req.query.page === 0){
+            page=0
+        }
+        const suppliers=await prisma.fournisseur.findMany({
+            skip:page,
+            take: 4,
+        });
     if(!suppliers){
         return res.status(404).json({
             status:404,
@@ -66,7 +73,6 @@ const supplier=await prisma.fournisseur.findUnique({
 })
 if(!supplier) return res.status(404).json({status:404,message:"supplier not found"})
 
-console.log(update)
 return res.status(200).json({status:200,data:supplier})
 }
 catch(err){
