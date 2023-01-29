@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/index.tsx", "pages/Imgdropping.jsx"  ],
+, "pages/index.js", "pages/Imgdropping.jsx"  ],
   "exclude": [
     "node_modules"
   ]

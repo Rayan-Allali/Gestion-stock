@@ -1,6 +1,4 @@
 import '../styles/globals.css'
-import SideNavbar from '../Componants/SideNvar/SideNav'
-import Navbar from '../Componants/Navbar'
 import { Lato } from '@next/font/google'
 
 const lato = Lato({
