@@ -27,6 +27,8 @@ idAchat Int @id @default(autoincrement())
 montantTotal Int
 montantRestant Int
 client Int
+DateA DateTime @default(now())
+modifiedAt DateTime @updatedAt
 clientId client @relation(fields: [client],references: [codeC], onDelete: Cascade)
 reglements regelementClient[] 
 transactions transaction[]
@@ -54,6 +56,7 @@ model fournisseur{
   prenomF String
   adressF String
   teleF String
+  email String
   sold Int @default(0)
   pointF Int @default(0)
   ventes  vente[]
