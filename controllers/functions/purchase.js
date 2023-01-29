@@ -4,7 +4,7 @@ import prisma from "../../lib/prisma"
 export async function AllSalesOfCustomer(req,res){
     try{
         const id=req.query.id *1
-        const AllSalesOfCustomer=await prisma.achatt.findMany({
+        const AllSalesOfCustomer=await prisma.achat.findMany({
             where:{
                     client:id
             }
@@ -15,7 +15,7 @@ export async function AllSalesOfCustomer(req,res){
         })
     }catch(err){
         console.error(err)
-        return res.status.json({status:500,message:"something went wrong"})
+        return res.status(500).json({status:500,message:"something went wrong"})
     }
 }
 
@@ -33,6 +33,6 @@ export async function AllInvoicesOfSupplier(req,res){
         })
     }catch(err){
         console.error(err)
-        return res.status.json({status:500,message:"something went wrong"})
+        return res.status(500).json({status:500,message:"something went wrong"})
     }
 }
