@@ -28,9 +28,6 @@ const SectionTitle :React.FC<props>= (props) => {
             case 'Supplier':
             Img=SupplierA
                 break;
-            case 'Customer':
-            Img=customersA
-                break;
             case 'Stock':
             Img=StockA
                 break;
@@ -47,7 +44,7 @@ const SectionTitle :React.FC<props>= (props) => {
     return ( 
         <div  className='flex h-[50px] bg-white px-5 items-center ' >
                     <div className={`flex gap-3 font-[700] text-[14px] py-3 items-center text-[#34393D]`}> 
-                    <Image alt="" src={Img} ></Image > {props.title}s
+                    <Image alt="" src={Img} ></Image > {props.title}
                     </div>
         </div> 
      );

@@ -72,7 +72,16 @@ if(!customer)return res.status(400).json({
         status:400,
         message:"something went wrong we couldn't create new customer"
     })
-
+    const PointC=await prisma.pointC.create({
+       data:{
+        points:0,
+        customer:{
+            connect:{
+                codeC:customer.codeC
+            }
+        }
+       }
+    })
   return res.status(201).json({
     status:201,
     data:customer

@@ -6,7 +6,8 @@ const clients=await Prisma.fournisseur.create({data:{
   prenomF: "ryad",
   teleF: "989-956-1716",
   img: "https://robohash.org/doloresutest.png?size=20x20&set=set1",
-  adressF: "mhalma"
+  adressF: "mhalma",
+  email:"test@gmail.com"
 }})
 }
 main()

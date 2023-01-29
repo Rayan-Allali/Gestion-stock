@@ -20,8 +20,15 @@ model client{
   credit Int @default(0)
   pointC Int @default(0)
   achats achat[]
+  pointcs pointC[]
 }
-
+model pointC{
+  idPoint Int @id @default(autoincrement())
+  yearP DateTime @default(now())
+  points Int 
+  customerId Int
+  customer client @relation(fields: [customerId ],references: [codeC],onDelete: Cascade)
+}
 model achat{
 idAchat Int @id @default(autoincrement())
 montantTotal Int
@@ -62,7 +69,17 @@ model fournisseur{
   ventes  vente[]
   commandes bonCommande[]
   factures facture[]
+  pointFs pointF[]
 }
+
+model pointF{
+  idPoint Int @id @default(autoincrement())
+  yearP DateTime  @default(now())
+  points Int 
+  supplierId Int
+  supplier fournisseur @relation(fields: [supplierId],references: [codeF],onDelete: Cascade)
+}
+
 model vente{
 produit Int
 product produit @relation(fields: [produit],references: [codeP],onDelete: Cascade)
