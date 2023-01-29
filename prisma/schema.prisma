@@ -102,6 +102,23 @@ ventes vente[]
 stocker stocker[]
 productsStock productstock[]
 sortieStock sortieStock[]
+qteVendus qteVendu[]
+qteAchats qteAchat[]
+}
+model qteVendu{
+  idQte Int @id @default(autoincrement())
+  qte Int @default(0)
+  yearP DateTime @default(now())
+  produitId Int
+  produit produit @relation(fields: [produitId],references: [codeP],onDelete: Cascade)
+}
+
+model qteAchat{
+  idQte Int @id @default(autoincrement())
+  qte Int @default(0)
+  yearP DateTime @default(now())
+  produitId Int
+  produit produit @relation(fields: [produitId],references: [codeP],onDelete: Cascade)
 }
 model typeProduit{
   name String @id 

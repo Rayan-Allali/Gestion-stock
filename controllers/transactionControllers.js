@@ -87,7 +87,7 @@ const transaction =await prisma.transaction.create({
 })
 const update= await Promise.resolve(updateProductStockQte(qte,idStock,"-"))
 if(update === 0) return res.status(404).json({status:400,message:"no product in stock with that id"})
-
+ 
 if(update === 1)return res.status(400).json({status:400,message:"This product's quantity is less than the amount you wish to extract."})
 
 const montant=qte * transaction.produitStock.prixV

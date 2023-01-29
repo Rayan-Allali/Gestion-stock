@@ -259,8 +259,10 @@ export async function putHandler(req,res){
             }
         })
         if(!updatedInvoice) return res.status(400).json({status:400,message:"we couldnt update the invoice"})
+        console.log("hiiiiiiiiiii")
         const qte2=stocker.qte - qte
        const update=await Promise.resolve(UpdateProductQteAchat(qte2,codeP,"+"))
+       console.log("hiiiiiiiii")
        if(update<2) return res.status(400).json({status:400,message:"we couldnt update the product qteachat"})
     }
     else if(qte && !prixV){
