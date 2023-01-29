@@ -4,6 +4,7 @@ export async function getAllHandler(req,res){
         const invoices=await prisma.facture.findMany(
             {
                 select:{
+                    numF:true,
                     dateF:true,
                     fournisseur:true,
                     TotalRest:true,
@@ -45,6 +46,7 @@ export async function getHandler(req,res){
             numF:id
         },
         select:{
+            numF:true,
             dateF:true,
             fournisseur:true,
             stocker:{

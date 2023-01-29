@@ -15,31 +15,6 @@ export async function getAllHandler(req,res){
                         nomC:true,
                         img:true
                     }
-                },
-                reglements:{
-                    select:{
-                        idRegelementClient:true,
-                        paiment:true,
-                    }
-                }
-                ,transactions:{
-                    select:{
-                        numTr:true,
-                        qte:true,
-                        produitStock :{
-                            select:{
-                                idStock:true,
-                                prixV:true,
-                                product:{
-                                    select:{
-                                        codeP:true,
-                                        nomP:true,
-                                        img:true 
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
                             }
         });
