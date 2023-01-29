@@ -1,19 +1,8 @@
-
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import ProduitStock from '../../Componants/Tables/ProduitStock'
+import IndexTeplate from '../../Componants/IndexTemplate'
 
 export default function Home() {
-  const [Data, setData] = useState<any>()
-  useEffect(() => { 
-    axios.get(`http://localhost:3000/api/product`)
-    .then(res => {
-     setData(res.data.data)})
-  }, [])
- 
+const url=`http://localhost:3000/api/product`
   return (
-    <>
-    {Data &&  <ProduitStock   Data={Data}  title="Product"  ></ProduitStock> }   
-    </>
+    <IndexTeplate  Filter={false} title='Product' url={url}  Type="PS" ></IndexTeplate>
   )
 }

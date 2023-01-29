@@ -1,16 +1,16 @@
-import { useEffect, useState} from 'react';
-import Plus from '../../public/Plus.svg'
-import LeftArrow from '../../public/LeftArrow.svg'
-import RightArrow from '../../public/RightArrow.svg'
-import { MdDelete,MdOutlineKeyboardArrowDown,MdModeEdit } from "react-icons/md";
-import Image, { StaticImageData } from 'next/image'
+import { Dispatch, SetStateAction, useEffect, useState} from 'react';
+import { MdDelete,MdModeEdit } from "react-icons/md";
+import Image from 'next/image'
 import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
 import Add from '../Add/Add';
 import axios from 'axios';
 import SectionTitle from '../SectionTitle';
+import Upper from './UpperTable';
+import Pagination from './Pagination';
 interface props{
   title:string,
+  setAddClick: Dispatch<SetStateAction<boolean>>,
   choices?: { id:number, Nbr: number,Title: string}[],
   Data:{
     codeF?: number;   codeC?:number;
@@ -22,8 +22,6 @@ interface props{
 }[]
 }
 const SupCus:React.FC<props> = (props) => {
-    const [Filter, setFilter] =useState([true,false,false])
-    const [AddClick, setAddClick] = useState(false)
     const [select, setselect] = useState(false)
     const [selectData, setselectData] = useState<number[]>([]);
     const handleSelect = () => {
@@ -60,7 +58,7 @@ const SupCus:React.FC<props> = (props) => {
     .catch((err) => console.log(err));
    }
     };
-
+    const [Filter, setFilter] =useState([true,false,false])
     let arr=[...Filter] 
     const Clickhandler=(id:number)=>{
       arr=[false,false,false]
@@ -70,9 +68,9 @@ const SupCus:React.FC<props> = (props) => {
 
        const [blogPosts, setBlogPosts] = useState([]);
        const [currentPage, setCurrentPage] = useState(1);
-       const RowsPerPage = 5;
+       const RowsPerPage = 4;
        const indexOfLastPost = currentPage * RowsPerPage;
-       const LastPage= Math.ceil(props.Data.length/5)
+       const LastPage= Math.ceil(props.Data.length/4)
        const [ArrayPage, setArrayPage] = useState([]);
 
        const DisplayPage=(id:number)=>{
@@ -117,47 +115,24 @@ const SupCus:React.FC<props> = (props) => {
   
 
     return ( 
-        <div  className=" bg-[#EFF2F6] w-full">
-      <SectionTitle  title={props.title}  ></SectionTitle>
-          <div className="grid  py-[30px] justify-center ">  
-          {props.choices && <div className="flex justify-start gap-2 mt-5 " >
+        <div  className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
+      <SectionTitle type={props.title}  title={props.title}  ></SectionTitle>
+          <div className="grid py-[30px] justify-center ">  
+          {props.choices && <div className="flex justify-start gap-2 " >
          {props.choices.map(Filterage=>{
             return <span key={Filterage.id} onClick={()=>{Clickhandler(Filterage.id)}} >
                    <FilterElmnt Filter={Filter[Filterage.id]} {...Filterage}></FilterElmnt>
             </span>
          })}
          </div>}
-         <AnimatePresence>
-        {AddClick &&  <motion.div className='w-[calc(100vw-230px)] z-10 h-[calc(100vh-122px)] fixed bg-[#3b373713]  top-[122px] '   
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0, }} 
-        transition={{duration:.5, }}
-        >
-         <Add Title={props.title}  setClicked={setAddClick} ></Add>
-         </motion.div> }
-         </AnimatePresence>
-          <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,250px] py-2 pb-4 w-[900px] ">
-          <div className="w-full h-[90px]  flex justify-between items-center " >
-            <div  className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
-            gap-2 font-bold items-center  "  onClick={()=>setAddClick(true)} > 
-            <Image src={Plus} alt=""></Image> Add {props.title}   </div>
-            <div className=' flex gap-3' >
-              <input type="text" placeholder="Search" className="w-[250px] rounded-[5px] p-2 px-4 bg-[#FAFAFA] h-[36px] " />
-              <div className="bg-[#f4f5f7] text-[#8f969c] p-2 text-xl rounded-[5px] cursor-pointer  "  onClick={handleSelect} >
-              <MdDelete ></MdDelete>
-              </div>
-                <div  className="w-[90px] h-[35px] text-[#3A78F1] bg-[#ecf2fe] rounded-[5px] cursor-pointer text-[14px] 
-                flex justify-center gap-2 font-bold items-center  "  >  Filter 
-                 <MdOutlineKeyboardArrowDown  className='text-xl' ></MdOutlineKeyboardArrowDown> </div>
-            </div>
-           </div>
+          <div className="bg-white grid  justify-items-center justify-center grid-rows-[90px,200px] py-1 pb-4 w-[900px] ">
+          <Upper  handleSelect={handleSelect} setAddClick={props.setAddClick} title={props.title} ></Upper>
            <table className=" w-[750px] text-left ">
             <thead>
             <tr className="text-[#A0AEC0] ">
               <th className='w-[4%] ' ></th>
-    <th className='w-[10%] '>Id</th>
-    <th className='w-[15%] '  >Name</th>
+    <th className='w-[5%] '>Id</th>
+    <th className='w-[25%] '  >Name</th>
     <th className='w-[15%] '   >{props.title=='Customer' && 'Credit' }    {props.title=='Supplier' && 'Sold' }</th>
     <th  className='w-[24%] ' >Phone Number</th>
     <th className='w-[20%] '>Points </th>
@@ -193,15 +168,7 @@ const SupCus:React.FC<props> = (props) => {
            </tbody>
 
           </table>
-          <div className="flex w-[650px] mt-10 justify-items-center justify-between ">
-            <Image src={LeftArrow} alt="" className='cursor-pointer' onClick={()=>HandelPagination(0,'-')} ></Image>
-                {Array.map(Page=>{
-                return <p key={Page} className={`cursor-pointer ${DisplayPage(Page) && 'hidden'} grid items-center justify-center rounded-[7px]
-                    ${Page==currentPage && 'border-2 border-[#3A78F1] text-[#3A78F1] border-solid '} w-[30px] h-[30px]  `} 
-                    onClick={()=>HandelPagination(Page)} > {Page} </p>
-                 })}
-            <Image src={RightArrow} className='cursor-pointer' alt="" onClick={()=>HandelPagination(0,'+')} ></Image>
-            </div>
+          <Pagination Array={Array}  DisplayPage={DisplayPage} HandelPagination={HandelPagination} currentPage={currentPage}  ></Pagination>
           </div>
           </div>
          

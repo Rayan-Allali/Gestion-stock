@@ -1,18 +1,9 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import SupCus from '../../Componants/Tables/SupCusTable'
+import IndexTeplate from '../../Componants/IndexTemplate'
 
 export default function Home() {
-const [Data, setData] = useState<any>()
-  useEffect(() => { 
-    axios.get(`http://localhost:3000/api/supplier`)
-    .then(res => {
-     setData(res.data.data)})
-  }, [])
- 
+const url=`http://localhost:3000/api/supplier`
+
  return (
-    <>
-     { Data && <SupCus   Data={Data} title="Supplier"  ></SupCus>}
-    </>
+  <IndexTeplate  Filter={false} title='Supplier' url={url}  Type="CS" ></IndexTeplate>
   )
 }

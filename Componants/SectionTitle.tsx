@@ -1,5 +1,5 @@
 import Image, { StaticImageData } from 'next/image'
-
+import History from '../public/History.png'
 import InvoiceA from '../public/invoice+.svg'
 import SaleA from '../public/Sales+.png'
 import StockA from '../public/Stock+.png'
@@ -7,16 +7,16 @@ import ProduitA from '../public/product+.png'
 import customersA from '../public/customers+.svg'
 import SupplierA from '../public/Suppliers+.svg'
 
-type Type= 'Invoice' | 'Customer' | 'Product' | 'Stock' | 'Sale' | 'Supplier'
+// type Type= 'Invoice' | 'Customer' | 'Product' | 'Stock' | 'Sale' | 'Supplier' | 'History'
 interface props{
     title:string,
-    type?:Type
+    type:string
   }
 
 const SectionTitle :React.FC<props>= (props) => {
     let Img: StaticImageData
       const ImgSetter=()=>{
-        switch (props.title) {
+        switch (props.type) {
             case 'Invoice':
              Img=InvoiceA
                 break;
@@ -37,6 +37,9 @@ const SectionTitle :React.FC<props>= (props) => {
             case 'Product':
             Img=ProduitA
                 break;
+            case 'History' : 
+            Img=History
+            break;
         }
      return Img
        }

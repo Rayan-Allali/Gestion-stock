@@ -7,6 +7,7 @@ import NewAdd from '../../public/NewAdd.png'
  
 import { FiX } from "react-icons/fi";
 import Image from 'next/image'
+import Add from './Add';
 interface props{
     Title:string,
     setClicked:(value:boolean) => void
@@ -14,15 +15,15 @@ interface props{
 
 
 const AddInvSale:React.FC<props> = (props) => {
+   const [AddClick, setAddClick] = useState(false)
+   
    const [Added,setAdded]=useState(false);
    const [productAdded, setproductAdded] = useState([0])
    const AddProduct=()=>{
       setproductAdded([...productAdded,0])
-      console.log(productAdded);
-      
    }
    let Type:any={};
-   let  url='http://localhost:3000/api/product'
+   // let  url='http://localhost:3000/api/product'
 
     Type={  img:"tst",
     nomP: "",
@@ -40,7 +41,6 @@ const AddInvSale:React.FC<props> = (props) => {
          case 3:
          data.type  = event.target.value
           break;}
-      console.log(data);
       }
     
    const handleSubmit = () => {  
@@ -52,7 +52,32 @@ const AddInvSale:React.FC<props> = (props) => {
       //     location.reload();
       //   })
    }
-    
+
+
+   const [Customers, setCustomers] = useState(false)
+   const [CustomerField, setCustomerField] = useState<any>()
+   const [CustomersData, setCustomersData] = useState<any>()
+   const url=`http://localhost:3000/api/customer`
+   const handleFocus=(Type:Number,e)=>{
+// Type=0 means Customer or supplier 1 means Product
+    if(Type==0){
+    axios.get(url)
+   .then(res => {
+   setCustomersData(res.data.data)})
+   setCustomers(true)
+    }
+    else {}
+   }  
+   const handleBlur=(Type:Number,e)=>{
+      // Type=0 means Customer or supplier 1 means Product
+      if(Type==0){
+         setTimeout(() => {
+            setCustomers(false)
+             e.target.value=CustomerField.nomC + ' ' +CustomerField.prenomC  
+         }, 1500);
+      }
+      else {}
+         }  
 
    async function SaveClicked() {
      await handleSubmit() 
@@ -80,16 +105,26 @@ const AddInvSale:React.FC<props> = (props) => {
         <form >
         <div className="flex flex-col items-center w-full my-6 gap-8 ">
         <div className="relative">
-           <Image src={NewAdd} className="absolute h-[20px] cursor-pointer w-[20px] translate-y-[-50%] top-[50%] left-5 " alt=""></Image>
-            <input type="text" onChange={(e)=>handleChange(e,1)} placeholder="Select Customer" className=" pl-[30%] rounded-[5px] w-[300px] h-[40px] border border-solid border-[#a6a7a8] " />
+           <Image src={NewAdd} className="absolute h-[20px] cursor-pointer w-[20px] translate-y-[-50%] top-[50%] left-5 " alt=""
+           onClick={()=>setAddClick(true)}
+           ></Image>
+            <input type="text" onFocus={(e)=>{handleFocus(0,e)}} onBlur={(e)=>{handleBlur(0,e)}} onChange={(e)=>handleChange(e,1)} placeholder="Select Customer" 
+            className=" pl-[30%] rounded-[5px] w-[300px] h-[40px] border border-solid border-[#a6a7a8] " />
+         {  Customers && <div  className='border border-solid text-black border-black absolute bottom-[-400%] w-[300px] overflow-y-scroll max-h-[150px] bg-white ' >
+                    {CustomersData  && CustomersData.map(Data=>{
+                     return <div  className='flex p-2 cursor-pointer gap-1 border-b-solid border-b border-b-black' key={Data.codeC}
+                     onClick={()=>{setCustomerField(Data);  console.log(CustomerField);}}> 
+                            <p>N° {Data.codeC} </p> 
+                            <p> {Data.nomC} </p>
+                            <p> {Data.prenomC} </p>
+                          </div>
+                    }) }
+           </div> }
          </div>
          <div className='max-h-[210px] overflow-y-scroll grid gap-4'>
          {productAdded.map(product=>{
             return    <div className='flex gap-4'>
-             <div className="relative">
-           <Image src={NewAdd} className="absolute h-[20px] cursor-pointer w-[20px] translate-y-[-50%] top-[50%] left-5 " alt=""></Image>
-               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="Select Product" className=" pl-[25%] rounded-[5px] w-[270px] h-[40px] border border-solid border-[#a6a7a8] " />
-            </div>
+               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="Select Product" className=" pl-[15%] rounded-[5px] w-[270px] h-[40px] border border-solid border-[#a6a7a8] " />
             <div className="">
                <input type="text" onChange={(e)=>handleChange(e,3)} placeholder="PrixUt"   className="  pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
             </div>
@@ -131,7 +166,16 @@ const AddInvSale:React.FC<props> = (props) => {
   </motion.div>
         }
         </AnimatePresence>
-      
+        <AnimatePresence>
+        {AddClick &&  <motion.div   
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, }} 
+        transition={{duration:.5, }}
+        >
+         <Add Title={props.Title=="Invoice" ? "Supplier"  : "Customer" }  setClicked={setAddClick} ></Add>
+         </motion.div> }
+         </AnimatePresence>     
     </motion.div> );
 }
  
