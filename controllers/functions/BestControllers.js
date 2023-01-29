@@ -74,7 +74,8 @@ export async function bestCustomers(req,res){
 
  export async function bestProductVendu(req,res){
     try{
-     const bestProductVendu=await prisma.produit.findMany({
+        const id=req.query.id * 1
+     const bestProductVendu=await prisma.qteVendu.findMany({
          take: 3,
          orderBy: {
              qteVendu: 'desc',
@@ -90,10 +91,28 @@ export async function bestCustomers(req,res){
  export async function bestProductAchat(req,res){
     try{
      const bestProductAchat=await prisma.produit.findMany({
-         take: 3,
-         orderBy: {
-             qteAchat: 'desc',
-           },
+        take: 3,
+        where:{
+            yearP:{
+                gte: new Date(
+                    `${id}-01-01T00:00:00+0000`
+                  ),
+                  lte:new Date(
+                      `${id}-12-31T00:00:00+0000`
+                    ),
+            }
+        },
+        orderBy: {
+            qte: 'desc',
+          },
+          select:{
+            points,
+            produit :{
+                codeP:true,
+                nomP:true,
+                img:true
+            }
+          }
      })
      return res.status(200).json({status:200,data:bestProductAchat})
     }catch(err){

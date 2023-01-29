@@ -176,3 +176,22 @@ export async function countAllProduct(req,res){
         return res.status.json({status:500,message:"something went wrong"})
     }
 }
+
+export async function countAllProductOfType(req,res){
+    try{
+        const id=req.query.id
+        const countAllProduct=await prisma.produit.count({
+            where:{
+                type:id
+            }
+        })
+        return res.status(200).json({
+            status:300,
+            data:countAllProduct
+        })
+    }catch(err){
+        console.error(err)
+        return res.status.json({status:500,message:"something went wrong"})
+    }
+}
+
