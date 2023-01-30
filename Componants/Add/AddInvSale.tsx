@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { AiOutlineCheck } from "react-icons/ai";
 import PlusA from '../../public/Plus+.png' 
 import NewAdd from '../../public/NewAdd.png' 
- 
 import { FiX } from "react-icons/fi";
 import Image from 'next/image'
 import Add from './Add';
@@ -94,6 +93,7 @@ const AddInvSale:React.FC<props> = (props) => {
          // setProducts(State)
     }
    }  
+   
    const handleBlur=(Type:Number,e)=>{
       // Type=0 means Customer or supplier 1 means Product
       if(Type==0){

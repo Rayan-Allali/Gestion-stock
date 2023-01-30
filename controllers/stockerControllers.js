@@ -1,6 +1,6 @@
 import prisma from '../lib/prisma'
 import {findProduct,mergeStock} from '../lib/searchObject'
-import { UpdateSupplierSold,updateProductStockQte,UpdateProductQteAchat} from '../lib/updating'
+import { UpdateSupplierSold,updateProductStockQte,UpdateProductQteAchat, updatePointSupplier} from '../lib/updating'
 export async function getAllHandler(req,res){
     try{
         const stockers=await prisma.stocker.findMany(
@@ -167,6 +167,8 @@ const ir=await Promise.resolve(findProduct(product))
         const montant=qte * prixHt
         const update=await Promise.resolve(UpdateSupplierSold(montant,invoice.supplier.codeF,"+","post"))
         if(update<2)return res.status(400).json({status:400,message:"we couldnt update supplier sold"})
+        const update3=Promise.resolve(updatePointSupplier(Date.now(),montant,invoice.supplier.codeF,"+"))
+        if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the PointF try again"})
 const stocker=await prisma.stocker.create({
     data:{
         qte,
@@ -257,8 +259,10 @@ export async function putHandler(req,res){
             }
         })
         if(!updatedInvoice) return res.status(400).json({status:400,message:"we couldnt update the invoice"})
+        console.log("hiiiiiiiiiii")
         const qte2=stocker.qte - qte
        const update=await Promise.resolve(UpdateProductQteAchat(qte2,codeP,"+"))
+       console.log("hiiiiiiiii")
        if(update<2) return res.status(400).json({status:400,message:"we couldnt update the product qteachat"})
     }
     else if(qte && !prixV){
@@ -345,6 +349,8 @@ if(update <2) return res.status(400).json({status:400,message:"we couldnt update
     }
 })
 if(!updatedstock) return res.status(400).json({status:400,message:"we couldnt update the product stuck qte"})
+const update3=Promise.resolve(updatePointSupplier(Date.now(),total,facture.supplier.codeF,"+"))
+if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the PointF try again"})
     const newstocker =await prisma.stocker.updateMany({
         where:{
             facture:numF,
@@ -422,6 +428,8 @@ export async function deleteHandler(req,res){
        if(update1<2) return res.status(400).json({status:400,message:"we couldnt update the productstuck qte"})
         const update=await Promise.resolve(UpdateSupplierSold(montant,invoice.supplier.codeF,"-","post"))
         if(update<2)return res.status(400).json({status:400,message:"we couldnt update supplier sold"})
+        const update3=Promise.resolve(updatePointSupplier(Date.now(),montant,invoice.supplier.codeF,"-"))
+        if(update3 <2) return res.status(400).json({status:400,message:"we couldnt update the PointF try again"})
         const deletedstocker=await prisma.stocker.deleteMany({
             where:{
                 facture:numF*1,

@@ -85,7 +85,20 @@ if(!product )return res.status(400).json({
         status:400,
         message:"something went wrong we couldn't create new product"
     })
-
+const qteVendu=await prisma.qteVendu.create({
+    produit:{
+        connect:{
+            codeP:product.codeP
+        }
+    }
+})
+const qteAchat=await prisma.qteAchat.create({
+    produit:{
+        connect:{
+            codeP:product.codeP
+        }
+    }
+})
   return res.status(201).json({
     status:201,
     data:product

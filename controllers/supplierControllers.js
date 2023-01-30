@@ -1,14 +1,7 @@
 import prisma from '../lib/prisma'
 export async function getAllHandler(req,res){
     try{
-        let page=(req.query.page * 1 - 1) * 4
-        if(!page || req.query.page === 0){
-            page=0
-        }
-        const suppliers=await prisma.fournisseur.findMany({
-            skip:page,
-            take: 4,
-        });
+        const suppliers=await prisma.fournisseur.findMany();
     if(!suppliers){
         return res.status(404).json({
             status:404,
@@ -31,22 +24,32 @@ export async function getAllHandler(req,res){
 
 export async function postHandler(req,res){
     try{
-const {nomF,adressF,prenomF,teleF,img}=req.body
-if(!nomF || !adressF || !teleF || !prenomF || !img) return res.status(400).json({status:400,message:"missing data"});
+const {nomF,adressF,prenomF,teleF,img,email}=req.body
+if(!nomF || !adressF || !teleF || !prenomF || !img ||!email) return res.status(400).json({status:400,message:"missing data"});
 const pointF=0;
 const sold=0;
+
 const supplier =await prisma.fournisseur.create({
     data:{
-        nomF,adressF,prenomF,teleF,pointF,sold,img
+        nomF,adressF,prenomF,teleF,pointF,sold,img,email
     }
 })
-if(!supplier ){return res.status(400).json({
+if(!supplier){return res.status(400).json({
         status:400,
         message:"something went wrong we couldn't create new supplier"
     }); 
-console.log('HI');
 }
 
+const PointF=await prisma.pointF.create({
+    data:{
+        points:0,
+    supplier:{
+        connect:{
+            codeF:supplier.codeF
+        }
+    }
+    }
+})
   return res.status(201).json({
     status:201,
     data:supplier 
@@ -117,8 +120,8 @@ export async function putHandler(req,res){
             message:'invalid id'
         })
     }
-    let {nomF,prenomF,adressF,teleF}=req.body
-    if(!nomF && !prenomF && !adressF && !teleF){
+    let {nomF,prenomF,adressF,teleF,email}=req.body
+    if(!nomF && !prenomF && !adressF && !teleF && !email) {
         return res.status(400).json({
             status:400,
             message:"missing data"
@@ -148,12 +151,15 @@ export async function putHandler(req,res){
     if(!prenomF){
         prenomF=supplier.prenomF
     }
+    if(!email){
+        email=supplier.email
+    }
     const newsupplier =await prisma.fournisseur.update({
         where:{
             codeF:id
         },
         data:{
-            prenomF,nomF,teleF,adressF
+            prenomF,nomF,teleF,adressF,email
         }
     })
     return res.status(200).json({

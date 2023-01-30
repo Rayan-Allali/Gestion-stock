@@ -28,9 +28,6 @@ const SectionTitle :React.FC<props>= (props) => {
             case 'Supplier':
             Img=SupplierA
                 break;
-            case 'Customer':
-            Img=customersA
-                break;
             case 'Stock':
             Img=StockA
                 break;
