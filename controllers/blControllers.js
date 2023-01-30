@@ -6,6 +6,7 @@ export async function getAllHandler(req,res){
             select:{
                 id:true,
                 DateBl:true,
+                facture:true,
                 numFacture:{
                     select:{
                         numF:true,

@@ -9,6 +9,8 @@ import ProduitStock from './Tables/ProduitStock';
 import InvSale from './Tables/InvSale';
 import AddProductStock from './Add/AddProductStock';
 import AddInvSale from './Add/AddInvSale';
+import Bl from './Tables/Bl';
+import Bc from './Tables/Bc';
 import Addpay from './Add/AddPay';
 
 interface props{
@@ -46,9 +48,6 @@ switch (props.title) {
     case "Invoice":
       State[6]=true
       break;
-      
-            State[4]=true
-            break;
 }
 let Filtage=null
 if(props.Type=="CS")
@@ -66,10 +65,10 @@ if(props.Type=="CS")
   axios.get(props.url)
   .then(res => {
    setData(res.data.data)})
-   console.log(Data);
+   
  }, 800); 
 }, [AddClick])
-
+console.log(Data);
  return (
   <div className='grid grid-cols-[230px,1fr] relative w-full'>
        <SideNavbar State={State} className={` col-span-1 ` }  />
@@ -78,6 +77,8 @@ if(props.Type=="CS")
   { props.Type=="CS" && Data  &&  <SupCus  setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></SupCus>}
   { props.Type=="PS" && Data  &&  <ProduitStock  setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></ProduitStock>}
   { props.Type=="IS" && Data  &&  <InvSale setAddPay={setAddPay} setPayID={setPayID} setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></InvSale>}
+  { props.Type=="BC" && Data  &&  <Bc  setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></Bc>}
+  { props.Type=="BL" && Data  &&  <Bl  setAddClick={setAddClick} Data={Data} title={props.title}  ></Bl>}
      </div>
     <AnimatePresence>
         {AddClick &&  <motion.div className='w-[calc(100vw-230px)] z-10 h-[calc(100vh-122px)] fixed bg-[#3b373713] left-[230px]  top-[122px] '   
