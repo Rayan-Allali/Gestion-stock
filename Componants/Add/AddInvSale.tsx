@@ -7,7 +7,6 @@ import NewAdd from '../../public/NewAdd.png'
 import { FiX } from "react-icons/fi";
 import Image from 'next/image'
 import Add from './Add';
-import ProductElement from './ProductElement';
 interface props{
     Title:string,
     setClicked:(value:boolean) => void
@@ -43,7 +42,8 @@ const AddInvSale:React.FC<props> = (props) => {
          data.nomP  = event.target.value
             break;
          case 2:
-         data.designation  = event.target.value
+         data.codeP  = event.target.value
+         console.log(event.target.value);
             break;
          case 3:
          data.type  = event.target.value
@@ -153,8 +153,31 @@ const AddInvSale:React.FC<props> = (props) => {
          </div>
          <div className='max-h-[210px] overflow-y-scroll grid gap-4'>
          {productAdded.map(product=>{
-            return     <ProductElement Products={Products} ProductsData={ProductsData} setProductField={setProductField}
-             handleBlur={handleBlur} handleChange={handleChange} handleFocus={handleFocus} product={product}  ></ProductElement>
+            return    <div className='flex gap-4' key={Math.random()} >
+               <div>
+               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="Select Product" className=" pl-[15%] rounded-[5px] w-[270px] h-[40px] border border-solid border-[#a6a7a8] " />
+               {  Products && <div  className='border border-solid text-black border-black absolute bottom-[-400%] w-[300px] overflow-y-scroll h-[150px] max-h-[150px] bg-white ' >
+                    {ProductsData  && ProductsData.map(Data=>{
+                     return <div  className='flex p-2 cursor-pointer gap-1 border-b-solid border-b border-b-black' key={Math.random()}
+                     onClick={()=>{setProductField(prev=>prev=Data);  }}> 
+                            <p>N° {Data.codeP} </p> 
+                            <p> {Data.nomP} </p>
+                            <p> QteAchat : {Data.qteAchat} </p>
+                            <p> QteVent : {Data.qteVendu} </p>
+                          </div>
+                    }) }
+           </div> }
+               </div>
+            <div className="">
+               <input type="text" onChange={(e)=>handleChange(e,3)} placeholder="PrixUt"   className="  pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
+            </div>
+            <div className="">
+               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="PrixVt" className=" pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
+            </div>
+            <div className="">
+               <input type="text" onChange={(e)=>handleChange(e,3)} placeholder="Qte"   className="  pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
+            </div>
+         </div> 
            
          })}
          </div>
