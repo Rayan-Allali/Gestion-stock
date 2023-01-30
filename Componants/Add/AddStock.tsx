@@ -1,0 +1,143 @@
+import axios from 'axios';
+import {motion,AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react';
+import { AiOutlineCheck } from "react-icons/ai";
+import { FiX } from "react-icons/fi";
+import Dropzone from '../Imgdropping';
+interface props{
+    Title:string,
+    Type?:string,
+    setClicked:(value:boolean) => void
+}
+const AddProductStock:React.FC<props> = (props) => {
+   const [Added,setAdded]=useState(false);
+   let Type:any={};
+   let  url
+   console.log(props.Title);
+   
+   if(props.Title=='Product' || 'Product Types' ){
+      Type={  img:"tst",
+      nomP: "",
+      designation:"",
+      type: props.Type ? props.Type : "" ,}
+      url='http://localhost:3000/api/product'
+   } 
+   else{
+      Type={  prixHt:0,
+         produit:0,
+      prixV: 0,
+      qte:0,}
+
+     
+      url='http://localhost:3000/api/productStock'
+   }
+  
+  const [data, setdata] = useState( Type )
+     const handleChange = (event:any,attrb: number) => {
+      switch (attrb) {
+         case 1:
+           props.Title=='Product' || 'Product Types'  ?  data.nomP = event.target.value :    data.qte  = parseInt(event.target.value)
+            break;
+         case 2:
+            props.Title=='Product' || 'Product Types'   ?   data.designatio = event.target.value :   data.prixV  = parseInt(event.target.value)
+            break;
+         case 3:
+            props.Title=='Product' || 'Product Types' ? data.type = event.target.value : data.prixHt  = parseInt(event.target.value)
+          break;
+          case 4:
+           data.produit  = parseInt(event.target.value)
+           data.productId  = parseInt(event.target.value)
+          break;
+         }
+      console.log(data);
+      }
+    
+   const handleSubmit = () => {  
+        axios.post(url,data)
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+          console.log('Successful');
+          location.reload();
+        })}
+    
+
+   async function SaveClicked() {
+     await handleSubmit() 
+     setAdded(true) 
+     setTimeout(() => {
+      props.setClicked(false) 
+     }, 400);
+     
+   }
+ 
+    return ( 
+    <motion.div  className="w-[800px] ml-[100px] absolute top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] h-[420px] shadow-2xl
+    rounded-[10px] mb-10 bg-white p-7 text-[#b0b1b3] " 
+    initial={{ y: '-200%',x: '50%',opacity: 0 }}
+    animate={{ y: '-55%',x: '50%', opacity: 1 }} 
+    exit={{ y: '-200%',x: '50%',opacity: 0 , }}
+    transition={{ type: "spring", stiffness: 60,delay:.5 }}
+     >
+    <div  className='flex justify-between' >
+    <h1  className="text-xl text-black font-semibold ">New {props.Title}</h1>  
+    <div className='rounded-full bg-[#ff0000b7] hover:bg-[red] duration-[.5s] text-white text-xl w-[30px] h-[30px] grid justify-center cursor-pointer items-center' 
+    onClick={()=>props.setClicked(false)}> 
+    <FiX></FiX></div>
+    </div>
+        <form >
+        <div className={` grid justify-items-center items-center grid-cols-2 w-full my-6 gap-3   ${ props.Title!='product' && "" } `}>
+       { props.Title=='Product'  || 'Product Types'  &&    <Dropzone ></Dropzone>}
+       { props.Title!='Product'  || 'Product Types' &&       <div className="">
+            <h1 className="mb-2 text-lg "> Produit</h1>
+            <input type="text" onChange={(e)=>handleChange(e,4)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+         </div>}
+        <div className='grid gap-3  '    >
+        <div className="">
+            <h1 className="mb-2 text-lg ">   { props.Title=='Product' || 'Product Types'  ? 'Nom Produit'  :'Qte'} </h1>
+            <input type="text" onChange={(e)=>handleChange(e,1)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+         </div>
+         <div className="">
+            <h1 className="mb-2 text-lg "> { props.Title=='Product'  || 'Product Types' ? 'Designation'  :'Prix Vent'} </h1>
+            <input type="text"  onChange={(e)=>handleChange(e,2)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+         </div>
+         <div className="">
+            <h1 id='Type' className="mb-2 text-lg ">{ props.Title=='Product' || 'Product Types'  ? 'Type'  :'Prix Achat'}</h1>
+            {props.Type ? 
+             <input type="text" value={props.Type} readOnly={true}
+             className="rounded-[5px] pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " /> : 
+            <input type="text" onChange={(e)=>handleChange(e,3)}
+             className="rounded-[5px] w-[350px]  pl-[5%] h-[35px] border border-solid border-[#a6a7a8] " /> }
+         
+         </div>
+        </div>
+         
+        </div>
+        </form>
+        <div className="flex w-full justify-end px-3 gap-4">
+            <button  className="text-black p-2 px-7 rounded-[5px] border border-solid border-[#a6a7a8] hover:bg-[#f7f2f2]
+             hover:border-[#818181] duration-[.5s] "  onClick={()=>props.setClicked(false)} >Clear</button>
+            <button type='submit' className="bg-[#666cde] text-white p-2 duration-[.5s] px-7 rounded-[5px] hover:bg-[#6167d3] " 
+            onClick={()=>{SaveClicked()}}   >Save</button>
+        </div>
+        <AnimatePresence>
+        { Added &&
+  <motion.div className="absolute bottom-[-13%] right-[50%] translate-x-[50%] bg-white rounded-[5px] gap-3 border-l-[3px]
+   border-l-solid border-l-[#666cde] w-[180px] items-center justify-center flex h-[45px] text-black "
+   initial={{ opacity: 0, y:40 }}
+        animate={{ opacity: 1,y:0 }}
+        exit={{ opacity: 0, }} 
+        transition={{duration:.3, }}
+   >
+    <div className="rounded-full bg-[#666cde] text-white h-[20px] w-[20px] grid justify-center items-center  ">
+    <AiOutlineCheck></AiOutlineCheck> 
+    </div>
+    {props.Title}   Added
+  </motion.div>
+        }
+        </AnimatePresence>
+      
+    </motion.div> );
+}
+ 
+export default AddProductStock;
