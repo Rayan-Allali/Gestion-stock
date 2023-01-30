@@ -14,6 +14,8 @@ import Stock from '../../public/Stock.png'
 import StockA from '../../public/Stock+.png'
 import Supplier from '../../public/Supplier.svg'
 import SupplierA from '../../public/Suppliers+.svg'
+import PurchaseA from '../../public/purchaseOrder.svg'
+import Purchase from '../../public/purchaseOrder+.svg'
 import Image, { StaticImageData } from "next/image";
 interface props{
     Clicked:boolean,
@@ -47,6 +49,9 @@ const SideElements:React.FC<props> = (props) => {
         case 'History':
         Img=props.Clicked ? HistoryA : History 
             break;    
+        case 'PurchaseOrder':
+        Img=props.Clicked ? PurchaseA : Purchase
+            break;
     }
  return Img
    }

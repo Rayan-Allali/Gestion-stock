@@ -10,6 +10,7 @@ interface props{
 }
 
 const Upper:React.FC<props> = (props) => {
+  
     return ( 
         <div className="w-full h-[90px] flex justify-between items-center " >
         <div  className="w-[120px] h-[38px] bg-[#3A78F1] rounded-[5px] cursor-pointer text-white text-[13px] flex justify-center 
@@ -21,7 +22,7 @@ const Upper:React.FC<props> = (props) => {
           <MdDelete ></MdDelete>
           </div>
             <div  className="w-[90px] h-[35px] text-[#3A78F1] bg-[#ecf2fe] rounded-[5px] cursor-pointer text-[14px] 
-            flex justify-center gap-2 font-bold items-center  "  >  Filter 
+            flex justify-center gap-2 font-bold items-center relative "  >  Filter 
              <MdOutlineKeyboardArrowDown  className='text-xl' ></MdOutlineKeyboardArrowDown> </div>
         </div>
        </div>

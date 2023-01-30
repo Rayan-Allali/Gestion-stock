@@ -26,12 +26,14 @@ const SideNavbar:React.FC<props> = (props) => {
       { id:6,
       Title:'Invoices'} ,
       { id:7,
-       Title:'History'}
+       Title:'History'},
+       { id:8,
+        Title:'PurchaseOrder'}
       ]
     // the SideNav variable  
     let arr=[...SideNav]
    const Clickhandler=(id: number)=>{
-   arr=[false,false,false,false,false,false,false,false]
+   arr=[false,false,false,false,false,false,false,false,false]
    arr[id]=true
    setSideNav(arr);
    }

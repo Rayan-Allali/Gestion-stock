@@ -2,7 +2,8 @@ import prisma from "../../lib/prisma";
 
 export async function bestSuppliers(req,res){
    try{
-    const id=req.query.id *1
+    let id=req.query.id * 1
+        if(!id) id=2023
     if(!id) return res.status(400).json({status:400,message:"Invalid Id"})
     const bestPointsSupllier=await prisma.pointF.findMany({
         take: 3,
@@ -20,12 +21,14 @@ export async function bestSuppliers(req,res){
             points: 'desc',
           },
           select:{
-            points,
+            points:true,
             supplier:{
-                codeF:true,
+                select:{
+                  codeF:true,
                 nomF:true,
                 prenomF:true,
                 img:true
+                }
             }
           }
     })
@@ -38,7 +41,8 @@ export async function bestSuppliers(req,res){
 
 export async function bestCustomers(req,res){
     try{
-        const id=req.query.id *1
+      let id=req.query.id * 1
+      if(!id) id=2023
         if(!id) return res.status(400).json({status:400,message:"Invalid Id"})
         const bestPointsCustomer=await prisma.pointC.findMany({
             take: 3,
@@ -56,12 +60,14 @@ export async function bestCustomers(req,res){
                 points: 'desc',
               },
               select:{
-                points,
+                points:true,
                 customer:{
-                    codeC:true,
+                    select:{
+                      codeC:true,
                     nomC:true,
                     prenomC:true,
                     img:true
+                    }
                 }
               }
         })
@@ -74,12 +80,33 @@ export async function bestCustomers(req,res){
 
  export async function bestProductVendu(req,res){
     try{
-        const id=req.query.id * 1
+        let id=req.query.id * 1
+        if(!id) id=2023
      const bestProductVendu=await prisma.qteVendu.findMany({
-         take: 3,
-         orderBy: {
-             qteVendu: 'desc',
-           },
+      take: 3,
+      where:{
+          yearP:{
+              gte: new Date(
+                  `${id}-01-01T00:00:00+0000`
+                ),
+                lte:new Date(
+                    `${id}-12-31T00:00:00+0000`
+                  ),
+          }
+      },
+      orderBy: {
+          qte: 'desc',
+        },
+        select:{
+          qte:true,
+          produit :{
+              select:{
+                codeP:true,
+              nomP:true,
+              img:true
+              }
+          }
+        }
      })
      return res.status(200).json({status:200,data:bestProductVendu})
     }catch(err){
@@ -90,28 +117,12 @@ export async function bestCustomers(req,res){
 
  export async function bestProductAchat(req,res){
     try{
+      let id=req.query.id * 1
+        if(!id) id=2023
      const bestProductAchat=await prisma.produit.findMany({
         take: 3,
-        where:{
-            yearP:{
-                gte: new Date(
-                    `${id}-01-01T00:00:00+0000`
-                  ),
-                  lte:new Date(
-                      `${id}-12-31T00:00:00+0000`
-                    ),
-            }
-        },
         orderBy: {
-            qte: 'desc',
-          },
-          select:{
-            points,
-            produit :{
-                codeP:true,
-                nomP:true,
-                img:true
-            }
+            qteAchat: 'desc',
           }
      })
      return res.status(200).json({status:200,data:bestProductAchat})

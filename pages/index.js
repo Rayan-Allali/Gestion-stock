@@ -16,18 +16,45 @@ import axios from 'axios';
 
 export default function Home() {
   let State=[true,false,false,false,false,false,false,false]
+
+  const [yearPicked,setYear]=useState(new Date(Date.now()).getFullYear());
+      
+     const yearSelected=(year)=>{
+     switch (year) {
+      case 2023:
+        setYear(new Date(
+          `2023-01-01T00:00:00+0000`
+        ).getFullYear())
+        break;
+        case 2022:
+          setYear(new Date(
+            `2022-01-01T00:00:00+0000`
+          ))
+        break;
+        case 2021:
+          setYear(new Date(
+            `2021-01-01T00:00:00+0000`
+          ))
+        break;
+     }
+     }
+    
+
+
   const [BestProductHT, setBestProductHT] = useState()
   useEffect(() => { 
     setBestProductHT(null)
-    axios.get(`http://localhost:3000/api/best/productAchat`)
+    axios.get(`http://localhost:3000/api/best/productAchat/${yearPicked}`)
     .then(res => {
       setBestProductHT(res.data.data)})
   }, [])
 
+
+
   const [BestProductVT, setBestProductVT] = useState()
   useEffect(() => { 
     setBestProductHT(null)
-    axios.get(`http://localhost:3000/api/best/productVendu`)
+    axios.get(`http://localhost:3000/api/best/productVendu/${yearPicked}`)
     .then(res => {
       setBestProductVT(res.data.data)})
   }, [])
@@ -35,7 +62,7 @@ export default function Home() {
   const [Bestcustomer, setBestcustomer] = useState()
   useEffect(() => { 
     setBestcustomer(null)
-    axios.get(`http://localhost:3000/api/best/customer`)
+    axios.get(`http://localhost:3000/api/best/customer/${yearPicked}`)
     .then(res => {
       setBestcustomer(res.data.data)})
   }, [])
@@ -43,16 +70,123 @@ export default function Home() {
   const [Bestsupplier, setBestsupplier] = useState()
   useEffect(() => { 
     setBestsupplier(null)
-    axios.get(`http://localhost:3000/api/best/supplier`)
+    axios.get(`http://localhost:3000/api/best/supplier/${yearPicked}`)
     .then(res => {
       setBestsupplier(res.data.data)})
   }, [])
+  const [lowOnstock, setlowOnstock] = useState()
+  useEffect(() => { 
+    setlowOnstock(null)
+    axios.get(`http://localhost:3000/api/notifie/lowStock`)
+    .then(res => {
+      setlowOnstock(res.data.data)})
+  }, [])
+  
+  const [itemType, setitemType] = useState()
+  useEffect(() => { 
+    setitemType(null)
+    axios.get(`http://localhost:3000/api/count/productType`)
+    .then(res => {
+      setitemType(res.data.data)})
+  }, [])
 
-  const Sales=[
+  const [items, setitems] = useState()
+  useEffect(() => { 
+    setitems(null)
+    axios.get(`http://localhost:3000/api/count/product`)
+    .then(res => {
+      setitems(res.data.data)})
+  }, [])
+
+  const [paidInvoices, setpaidInvoices] = useState()
+  useEffect(() => { 
+    setpaidInvoices(null)
+    axios.get(`http://localhost:3000/api/count/invoice/paid`)
+    .then(res => {
+      setpaidInvoices(res.data.data)})
+  }, [])
+
+  const [UnPaidInvoices, setUnpaidInvoices] = useState()
+  useEffect(() => { 
+    setUnpaidInvoices(null)
+    axios.get(`http://localhost:3000/api/count/invoice/unPaid`)
+    .then(res => {
+      setUnpaidInvoices(res.data.data)})
+  }, [])
+
+  const [AllCustomer, setAllCustomer] = useState()
+  useEffect(() => { 
+    setAllCustomer(null)
+    axios.get(`http://localhost:3000/api/count/customer`)
+    .then(res => {
+      setAllCustomer(res.data.data)})
+  }, [])
+  const [AllSupplier, setAllSupplier] = useState()
+  useEffect(() => { 
+    setAllSupplier(null)
+    axios.get(`http://localhost:3000/api/count/supplier`)
+    .then(res => {
+      setAllSupplier(res.data.data)})
+  }, [])
+  const [All, setAll] = useState()
+  useEffect(() => { 
+    setAll(null)
+    axios.get(`http://localhost:3000/api/year/${yearPicked}`)
+    .then(res => {
+      setAll(res.data.data)
+      setSales([
+        { id:0,
+          Type:0,
+          Text:'Total Sales',
+          nbr:res.data.data.sale
+        },
+        { id:1,
+          Type:0,
+          Text:'Revenu',
+          nbr:res.data.data.TotalRevenu
+        },
+        { id:2,
+          Type:0,
+          Text:'Cost',
+          nbr:res.data.data.TotalCostInvoice
+        },
+        { id:3,
+          Type:0,
+          Text:'profit',
+          nbr:res.data.data.TotalRevenu
+        },
+      ]);
+      setPurchases([
+        { id:0,
+          Type:1,
+          Text:'No of Purchase',
+          nbr:res.data.data.invoice
+        },
+        { id:1,
+          Type:1,
+          Text:'Paid Order',
+          nbr:res.data.data.paidSale
+        },
+        { id:2,
+          Type:1,
+          Text:'Cost',
+          nbr:res.data.data.TotalCostSale
+        },
+        { id:3,
+          Type:1,
+          Text:'Inpaid Order',
+          nbr:res.data.data.UnPaidSale
+        },
+      ])
+    });
+      
+  }, [])
+  console.log(All)
+  const [Sales,setSales]=useState([
     { id:0,
       Type:0,
       Text:'Total Sales',
-      nbr:'650'
+      nbr:650
     },
     { id:1,
       Type:0,
@@ -62,18 +196,18 @@ export default function Home() {
     { id:2,
       Type:0,
       Text:'Cost',
-      nbr:'18K'
+      nbr:"18k"
     },
     { id:3,
       Type:0,
       Text:'profit',
       nbr:'8K'
     },
-  ];
-  const Purchases=[
+  ]);
+  const [Purchases,setPurchases]=useState([
     { id:0,
       Type:1,
-      Text:'Total Sales',
+      Text:'No of Purchase',
       nbr:'650'
     },
     { id:1,
@@ -91,7 +225,7 @@ export default function Home() {
       Text:'Inpaid Order',
       nbr:'8K'
     },
-  ];
+  ]);
   const data = {
     labels: [1,2,3,4,5,6,7,8,9,10,11,12],
     datasets: [
@@ -171,17 +305,14 @@ export default function Home() {
       </span>
       { YearSelected && <ui  className='flex flex-col gap-1  ' >
       <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px] gap-1'  onClick={()=>{location.reload()}} >
-       Year 2019
+      justify-center items-center h-[32px] gap-1'  onClick={()=>{yearSelected(2023)}} >
+       Year 2023
       </li>
       <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px] border-t-1 border-t-solid border-t-[#999a9b]' onClick={()=>{location.reload()}} > Year 2018
+      justify-center items-center h-[32px]'  onClick={()=>{yearSelected(2022)}} > Year 2022
       </li>
       <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px]'  onClick={()=>{location.reload()}} > Year 2017
-      </li>
-      <li  className='w-[110px] cursor-pointer bg-[#F4F5F7] text-[13px] rounded-[4px] flex 
-      justify-center items-center h-[32px] '  onClick={()=>{location.reload()}} >  Year 2016
+      justify-center items-center h-[32px] '  onClick={()=>{yearSelected(2021)}} >  Year 2021
       </li>
       </ui> }
       
@@ -224,15 +355,15 @@ export default function Home() {
           <article  className='grid gap-3 ' >
           <div className="flex justify-between p-1  items-center border-b-[#EBF1F7] border-b border-b-solid    ">
             <h1   className='text-[#B0B0B0] text-[14px]   '  >Low Stock Items</h1>
-           <p  className='text-[#0D151D] text-[22px] ' > 05 </p>
+           <p  className='text-[#0D151D] text-[22px] ' > {lowOnstock} </p>
           </div>
           <div className="flex justify-between p-1 items-center border-b-[#EBF1F7] border-b border-b-solid ">
             <h1  className='text-[#B0B0B0] text-[14px]   ' >Item Type</h1>
-            <p  className='text-[#0D151D] text-[22px] ' >15</p>
+            <p  className='text-[#0D151D] text-[22px] ' >{itemType}</p>
           </div>
           <div className="flex justify-between p-1 items-center">
             <h1  className='text-[#B0B0B0] text-[14px]   ' >No of Items</h1>
-            <p  className='text-[#0D151D] text-[22px] ' >120</p>
+            <p  className='text-[#0D151D] text-[22px] ' >{items}</p>
           </div>
           </article>
         </div>
@@ -243,12 +374,12 @@ export default function Home() {
           <div className="bg-[#F2F2F2] rounded-[15px] h-[129px] w-[138px] pt-5 px-3  ">
           <Image src={paidinv} alt="" ></Image>
             <h1  className='text-[#B0B0B0] text-[15px] my-1' >Paid  Invoices</h1>
-            <p  className='text-[#0D151D] text-[22px] ' >15</p>
+            <p  className='text-[#0D151D] text-[22px] ' >{paidInvoices}</p>
           </div>
           <div className="bg-[#F2F2F2] rounded-[15px] h-[129px] w-[138px] pt-5 px-3 ">
           <Image src={unpaidinv} alt="" ></Image>
             <h1  className='text-[#B0B0B0] text-[15px]  my-1 ' >UnPaid  Invoices</h1>
-            <p  className='text-[#0D151D] text-[22px] ' >15</p>
+            <p  className='text-[#0D151D] text-[22px] ' >{UnPaidInvoices}</p>
           </div>
           </article>
         </div>
@@ -259,12 +390,12 @@ export default function Home() {
           <div className="bg-[#F2F2F2] rounded-[15px] h-[129px] w-[138px] pt-5 px-3  ">
           <FaUsers  className='text-4xl text-[#346FE5] '></FaUsers>
             <h1  className='text-[#B0B0B0] text-[15px] my-1  ' >Total Customers</h1>
-            <p  className='text-[#0D151D] text-[22px] ' >1.9K</p>
+            <p  className='text-[#0D151D] text-[22px] ' >{AllCustomer}</p>
           </div>
           <div className="bg-[#F2F2F2] rounded-[15px] h-[129px] w-[138px] pt-5 px-3 ">
           <FaUsers  className='text-4xl text-[#346FE5] '></FaUsers>
             <h1  className='text-[#B0B0B0] text-[15px]  my-1 ' >Total Suppliers</h1>
-            <p  className='text-[#0D151D] text-[22px] ' >45</p>
+            <p  className='text-[#0D151D] text-[22px] ' >{AllSupplier}</p>
           </div>
           </article>
         </div>
@@ -299,11 +430,11 @@ export default function Home() {
     
      <div className='grid gap-3'>
       {Bestsupplier && Bestsupplier.map(supplier=>{
-        return  <div  key={supplier.codeF}
+        return  <div  key={supplier.supplier.codeF}
         className='h-[56px] w-[220px] p-2 rounded-[10px] bg-white flex justify-between items-center' > 
         <FaUsers  className='text-4xl'></FaUsers>   
-          <h1>{supplier.nomF} {supplier.prenomF} </h1> 
-         <p>{supplier.pointF}</p>   
+          <h1>{supplier.supplier.nomF} {supplier.supplier.prenomF} </h1> 
+         <p>{supplier.points}</p>   
         </div>
       }) }
      </div>
@@ -335,11 +466,11 @@ export default function Home() {
     
      <div className='grid gap-3'>
       {Bestcustomer && Bestcustomer.map(customer=>{
-        return  <div  key={customer.codeC}
+        return  <div  key={customer.customer.codeC}
         className='h-[56px] w-[210px] p-2 rounded-[10px] bg-white flex justify-between items-center' > 
         <FaUsers  className='text-4xl'></FaUsers>   
-          <h1>{customer.nomC} {customer.prenomC} </h1> 
-         <p>{customer.pointC}</p>   
+          <h1>{customer.customer.nomC} {customer.customer.prenomC} </h1> 
+         <p>{customer.points}</p>   
         </div>
       }) }
      </div>
@@ -348,11 +479,11 @@ export default function Home() {
         <h1 className=' text-[#646769] text-[18px] mb-3 font-[700] '>   Best Products </h1>
     <div className='grid gap-2  bg-white rounded-[10px]  '>
   {BestProductVT && BestProductVT.map(product=>{
-    return  <div key={product.codeP}
+    return  <div key={product.produit.codeP}
      className='h-[56px] w-[210px] p-2 flex justify-between items-center border-b-[#EBF1F7] border-b border-b-solid   ' > 
     <GiBanana  className='text-4xl  text-[yellow] '></GiBanana>   
-      <h1> {product.nomP} </h1> 
-     <p>{product.qteVendu} </p>   
+      <h1> {product.produit.nomP} </h1> 
+     <p>{product.qte} </p>   
   </div>
   }) }
     </div>
