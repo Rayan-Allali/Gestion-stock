@@ -84,8 +84,6 @@ function Dropzone() {
 
         {/* <button type="submit" className="btn-submit">Submit</button> */}
     </form>
-
-
   )
 }
 

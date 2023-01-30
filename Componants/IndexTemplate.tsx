@@ -9,7 +9,7 @@ import ProduitStock from './Tables/ProduitStock';
 import InvSale from './Tables/InvSale';
 import AddProductStock from './Add/AddProductStock';
 import AddInvSale from './Add/AddInvSale';
-
+import Addpay from './Add/AddPay';
 
 interface props{
   title:string;
@@ -22,6 +22,10 @@ interface props{
 
 const [Data, setData] = useState<any>()
 const [AddClick, setAddClick] = useState(false)
+
+const [AddPay, setAddPay] = useState(false)
+const [PayID, setPayID] = useState()
+
 let State=[false,false,false,false,false,false,false,false]
 switch (props.title) {
   case "Product":
@@ -47,8 +51,13 @@ switch (props.title) {
             break;
 }
 let Filtage=null
-props.Filter ? Filtage=[{id:0,Title:`All ${props.title} `,Nbr:50},{id:1,Title:`Active ${props.title} `,Nbr:30},{id:2,Title:`Inactive ${props.title} `,Nbr:20}]
- : Filtage=null;
+if(props.Type=="CS")
+{props.Filter ? Filtage=[{id:0,Title:`All ${props.title} `,Nbr:50},{id:1,Title:`Active ${props.title} `,Nbr:30},{id:2,Title:`Inactive ${props.title} `,Nbr:20}]
+ : Filtage=null;}
+ if(props.Type=="IS")
+ {props.Filter ? Filtage=[{id:0,Title:`All ${props.title} `,Nbr:50},{id:1,Title:`Paid ${props.title} `,Nbr:30},{id:2,Title:`UnPaid ${props.title} `,Nbr:20}]
+  : Filtage=null;}
+
 
  useEffect(() => { 
   AddClick==false &&
@@ -68,7 +77,7 @@ props.Filter ? Filtage=[{id:0,Title:`All ${props.title} `,Nbr:50},{id:1,Title:`A
   <Navbar/>
   { props.Type=="CS" && Data  &&  <SupCus  setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></SupCus>}
   { props.Type=="PS" && Data  &&  <ProduitStock  setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></ProduitStock>}
-  { props.Type=="IS" && Data  &&  <InvSale  setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></InvSale>}
+  { props.Type=="IS" && Data  &&  <InvSale setAddPay={setAddPay} setPayID={setPayID} setAddClick={setAddClick} Data={Data} choices={Filtage} title={props.title}  ></InvSale>}
      </div>
     <AnimatePresence>
         {AddClick &&  <motion.div className='w-[calc(100vw-230px)] z-10 h-[calc(100vh-122px)] fixed bg-[#3b373713] left-[230px]  top-[122px] '   
@@ -80,6 +89,16 @@ props.Filter ? Filtage=[{id:0,Title:`All ${props.title} `,Nbr:50},{id:1,Title:`A
           { props.Type=="PS" && <AddProductStock Title={props.title}  setClicked={setAddClick} ></AddProductStock> }
           { props.Type=="IS" && <AddInvSale Title={props.title}  setClicked={setAddClick} ></AddInvSale> }
          </motion.div> }
+         {AddPay &&  <motion.div className='w-[calc(100vw-230px)] z-10 h-[calc(100vh-122px)] fixed bg-[#3b373713] left-[230px]  top-[122px] '   
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, }} 
+        transition={{duration:.5, }}>
+          { props.Type=="IS" && <Addpay Title={props.title} ID={PayID}  setClicked={setAddPay} ></Addpay> }
+         </motion.div> }
+
+
+         
     </AnimatePresence>
     </div>
   )

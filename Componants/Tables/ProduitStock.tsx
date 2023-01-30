@@ -27,6 +27,8 @@ interface props {
   }[];
 }
 const ProduitStock: React.FC<props> = (props) => {
+  const [EditClick, setEditClick] = useState(false)
+  
   const [select, setselect] = useState(false);
   const [selectData, setselectData] = useState<number[]>([]);
   const handleSelect = () => {
