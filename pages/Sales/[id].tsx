@@ -15,7 +15,7 @@ const Id = () => {
 
 //  to delete one element 
  const DeleteElement = (ID: number) => {
-   axios.delete(`http://localhost:3000/api/supplier/${ID}`)
+   axios.delete(`http://localhost:3000/api/supplier/${pid}`)
    .then(() => {
      console.log("No probleme");
      location.reload();

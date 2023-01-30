@@ -129,6 +129,7 @@ model bonCommande{
 idBon Int @id @default(autoincrement())
 contients contient[] 
 fournisseur Int
+DateB DateTime @default(now())
 supplier fournisseur @relation(fields: [fournisseur],references: [codeF])
 }
 model contient{

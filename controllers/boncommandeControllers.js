@@ -5,6 +5,8 @@ export async function getAllHandler(req,res){
         const BonCommandes=await prisma.bonCommande.findMany({
             select:{
                 idBon:true,
+                fournisseur:true,
+                DateB:true,
                 supplier:{
                     select:{
                         codeF:true,
@@ -59,10 +61,12 @@ export async function getHandler(req,res){
         },
         select:{
             idBon:true,
+            DateB:true,
             supplier:{
                 select:{
                     codeF:true,
-                    nomF:true
+                    nomF:true,
+                    sold:true
                 }
             },
             contients:{

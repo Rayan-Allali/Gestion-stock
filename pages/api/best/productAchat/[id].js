@@ -1,4 +1,4 @@
-import {bestProductAchat } from "../../../controllers/functions/BestControllers";
+import {bestProductAchat } from "../../../../controllers/functions/BestControllers";
 
 export default async function handler(req,res){
     if(req.method === 'GET') return bestProductAchat(req,res)
