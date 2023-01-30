@@ -13,7 +13,7 @@ const AddProductStock:React.FC<props> = (props) => {
    const [Added,setAdded]=useState(false);
    let Type:any={};
    let  url='http://localhost:3000/api/product'
-
+   
     Type={  img:"tst",
     nomP: "",
     designation:"",
