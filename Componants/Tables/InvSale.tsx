@@ -14,6 +14,8 @@ import { MdDelete,MdOutlineKeyboardArrowDown } from "react-icons/md";
 interface props{
   title:string,
   setAddClick: (value: SetStateAction<boolean>) => void,
+  setAddPay: (value: SetStateAction<boolean>) => void,
+  setPayID: (value: SetStateAction<any>) => void,
   choices?: { id:number, Nbr: number,Title: string}[],
   Data:{
     idAchat?: number;   dateF?:Date;
@@ -26,7 +28,6 @@ interface props{
 const InvSale:React.FC<props> = (props) => {
     const [Filter, setFilter] =useState([true,false,false])
     const [select, setselect] = useState(false)
-    const [AddClick, setAddClick] = useState(false)
     const handleSelect=()=>{
       setselect(prev=>prev=!prev)
     }
@@ -148,7 +149,7 @@ const InvSale:React.FC<props> = (props) => {
       </td>
            <td className='cursor-pointer font-bold' >
             <span className='w-[99px] flex justify-center items-center gap-2 border bg-[#3A78F1] border-[#E2E8F0] border-solid 
-            h-[38px] rounded-[10px]  text-white'>
+            h-[38px] rounded-[10px]  text-white'  onClick={()=>{props.setPayID(Data.numF || Data.idAchat);props.setAddPay(true);}}>
             <Image  src={dollar} alt=''></Image> Pay
             </span>
            

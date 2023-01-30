@@ -1,60 +1,104 @@
 import axios from 'axios';
 import {motion,AnimatePresence } from 'framer-motion'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineCheck } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
 interface props{
     Title:string,
+    ID:number,
     setClicked:(value:boolean) => void
 }
 
-
-const Add:React.FC<props> = (props) => {
+const Edit:React.FC<props> = (props) => {
+   
    const [Added,setAdded]=useState(false);
-   let Type:any={};
+   let Type: { codeF?: number; nomF?: string; prenomF?: string; adressF?: string; teleF?: string; img: string; email?: string; codeC?: number; nomC?: string; prenomC?: string; adressC?: string; teleC?: string; };
    let url=''
-if(props.Title=='Supplier'){
-   Type={
-   nomF: "",
-   prenomF:"",
-   adressF: "",
-   teleF:"",
-   img:"tst",
-   email:"" }
-   url='http://localhost:3000/api/supplier'
-}
-else if(props.Title=='Customer') {
-   Type={  img:"tst",
-   nomC: "",
-   prenomC:"",
-   adressC: "",
-   teleC:""}
-   url='http://localhost:3000/api/customer'
-}
-  const [data, setdata] = useState( Type )
+
+
+   if(props.Title=='Supplier'){
+      Type={
+         codeF:0,
+      nomF: "",   
+      prenomF:"",
+      adressF: "",
+      teleF:"",
+      img:"tst",
+      email:"" }
+      url=`http://localhost:3000/api/supplier/${props.ID}`
+   }
+   else if(props.Title=='Customer') {
+      Type={  img:"",
+      codeC:0,
+      nomC: "",
+      prenomC:"",
+      adressC: "",
+      teleC:""}
+      url=`http://localhost:3000/api/customer/${props.ID}`
+   }
+   const [data, setdata] = useState<any>()
+   useEffect(() => { 
+      // setdata(Type)
+      axios.get(url)
+      .then(res => {
+         console.log("res : ",res.data.data)
+         let x=res.data.data
+         console.log(x)
+         setdata(90)
+         console.log('data',data)})
+      //  console.log(Data);
+    }, [])
+
+  //  const editElement=(ID: number)=>{ 
+      //     if(props.title==='Supplier'){
+      //      axios
+      //      .put(`http://localhost:3000/api/supplier/${ID}`,)
+      //      .then(() => {
+      //        console.log("No probleme");
+      //        location.reload();
+      //      })
+      //      .catch((err) => console.log(err));
+      //     }
+      //     else {
+      //      axios
+      //      .delete(`http://localhost:3000/api/customer/${ID}`)
+      //      .then(() => {
+      //        console.log("No probleme");
+      //        location.reload();
+      //      })
+      //      .catch((err) => console.log(err));
+      //     }
+           
+
+      //   axios.put('http://dummy.restapiexample.com/api/v1/update/{this.state.id}',0)
+      //  .then(res => console.log(res.data));
+      //  }
+
+
+
      const handleChange = (event:any,attrb: number) => {
-      switch (attrb) {
-         case 1:
-            if(props.Title=='Supplier')   data.nomF  = event.target.value
-            else data.nomC  = event.target.value
-            break;
-         case 2:
-            if(props.Title=='Supplier') data.prenomF  = event.target.value
-            else data.prenomC  = event.target.value
-            break;
-         case 3:
-           if(props.Title=='Supplier') data.adressF  = event.target.value
-           else data.adressC  = event.target.value
-          break;
-         case 4:
-           if(props.Title=='Supplier') data.teleF= event.target.value
-           else data.teleC  = event.target.value
-          case 5:
-            if(props.Title=='Supplier') data.email= event.target.value
-            else data.email  = event.target.value
-          break;
-      }
-      console.log(data);
+      // switch (attrb) {
+      //    case 1:
+      //       if(props.Title=='Supplier')   data.nomF  = event.target.value
+      //       else data.nomC  = event.target.value
+      //       break;
+      //    case 2:
+      //       if(props.Title=='Supplier') data.prenomF  = event.target.value
+      //       else data.prenomC  = event.target.value
+      //       break;
+      //    case 3:
+      //      if(props.Title=='Supplier') data.adressF  = event.target.value
+      //      else data.adressC  = event.target.value
+      //     break;
+      //    case 4:
+      //      if(props.Title=='Supplier') data.teleF= event.target.value
+      //      else data.teleC  = event.target.value
+      //     case 5:
+      //       if(props.Title=='Supplier') data.email= event.target.value
+      //       else data.email  = event.target.value
+      //     break;
+      // }
+      // console.log(data);
       }
     
    const handleSubmit = () => {
@@ -83,12 +127,12 @@ else if(props.Title=='Customer') {
     transition={{ type: "spring", stiffness: 60,delay:.5 }}
      >
     <div  className='flex justify-between' >
-    <h1  className="text-xl text-black font-semibold ">New {props.Title}</h1>  
+    <h1  className="text-xl text-black font-semibold ">Edit {props.Title}  N° {props.ID} </h1>  
     <div className='rounded-full bg-[#ff0000b7] hover:bg-[red] duration-[.5s] text-white text-xl w-[30px] h-[30px] grid justify-center cursor-pointer items-center' 
     onClick={()=>props.setClicked(false)}> 
     <FiX></FiX></div>
     </div>
-        <form >
+      { data && <form >
         <div className=" grid justify-items-center items-center grid-cols-2 w-full my-6 gap-3 ">
          <div className="">
             <h1 className="mb-2 text-lg ">First Name</h1>
@@ -111,7 +155,7 @@ else if(props.Title=='Customer') {
             <input type="text" onChange={(e)=>handleChange(e,5)}  className=" pl-[5%] text-black rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] "  />
          </div>
         </div>
-        </form>
+        </form>}
         <div className="flex w-full justify-end px-3 gap-4">
             <button  className="text-black p-2 px-7 rounded-[5px] border border-solid border-[#a6a7a8] hover:bg-[#f7f2f2]
              hover:border-[#818181] duration-[.5s] "  onClick={()=>props.setClicked(false)} >Clear</button>
@@ -137,4 +181,4 @@ else if(props.Title=='Customer') {
     </motion.div> );
 }
  
-export default Add;
+export default Edit;

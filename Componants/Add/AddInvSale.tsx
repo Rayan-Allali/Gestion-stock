@@ -7,6 +7,7 @@ import NewAdd from '../../public/NewAdd.png'
 import { FiX } from "react-icons/fi";
 import Image from 'next/image'
 import Add from './Add';
+import ProductElement from './ProductElement';
 interface props{
     Title:string,
     setClicked:(value:boolean) => void
@@ -16,10 +17,17 @@ interface props{
 const AddInvSale:React.FC<props> = (props) => {
    const [AddClick, setAddClick] = useState(false)
    
+
+   const [index,setindex]=useState(1);
    const [Added,setAdded]=useState(false);
    const [productAdded, setproductAdded] = useState([0])
    const AddProduct=()=>{
-      setproductAdded([...productAdded,0])
+      setindex(index+1)
+      setproductAdded([...productAdded,index])
+      console.log(index);
+      console.log(productAdded);
+      
+      
    }
    let Type:any={};
    // let  url='http://localhost:3000/api/product'
@@ -53,19 +61,42 @@ const AddInvSale:React.FC<props> = (props) => {
    }
 
 
+   
    const [Customers, setCustomers] = useState(false)
    const [CustomerField, setCustomerField] = useState<any>()
    const [CustomersData, setCustomersData] = useState<any>()
-   const url=`http://localhost:3000/api/customer`
-   const handleFocus=(Type:Number,e)=>{
+
+   const [Products, setProducts] = useState(false)
+   const [ProductField, setProductField] = useState<any>([])
+   const [ProductsData, setProductsData] = useState<any>()
+
+   const handleFocus=(Type:Number,e,id?:number)=>{
 // Type=0 means Customer or supplier 1 means Product
     if(Type==0){
-    axios.get(url)
+    axios.get(`http://localhost:3000/api/customer`)
    .then(res => {
    setCustomersData(res.data.data)})
    setCustomers(true)
     }
-    else {}
+    else {      e.preventDefault();
+      setTimeout(() => {
+         axios.get(`http://localhost:3000/api/product`)
+         .then(res => {
+       
+            setProductsData(res.data.data)
+            setProducts(true) 
+             console.log("prod:",ProductsData);
+         })
+            
+      }, 800);
+    
+         // let State=[false]
+         // for(let i=1;i<Products.length;i++){
+         //    State.push(false)
+         // }
+         // State[id]=true
+         // setProducts(State)
+    }
    }  
    
    const handleBlur=(Type:Number,e)=>{
@@ -73,8 +104,7 @@ const AddInvSale:React.FC<props> = (props) => {
       if(Type==0){
          setTimeout(() => {
             setCustomers(false)
-             e.target.value=CustomerField.nomC + ' ' +CustomerField.prenomC  
-         }, 1500);
+         }, 400);
       }
       else {}
          }  
@@ -87,7 +117,6 @@ const AddInvSale:React.FC<props> = (props) => {
      }, 400);
      
    }
-
     return ( 
     <motion.div  className="w-[650px] max-h-[510px] absolute top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] shadow-2xl font-semibold
     rounded-[10px] mb-10 bg-white p-6 text-[#b0b1b3] " 
@@ -108,12 +137,13 @@ const AddInvSale:React.FC<props> = (props) => {
            <Image src={NewAdd} className="absolute h-[20px] cursor-pointer w-[20px] translate-y-[-50%] top-[50%] left-5 " alt=""
            onClick={()=>setAddClick(true)}
            ></Image>
-            <input type="text" onFocus={(e)=>{handleFocus(0,e)}} onBlur={(e)=>{handleBlur(0,e)}} onChange={(e)=>handleChange(e,1)} placeholder="Select Customer" 
+            <input type="text" onFocus={(e)=>{handleFocus(0,e)}} value={CustomerField &&  CustomerField?.nomC + ' '+CustomerField?.prenomC}
+             onBlur={(e)=>{handleBlur(0,e)}} onChange={(e)=>handleChange(e,1)} placeholder="Select Customer" 
             className=" pl-[30%] rounded-[5px] w-[300px] h-[40px] border border-solid border-[#a6a7a8] " />
-         {  Customers && <div  className='border border-solid text-black border-black absolute bottom-[-400%] w-[300px] overflow-y-scroll max-h-[150px] bg-white ' >
+         {  Customers && <div  className='border border-solid text-black border-black absolute bottom-[-400%] w-[300px] overflow-y-scroll h-[150px] max-h-[150px] bg-white ' >
                     {CustomersData  && CustomersData.map(Data=>{
-                     return <div  className='flex p-2 cursor-pointer gap-1 border-b-solid border-b border-b-black' key={Data.codeC}
-                     onClick={()=>{setCustomerField(Data);  console.log(CustomerField);}}> 
+                     return <div  className='flex p-2 cursor-pointer gap-1 border-b-solid border-b border-b-black' key={Math.random()}
+                     onClick={()=>{setCustomerField(prev=>prev=Data);  }}> 
                             <p>N° {Data.codeC} </p> 
                             <p> {Data.nomC} </p>
                             <p> {Data.prenomC} </p>
@@ -123,18 +153,8 @@ const AddInvSale:React.FC<props> = (props) => {
          </div>
          <div className='max-h-[210px] overflow-y-scroll grid gap-4'>
          {productAdded.map(product=>{
-            return    <div className='flex gap-4'>
-               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="Select Product" className=" pl-[15%] rounded-[5px] w-[270px] h-[40px] border border-solid border-[#a6a7a8] " />
-            <div className="">
-               <input type="text" onChange={(e)=>handleChange(e,3)} placeholder="PrixUt"   className="  pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
-            </div>
-            <div className="">
-               <input type="text"  onChange={(e)=>handleChange(e,2)} placeholder="PrixVt" className=" pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
-            </div>
-            <div className="">
-               <input type="text" onChange={(e)=>handleChange(e,3)} placeholder="Qte"   className="  pl-[15%] rounded-[5px] w-[90px] h-[40px] border border-solid border-[#a6a7a8] " />
-            </div>
-         </div> 
+            return     <ProductElement Products={Products} ProductsData={ProductsData} setProductField={setProductField}
+             handleBlur={handleBlur} handleChange={handleChange} handleFocus={handleFocus} product={product}  ></ProductElement>
            
          })}
          </div>

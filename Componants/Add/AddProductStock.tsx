@@ -1,22 +1,23 @@
 import axios from 'axios';
 import {motion,AnimatePresence } from 'framer-motion'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineCheck } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
 import Dropzone from '../Imgdropping';
 interface props{
     Title:string,
+    Type?:string,
     setClicked:(value:boolean) => void
 }
 const AddProductStock:React.FC<props> = (props) => {
    const [Added,setAdded]=useState(false);
    let Type:any={};
    let  url='http://localhost:3000/api/product'
-
+   
     Type={  img:"tst",
     nomP: "",
     designation:"",
-    type: "",}
+    type: props.Type ? props.Type : "" ,}
   const [data, setdata] = useState( Type )
      const handleChange = (event:any,attrb: number) => {
       switch (attrb) {
@@ -50,7 +51,7 @@ const AddProductStock:React.FC<props> = (props) => {
      }, 400);
      
    }
-
+ 
     return ( 
     <motion.div  className="w-[800px] ml-[100px] absolute top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] h-[420px] shadow-2xl
     rounded-[10px] mb-10 bg-white p-7 text-[#b0b1b3] " 
@@ -71,15 +72,20 @@ const AddProductStock:React.FC<props> = (props) => {
         <div className='grid gap-3  '    >
         <div className="">
             <h1 className="mb-2 text-lg ">Nom Produit</h1>
-            <input type="text" onChange={(e)=>handleChange(e,1)} className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text" onChange={(e)=>handleChange(e,1)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
             <h1 className="mb-2 text-lg "> Designation</h1>
-            <input type="text"  onChange={(e)=>handleChange(e,2)} className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <input type="text"  onChange={(e)=>handleChange(e,2)} className="rounded-[5px]  pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
          </div>
          <div className="">
-            <h1 className="mb-2 text-lg ">Type</h1>
-            <input type="text" onChange={(e)=>handleChange(e,3)}   className="rounded-[5px] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " />
+            <h1 id='Type' className="mb-2 text-lg ">Type</h1>
+            {props.Type ? 
+             <input type="text" value={props.Type} readOnly={true}
+             className="rounded-[5px] pl-[5%] w-[350px] h-[35px] border border-solid border-[#a6a7a8] " /> : 
+            <input type="text" onChange={(e)=>handleChange(e,3)}
+             className="rounded-[5px] w-[350px]  pl-[5%] h-[35px] border border-solid border-[#a6a7a8] " /> }
+         
          </div>
         </div>
          

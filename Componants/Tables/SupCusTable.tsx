@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState} from 'react';
-import { MdDelete,MdModeEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import {IoMdEye } from "react-icons/io";
 import Image from 'next/image'
 import FilterElmnt from '../Filter';
 import { AnimatePresence, motion } from 'framer';
@@ -8,6 +9,9 @@ import axios from 'axios';
 import SectionTitle from '../SectionTitle';
 import Upper from './UpperTable';
 import Pagination from './Pagination';
+import Edit from '../Edit/EditCS';
+import Link from 'next/link';
+
 interface props{
   title:string,
   setAddClick: Dispatch<SetStateAction<boolean>>,
@@ -22,6 +26,12 @@ interface props{
 }[]
 }
 const SupCus:React.FC<props> = (props) => {
+  // const [EditClick, setEditClick] = useState(false)
+  // const [EditId, setEditId] = useState()
+
+
+
+
     const [select, setselect] = useState(false)
     const [selectData, setselectData] = useState<number[]>([]);
     const handleSelect = () => {
@@ -65,7 +75,7 @@ const SupCus:React.FC<props> = (props) => {
       arr[id]=true
       setFilter(arr);
       }
-
+ 
        const [blogPosts, setBlogPosts] = useState([]);
        const [currentPage, setCurrentPage] = useState(1);
        const RowsPerPage = 4;
@@ -112,7 +122,6 @@ const SupCus:React.FC<props> = (props) => {
         }
        }
 
-  
 
     return ( 
         <div  className=" bg-[#EFF2F6] h-[calc(100vh-75px)] w-full">
@@ -152,11 +161,21 @@ const SupCus:React.FC<props> = (props) => {
             <td>{Data.teleF}  {Data.teleC} </td>
            <td>{Data.pointF} {Data.pointC} </td>
            <td>
-           <MdModeEdit  className='cursor-pointer  text-2xl' ></MdModeEdit>
+           <Link href={  Data.codeC ? `http://localhost:3000/Customers/${Data.codeC}` :`http://localhost:3000/Suppliers/${Data.codeF}` } 
+           className='cursor-pointer  text-2xl'  >
+           <IoMdEye ></IoMdEye>
+           </Link>
+           {/* <MdModeEdit  className='cursor-pointer  text-2xl' 
+           onClick={() => {
+            let id= Data.codeF || Data.codeC
+            setEditId(id);
+            setEditClick(true)
+          }}
+           
+           ></MdModeEdit> */}
           </td>
            <td>
            <MdDelete 
-            id={Data.codeF}
             onClick={() => {
               let id= Data.codeF || Data.codeC
               console.log(id);
@@ -168,10 +187,19 @@ const SupCus:React.FC<props> = (props) => {
            </tbody>
 
           </table>
+
           <Pagination Array={Array}  DisplayPage={DisplayPage} HandelPagination={HandelPagination} currentPage={currentPage}  ></Pagination>
           </div>
           </div>
-         
+       {/* <AnimatePresence>
+        {EditClick &&  <motion.div className='w-[calc(100vw-230px)] z-10 h-[calc(100vh-122px)] fixed bg-[#3b373713] left-[230px]  top-[122px] '   
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, }} 
+        transition={{duration:.5, }}>
+          <Edit Title={props.title}  setClicked={setEditClick} ID={EditId} ></Edit>
+         </motion.div> }
+           </AnimatePresence> */}
         </div>     
      );
 }
