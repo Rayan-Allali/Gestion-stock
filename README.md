@@ -1,20 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Gestion de Stock
 
-## Getting Started
-npm i
-First, run the development server:
+Gestion de Stock Dashboard is a full-stack web application designed to manage and track product inventory. It provides a user-friendly interface to view, add, edit, and delete products, as well as generate reports and analytics.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Features
+Product Management: Add, view, edit, and delete products with ease.
+Inventory Tracking: Keep track of stock levels and receive notifications for low inventory.
+Analytics and Reports: Generate reports and view analytics to gain insights into product performance.
+Responsive Design: Mobile-friendly layout for easy access on different devices.
+Technologies Used
+Frontend: HTML, CSS, JavaScript, React.js, Next.js
+Backend: Node.js, Express.js, Prisma ORM, PostgreSQL
+Charts and Analytics: Chart.js, D3.js
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## License
+This project is licensed under the MIT License.
 
-## technologie used:
--prisma ORM to connect with db
--next js full stack with typescript
--react icons for icons
--axios to fetch data from backend
--framer motion for animation
+## Contact
+For any inquiries or feedback, please email us at rayanalllali@gmail.com.
